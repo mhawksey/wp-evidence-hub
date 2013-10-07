@@ -12,6 +12,7 @@ Author URI: http://www.rachelcarden.com
 
 var errorDNA = "The location does not exist. <a href='?post_type=location' target='_blank'>Add New Location</a>";
 
+
 jQuery.noConflict()(function(){
 	jQuery.ui.autocomplete.prototype._resizeMenu = function () {
 	  var ul = this.menu.element;
@@ -151,3 +152,36 @@ function autocomplete_eh_change_location(id, label){
 		}
 	});
 }
+
+//jQuery(document).ready(function($) {
+	jQuery("#pgm-reverse-geocode-button").on('click' ,function() {
+		jQuery("#pronamic-google-maps-meta-box").data('pgm-meta-box').reverseGeocode = function() {
+			var $ = jQuery;
+			var geocoder = new google.maps.Geocoder();
+			var fields = {};
+			fields.latitude = $("#pgm-lat-field");
+			fields.longitude = $("#pgm-lng-field");
+			fields.address = $("#pgm-address-field");
+			var location =  new google.maps.LatLng(fields.latitude.val(), fields.longitude.val());
+
+			geocoder.geocode({"latLng": location} , function(results, status) {
+				if(status == google.maps.GeocoderStatus.OK) {
+					if(results[0]) {
+						var address = results[0].formatted_address;
+						fields.address.val(address);
+						var arrAddress = results[0].address_components;
+						$.each(arrAddress, function (i, address_component) {
+							if (address_component.types[0] == "country"){ 
+        						console.log("country:"+address_component.long_name); 
+								return false;
+							}
+						});
+					}
+				} else {
+					alert(status);
+				}
+			});
+		};
+		return false;
+	});
+//});

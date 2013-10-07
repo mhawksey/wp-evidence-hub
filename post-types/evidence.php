@@ -196,6 +196,13 @@ if(!class_exists('Evidence_Template'))
 					'label' => 'Location'
 					)
 			 ));
+			 $this->options = array_merge($this->options, array(
+				'evidence_citation' => array(
+					'type' => 'text',
+					'position' => 'bottom',
+					'label' => 'Citation'
+					)
+			 ));
 			
 			// Add metaboxes
     		add_action('add_meta_boxes', array(&$this, 'add_meta_boxes'));
@@ -245,7 +252,7 @@ if(!class_exists('Evidence_Template'))
 		
 		public function enqueue_autocomplete_scripts() {
 			wp_enqueue_style( 'evidence-hub-autocomplete', plugins_url( '../css/admin.css' , __FILE__ ) );
-			wp_enqueue_script( 'evidence-hub-autocomplete', plugins_url( '../js/admin.js' , __FILE__ ), array( 'jquery', 'post', 'jquery-ui-autocomplete' ), '', true );
+			wp_enqueue_script( 'evidence-hub-autocomplete', plugins_url( '../js/admin.js' , __FILE__ ), array( 'jquery', 'post', 'jquery-ui-autocomplete', 'pronamic_google_maps_admin' ), '', true );
 			global $typenow;
   			if ($typenow=='evidence') {
 	  			wp_enqueue_script( 'pronamic_google_maps_site' );
