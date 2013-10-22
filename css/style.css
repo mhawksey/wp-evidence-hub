@@ -1,0 +1,47 @@
+/* CSS Document */
+#evidence-balance, #evidence-meta {
+background-color: #F8F8F8;
+padding: 10px;
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+border-radius: 5px;
+position:relative;
+overflow:auto; 
+font-face: "PT Sans", sans-serif;
+}
+#evidence-balance h4, #evidence-meta h4 {
+margin:0;
+font-weight:bold;
+text-align:center;	
+}
+.evidence-box {
+width:48%;
+font-size:90%;
+text-align:left;	
+}
+.evidence-box.pos {
+float:right;
+
+}
+.evidence-box.neg{
+float:left;
+width:47%;
+border-right: 1px #ccc inset;
+padding-right:15px;	
+	
+}
+.evidence-box ul li {
+list-style:none;	
+margin-left:0px;
+font-weight:bold;
+}
+.evidence-box ul li li {	
+list-style:disc;
+margin-left:30px;
+font-weight:normal
+}
+.evidence-box ul li ul {
+margin-top:0px;	
+}
+
+

@@ -46,7 +46,7 @@ jQuery.noConflict()(function(){
 									location_id: $item.location_id,
 									address: $item.address,
 									value: $item.label,
-									label: $item.label
+									label: $item.label,
 								};
 							}));
 						}
@@ -64,7 +64,7 @@ jQuery.noConflict()(function(){
 					autocomplete_eh_remove_error_message();
 					
 					// change the saved post author
-					autocomplete_eh_change_location( $ui.item.location_id, $ui.item.label );
+					autocomplete_eh_change_location( $ui.item.location_id, $ui.item.label  );
 					
 				},
 				response: function( $event, $ui ) {
@@ -122,7 +122,8 @@ function autocomplete_eh_change_location(id, label){
 	
 	$evidence_hub_location_id_field.val(label);
 	$evidence_hub_location_id.val(id);
-	
+
+		
 	var $saved_location_id = $evidence_hub_location_id.val();
 	
 	var $entered_user_value = $evidence_hub_location_id_field.val();
@@ -144,7 +145,13 @@ function autocomplete_eh_change_location(id, label){
 			// if the user exists
 			if ( $location.valid ) {
 				jQuery( '#pronamicMapHolder' ).html($location.map);	
+				jQuery( '.pgm' ).pronamicGoogleMaps();
 				jQuery( '.pgmm' ).pronamicGoogleMapsMashup();
+				
+				if ($location.country)
+					jQuery( '#evidence_hub_country' ).val($location.country);
+				else
+					jQuery( '#evidence_hub_country' ).val('');
 				
 			} else if ( $location.notamatch ||  $location.noid) {
 				autocomplete_eh_add_error_message( errorDNA );
@@ -172,7 +179,8 @@ function autocomplete_eh_change_location(id, label){
 						var arrAddress = results[0].address_components;
 						$.each(arrAddress, function (i, address_component) {
 							if (address_component.types[0] == "country"){ 
-        						console.log("country:"+address_component.long_name); 
+								$("#evidence_hub_country").val(address_component.short_name.toLowerCase());
+        						console.log("country:"+address_component.short_name.toLowerCase()); 
 								return false;
 							}
 						});
@@ -184,4 +192,5 @@ function autocomplete_eh_change_location(id, label){
 		};
 		return false;
 	});
+	
 //});

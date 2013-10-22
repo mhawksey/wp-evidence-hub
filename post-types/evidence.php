@@ -22,9 +22,11 @@ if(!class_exists('Evidence_Template'))
     		add_action('admin_init', array(&$this, 'admin_init'));
 			add_action('manage_edit-'.self::POST_TYPE.'_columns', array(&$this, 'columns'));
 			add_action('manage_'.self::POST_TYPE.'_posts_custom_column', array(&$this, 'column'),10 ,2);
-			add_action('admin_enqueue_scripts', array(&$this, 'enqueue_autocomplete_scripts'));
 			add_action('wp_ajax_evidence_hub_location_callback', array(&$this, 'ajax_evidence_hub_location_callback') );
 			add_action('wp_ajax_evidence_hub_if_location_exists_by_value', array(&$this, 'ajax_evidence_hub_if_location_exists_by_value') );
+			
+			
+			Evidence_Hub::$post_types[] = self::POST_TYPE;
 			
     	} // END public function __construct()
 
@@ -44,21 +46,58 @@ if(!class_exists('Evidence_Template'))
 				'cb' => '<input type="checkbox" />',
 				'title' => __( self::SINGULAR ),
 				'evidence_hub_polarity' => __( 'Polarity' ),
+				'evidence_hub_hypothesis_id' => __( 'Hypothesis' ),
+				'evidence_hub_country' => __( 'Country' ),
+				'evidence_hub_sector' => __( 'Sector' ),
+				'author' => __( 'Author' ),
 				'date' => __( 'Date' )
 			);
 
 			return $columns;
 		}
 		
+		public function add_to_bulk_quick_edit_custom_box( $column_name, $post_type ) {
+			print_r($column_name);
+			$type = str_replace('evidence_hub_', '', $column_name);
+			switch ($type) {
+				case 'sector':
+					Evidence_Hub::get_select_quick_edit($this->options->$type, $column_name);
+					break;
+				default:
+					break;
+			}			
+		}
+		
 		public function column($column, $post_id) {
 			global $post;
 			switch (str_replace('evidence_hub_', '', $column)) {
 			case 'polarity':
-				$polarity = get_post_meta( $post_id, $column, true );
+				$polarity = wp_get_object_terms( $post_id, $column);;
 				if ( empty( $polarity ) )
-				echo __( 'Empty' );
+					echo __( 'Empty' );
+				else 
+					echo __( '<span class="eh_pol">'.$polarity[0]->name.'</span>' );
+				break;
+			case 'hypothesis_id':
+				$hypothesis = get_the_title(get_post_meta( $post_id, $column, true ));
+				if ( empty( $hypothesis ) )
+					echo __( 'Empty' );
 				else
-					printf( __( '%s' ), ucwords($polarity) );
+					printf( __( '%s' ), ucwords($hypothesis) );
+				break;
+			case 'country':
+				$location = wp_get_object_terms( $post_id, $column);
+				if ( empty( $location ) )
+					echo __( 'Empty' );
+				else
+					printf( __( '%s' ), $location[0]->name  );
+				break;
+			case 'sector':
+				$sector = wp_get_object_terms( $post_id, $column);
+				if ( empty( $sector ) )
+					echo __( 'Empty' );
+				else
+					printf( __( '%s' ), $sector[0]->name );
 				break;
 			default :
 				break;
@@ -91,8 +130,9 @@ if(!class_exists('Evidence_Template'))
 					),
     				'public' => true,
     				'description' => __("A piece of evidence to support a hypothesis"),
+					'taxonomies' => array('post_tag'),
     				'supports' => array(
-    					'title', 'editor', 'excerpt', 
+    					'title', 'editor', 'excerpt', 'author' 
     				),
 					'has_archive' => true,
 					'rewrite' => array(
@@ -103,6 +143,11 @@ if(!class_exists('Evidence_Template'))
 					'menu_icon' => EVIDENCE_HUB_URL.'/images/icons/evidence.png',
     			)
     		);
+			
+			$args = Evidence_Hub::get_taxonomy_args("Sector","Sectors");
+			register_taxonomy( 'evidence_hub_sector', self::POST_TYPE, $args );
+			$args = Evidence_Hub::get_taxonomy_args("Polarity","Polarity");
+			register_taxonomy( 'evidence_hub_polarity', self::POST_TYPE, $args );
     	}
 	
     	/**
@@ -123,7 +168,11 @@ if(!class_exists('Evidence_Template'))
     			{
     				// Update the post's meta field
 					$field_name = "evidence_hub_$name";
-    				update_post_meta($post_id, $field_name, $_POST[$field_name]);
+					if ($option['save_as'] == 'term'){
+						wp_set_object_terms( $post_id, $_POST[$field_name], $field_name);
+					} else {
+    					update_post_meta($post_id, $field_name, $_POST[$field_name]);
+					}
     			}
     		}
     		else
@@ -155,6 +204,7 @@ if(!class_exists('Evidence_Template'))
 			$this->options = array_merge($this->options, array(
 				'hypothesis_id' => array(
 					'type' => 'select',
+					'save_as' => 'post_meta',
 					'position' => 'side',
 					'label' => "Hypothesis",
 					'options' => $hypothesis_options,
@@ -163,16 +213,16 @@ if(!class_exists('Evidence_Template'))
 			$this->options = array_merge($this->options, array(
 				'polarity' => array(
 					'type' => 'select',
+					'save_as' => 'term',
 					'position' => 'side',
 					'label' => "Polarity",
-					'options' => array (
-								'1' => '+',
-								'-1' => '–',),
+					'options' => get_terms('evidence_hub_polarity', 'hide_empty=0&orderby=id'),
 					),
 			));
 			$this->options = array_merge($this->options, array(
 				'date' => array(
 					'type' => 'date',
+					'save_as' => 'post_meta',
 					'position' => 'side',
 					'label' => 'Date'
 					)
@@ -180,25 +230,34 @@ if(!class_exists('Evidence_Template'))
 			 $this->options = array_merge($this->options, array(
 				'sector' => array(
 					'type' => 'select',
+					'save_as' => 'term',
 					'position' => 'side',
+					'quick_edit' => true,
 					'label' => 'Sector',
-					'options' => array (
-								'School-K12' => 'School-K12',
-								'College' => 'College',
-								'Higher Education' => 'Higher Education',
-								'Informal' => 'Informal'),
+					'options' => get_terms('evidence_hub_sector', 'hide_empty=0&orderby=id'),
 					)
 			 ));
 			 $this->options = array_merge($this->options, array(
 				'location_id' => array(
 					'type' => 'location',
+					'save_as' => 'post_meta',
 					'position' => 'side',
 					'label' => 'Location'
 					)
 			 ));
 			 $this->options = array_merge($this->options, array(
+				'country' => array(
+					'type' => 'select',
+					'save_as' => 'term',
+					'position' => 'side',
+					'label' => "Country",
+					'options' => get_terms('evidence_hub_country', 'hide_empty=0'),
+					),
+			 ));
+			 $this->options = array_merge($this->options, array(
 				'evidence_citation' => array(
 					'type' => 'text',
+					'save_as' => 'post_meta',
 					'position' => 'bottom',
 					'label' => 'Citation'
 					)
@@ -206,7 +265,10 @@ if(!class_exists('Evidence_Template'))
 			
 			// Add metaboxes
     		add_action('add_meta_boxes', array(&$this, 'add_meta_boxes'));
+			//add_action( 'bulk_edit_custom_box', array(&$this,'add_to_bulk_quick_edit_custom_box'), 10, 2 );
+			//add_action( 'quick_edit_custom_box', array(&$this,'add_to_bulk_quick_edit_custom_box'), 10, 2 );
     	} // END public function admin_init()
+
 			
     	/**
     	 * hook into WP's add_meta_boxes action hook
@@ -228,6 +290,9 @@ if(!class_exists('Evidence_Template'))
     			self::POST_TYPE,
 				'normal'
     	    );
+			remove_meta_box('tagsdiv-evidence_hub_country',self::POST_TYPE,'side');
+			remove_meta_box('tagsdiv-evidence_hub_sector',self::POST_TYPE,'side');
+			remove_meta_box('tagsdiv-evidence_hub_polarity',self::POST_TYPE,'side');
     	} // END public function add_meta_boxes()
 		
 
@@ -236,7 +301,7 @@ if(!class_exists('Evidence_Template'))
 		 */		
 		public function add_inner_meta_boxes_side($post)
 		{		
-			$sub_options = WP_Evidence_Hub::filterOptions($this->options, 'side');
+			$sub_options = Evidence_Hub::filterOptions($this->options, 'position', 'side');
 			include(sprintf("%s/custom_post_metaboxes.php", dirname(__FILE__)));			
 		} // END public function add_inner_meta_boxes($post)
 		
@@ -246,19 +311,11 @@ if(!class_exists('Evidence_Template'))
 		public function add_inner_meta_boxes($post)
 		{		
 			// Render the job order metabox
-			$sub_options = WP_Evidence_Hub::filterOptions($this->options, 'bottom');
+			$sub_options = Evidence_Hub::filterOptions($this->options, 'position', 'bottom');
 			include(sprintf("%s/custom_post_metaboxes.php", dirname(__FILE__)));			
 		} // END public function add_inner_meta_boxes($post)
 		
-		public function enqueue_autocomplete_scripts() {
-			wp_enqueue_style( 'evidence-hub-autocomplete', plugins_url( '../css/admin.css' , __FILE__ ) );
-			wp_enqueue_script( 'evidence-hub-autocomplete', plugins_url( '../js/admin.js' , __FILE__ ), array( 'jquery', 'post', 'jquery-ui-autocomplete', 'pronamic_google_maps_admin' ), '', true );
-			global $typenow;
-  			if ($typenow=='evidence') {
-	  			wp_enqueue_script( 'pronamic_google_maps_site' );
-			} 
-			 // we could just do wp_enqueue_script('post'); instead to load all the scripts related to add new post page.
-		}
+		
 		
 		public function ajax_evidence_hub_location_callback() {
 			global $wpdb;
@@ -293,9 +350,10 @@ if(!class_exists('Evidence_Template'))
 					echo json_encode( (object)array( 'notamatch' => 1 ) );
 					die();
 				} else {
-					$mapcode = WP_Evidence_Hub::get_pronamic_google_map($location_id);		
+					$mapcode = Evidence_Hub::get_pronamic_google_map($location_id);		
 					echo json_encode( (object)array( 'valid' => 1,
-													 'map' => $mapcode));
+													 'map' => $mapcode,
+													 'country' 		=> ($loc = wp_get_object_terms($location_id, 'evidence_hub_country')) ? $loc[0]->slug : NULL,));
 					die();
 				}
 			} 

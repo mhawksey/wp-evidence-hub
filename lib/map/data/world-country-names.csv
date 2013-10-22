@@ -1,0 +1,254 @@
+id;name;slug
+-1;Northern Cyprus;
+-2;Kosovo;
+-3;Somaliland;
+-99;n/a;
+4;Afghanistan;af
+248;Aland Islands !Åland Islands;ax
+8;Albania;al
+12;Algeria;dz
+16;American Samoa;as
+20;Andorra;ad
+24;Angola;ao
+660;Anguilla;ai
+10;Antarctica;aq
+28;Antigua and Barbuda;ag
+32;Argentina;ar
+51;Armenia;am
+533;Aruba;aw
+36;Australia;au
+40;Austria;at
+31;Azerbaijan;az
+44;Bahamas;bs
+48;Bahrain;bh
+50;Bangladesh;bd
+52;Barbados;bb
+112;Belarus;by
+56;Belgium;be
+84;Belize;bz
+204;Benin;bj
+60;Bermuda;bm
+64;Bhutan;bt
+68;Bolivia, Plurinational State of;bo
+535;Bonaire, Sint Eustatius and Saba;bq
+70;Bosnia and Herzegovina;ba
+72;Botswana;bw
+74;Bouvet Island;bv
+76;Brazil;br
+86;British Indian Ocean Territory;io
+96;Brunei Darussalam;bn
+100;Bulgaria;bg
+854;Burkina Faso;bf
+108;Burundi;bi
+116;Cambodia;kh
+120;Cameroon;cm
+124;Canada;ca
+132;Cape Verde;cv
+136;Cayman Islands;ky
+140;Central African Republic;cf
+148;Chad;td
+152;Chile;cl
+156;China;cn
+162;Christmas Island;cx
+166;Cocos (Keeling) Islands;cc
+170;Colombia;co
+174;Comoros;km
+178;Congo;cg
+180;Congo, the Democratic Republic of the;cd
+184;Cook Islands;ck
+188;Costa Rica;cr
+384;Cote d'Ivoire !Côte d'Ivoire;ci
+191;Croatia;hr
+192;Cuba;cu
+531;Curacao !Curaçao;cw
+196;Cyprus;cy
+203;Czech Republic;cz
+208;Denmark;dk
+262;Djibouti;dj
+212;Dominica;dm
+214;Dominican Republic;do
+218;Ecuador;ec
+818;Egypt;eg
+222;El Salvador;sv
+226;Equatorial Guinea;gq
+232;Eritrea;er
+233;Estonia;ee
+231;Ethiopia;et
+238;Falkland Islands (Malvinas);fk
+234;Faroe Islands;fo
+242;Fiji;fj
+246;Finland;fi
+250;France;fr
+254;French Guiana;gf
+258;French Polynesia;pf
+260;French Southern Territories;tf
+266;Gabon;ga
+270;Gambia;gm
+268;Georgia;ge
+276;Germany;de
+288;Ghana;gh
+292;Gibraltar;gi
+300;Greece;gr
+304;Greenland;gl
+308;Grenada;gd
+312;Guadeloupe;gp
+316;Guam;gu
+320;Guatemala;gt
+831;Guernsey;gg
+324;Guinea;gn
+624;Guinea-Bissau;gw
+328;Guyana;gy
+332;Haiti;ht
+334;Heard Island and McDonald Islands;hm
+336;Holy See (Vatican City State);va
+340;Honduras;hn
+344;Hong Kong;hk
+348;Hungary;hu
+352;Iceland;is
+356;India;in
+360;Indonesia;id
+364;Iran, Islamic Republic of;ir
+368;Iraq;iq
+372;Ireland;ie
+833;Isle of Man;im
+376;Israel;il
+380;Italy;it
+388;Jamaica;jm
+392;Japan;jp
+832;Jersey;je
+400;Jordan;jo
+398;Kazakhstan;kz
+404;Kenya;ke
+296;Kiribati;ki
+408;Korea, Democratic People's Republic of;kp
+410;Korea, Republic of;kr
+414;Kuwait;kw
+417;Kyrgyzstan;kg
+418;Lao People's Democratic Republic;la
+428;Latvia;lv
+422;Lebanon;lb
+426;Lesotho;ls
+430;Liberia;lr
+434;Libya;ly
+438;Liechtenstein;li
+440;Lithuania;lt
+442;Luxembourg;lu
+446;Macao;mo
+807;Macedonia, the former Yugoslav Republic of;mk
+450;Madagascar;mg
+454;Malawi;mw
+458;Malaysia;my
+462;Maldives;mv
+466;Mali;ml
+470;Malta;mt
+584;Marshall Islands;mh
+474;Martinique;mq
+478;Mauritania;mr
+480;Mauritius;mu
+175;Mayotte;yt
+484;Mexico;mx
+583;Micronesia, Federated States of;fm
+498;Moldova, Republic of;md
+492;Monaco;mc
+496;Mongolia;mn
+499;Montenegro;me
+500;Montserrat;ms
+504;Morocco;ma
+508;Mozambique;mz
+104;Myanmar;mm
+516;Namibia;na
+520;Nauru;nr
+524;Nepal;np
+528;Netherlands;nl
+540;New Caledonia;nc
+554;New Zealand;nz
+558;Nicaragua;ni
+562;Niger;ne
+566;Nigeria;ng
+570;Niue;nu
+574;Norfolk Island;nf
+580;Northern Mariana Islands;mp
+578;Norway;no
+512;Oman;om
+586;Pakistan;pk
+585;Palau;pw
+275;Palestine, State of;ps
+591;Panama;pa
+598;Papua New Guinea;pg
+600;Paraguay;py
+604;Peru;pe
+608;Philippines;ph
+612;Pitcairn;pn
+616;Poland;pl
+620;Portugal;pt
+630;Puerto Rico;pr
+634;Qatar;qa
+638;Reunion !Réunion;re
+642;Romania;ro
+643;Russian Federation;ru
+646;Rwanda;rw
+652;Saint Barthelemy !Saint Barthélemy;bl
+654;Saint Helena, Ascension and Tristan da Cunha;sh
+659;Saint Kitts and Nevis;kn
+662;Saint Lucia;lc
+663;Saint Martin (French part);mf
+666;Saint Pierre and Miquelon;pm
+670;Saint Vincent and the Grenadines;vc
+882;Samoa;ws
+674;San Marino;sm
+678;Sao Tome and Principe;st
+682;Saudi Arabia;sa
+686;Senegal;sn
+688;Serbia;rs
+690;Seychelles;sc
+694;Sierra Leone;sl
+702;Singapore;sg
+534;Sint Maarten (Dutch part);sx
+703;Slovakia;sk
+705;Slovenia;si
+90;Solomon Islands;sb
+706;Somalia;so
+710;South Africa;za
+239;South Georgia and the South Sandwich Islands;gs
+728;South Sudan;ss
+724;Spain;es
+144;Sri Lanka;lk
+729;Sudan;sd
+740;Suriname;sr
+744;Svalbard and Jan Mayen;sj
+748;Swaziland;sz
+752;Sweden;se
+756;Switzerland;ch
+760;Syrian Arab Republic;sy
+158;Taiwan, Province of China;tw
+762;Tajikistan;tj
+834;Tanzania, United Republic of;tz
+764;Thailand;th
+626;Timor-Leste;tl
+768;Togo;tg
+772;Tokelau;tk
+776;Tonga;to
+780;Trinidad and Tobago;tt
+788;Tunisia;tn
+792;Turkey;tr
+795;Turkmenistan;tm
+796;Turks and Caicos Islands;tc
+798;Tuvalu;tv
+800;Uganda;ug
+804;Ukraine;ua
+784;United Arab Emirates;ae
+826;United Kingdom;gb
+840;United States;us
+581;United States Minor Outlying Islands;um
+858;Uruguay;uy
+860;Uzbekistan;uz
+548;Vanuatu;vu
+862;Venezuela, Bolivarian Republic of;ve
+704;Viet Nam;vn
+92;Virgin Islands, British;vg
+850;Virgin Islands, U.S.;vi
+876;Wallis and Futuna;wf
+732;Western Sahara;eh
+887;Yemen;ye
+894;Zambia;zm
+716;Zimbabwe;zw

@@ -1,7 +1,9 @@
 <?php
-if(!class_exists('WP_Evidence_Hub_Settings'))
+
+if(!class_exists('Evidence_Hub_Settings'))
 {
-	class WP_Evidence_Hub_Settings
+
+	class Evidence_Hub_Settings
 	{
 		/**
 		 * Construct the plugin object
@@ -24,7 +26,7 @@ if(!class_exists('WP_Evidence_Hub_Settings'))
 				"Evidence Hub",
 				"Evidence Hub",
 				'edit_posts',
-				'wp_evidence-hub',
+				'evidence_hub',
 				array(&$this, 'plugin_settings_page'),
 				EVIDENCE_HUB_URL.'/images/icons/hub.png',
 				'29'
@@ -45,7 +47,7 @@ if(!class_exists('WP_Evidence_Hub_Settings'))
         	}
 	
         	// Render the settings template
-        	include(sprintf("%s/markup/overview.php", dirname(__FILE__)));
+        	include(sprintf("%s/overview.php", dirname(__FILE__)));
         } // END public function plugin_settings_page()
-    } // END class WP_Evidence_Hub_Settings
-} // END if(!class_exists('WP_Evidence_Hub_Settings'))
+    } // END class Evidence_Hub_Settings
+} // END if(!class_exists('Evidence_Hub_Settings'))

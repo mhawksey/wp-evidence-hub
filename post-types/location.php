@@ -20,8 +20,10 @@ if(!class_exists('Location_Template'))
     		// register actions
     		add_action('init', array(&$this, 'init'));
     		add_action('admin_init', array(&$this, 'admin_init'));
-			//add_action('manage_edit-'.self::POST_TYPE.'_columns', array(&$this, 'columns'));
-			//add_action('manage_'.self::POST_TYPE.'_posts_custom_column', array(&$this, 'column'),10 ,2);
+			add_action('manage_edit-'.self::POST_TYPE.'_columns', array(&$this, 'columns'));
+			add_action('manage_'.self::POST_TYPE.'_posts_custom_column', array(&$this, 'column'),10 ,2);
+			
+			Evidence_Hub::$post_types[] = self::POST_TYPE;
 			
     	} // END public function __construct()
 
@@ -39,7 +41,8 @@ if(!class_exists('Location_Template'))
 			$columns = array(
 				'cb' => '<input type="checkbox" />',
 				'title' => __( self::SINGULAR ),
-				'evidence_hub_rag' => __( 'Status' ),
+				'evidence_hub_country' => __( 'Country' ),
+				'author' => __( 'Author' ),
 				'date' => __( 'Date' )
 			);
 
@@ -48,13 +51,13 @@ if(!class_exists('Location_Template'))
 		public function column($column, $post_id) {
 			global $post;
 			switch (str_replace('evidence_hub_', '', $column)) {
-			case 'rag':
-				$rag = get_post_meta( $post_id, $column, true );
-				if ( empty( $rag ) )
-				echo __( 'Empty' );
-				else
-					printf( __( '%s' ), ucwords($rag) );
-				break;
+				case 'country':
+					$location = wp_get_object_terms( $post_id, $column);
+					if ( empty( $location ) )
+						echo __( 'Empty' );
+					else
+						printf( __( '%s' ), $location[0]->name  );
+					break;
 			default :
 				break;
 			}
@@ -85,9 +88,9 @@ if(!class_exists('Location_Template'))
 						'not_found_in_trash' => __(sprintf('No found in Trash%s', self::PLURAL)),
 					),
     				'public' => true,
-    				'description' => __("A hypothesis"),
+    				'description' => __("A location"),
     				'supports' => array(
-    					'title', 'editor', 'excerpt', 
+    					'title', 'editor', 'excerpt', 'author', 
     				),
 					'has_archive' => true,
 					'rewrite' => array(
@@ -98,6 +101,24 @@ if(!class_exists('Location_Template'))
 					'menu_icon' => EVIDENCE_HUB_URL.'/images/icons/location.png',
     			)
     		);
+		
+			$args = Evidence_Hub::get_taxonomy_args("Country", "Countries");
+		
+			register_taxonomy( 'evidence_hub_country', array(self::POST_TYPE, 'evidence'), $args );
+			
+			$countries = get_terms( 'evidence_hub_country', array( 'hide_empty' => false ) );
+			
+			// if no terms then lets add our terms
+			if( empty( $countries ) ){
+				$countries = $this->set_countries();
+				foreach( $countries as $country_code => $country_name ){
+					if( !term_exists( $country_name, 'evidence_hub_country' ) ){
+						wp_insert_term( $country_name, 'evidence_hub_country', array( 'slug' => $country_code ) );
+					}
+				}
+			}
+			
+			
     	}
 	
     	/**
@@ -118,7 +139,11 @@ if(!class_exists('Location_Template'))
     			{
     				// Update the post's meta field
 					$field_name = "evidence_hub_$name";
-    				update_post_meta($post_id, $field_name, $_POST[$field_name]);
+					if ($option['save_as'] == 'term'){
+						wp_set_object_terms( $post_id, $_POST[$field_name], $field_name);
+					} else {
+    					update_post_meta($post_id, $field_name, $_POST[$field_name]);
+					}
     			}
     		}
     		else
@@ -132,17 +157,17 @@ if(!class_exists('Location_Template'))
     	 */
     	public function admin_init()
     	{			
-			/*$this->options = array_merge($this->options, array(
-				'rag' => array(
+
+			$this->options = array_merge($this->options, array(
+				'country' => array(
 					'type' => 'select',
-					'label' => "RAG",
-					'options' => array (
-								'red' => 'Red',
-								'amber' => 'Amber',
-								'green' => 'Green'),
+					'save_as' => 'term',
+					'position' => 'side',
+					'label' => "Country",
+					'options' => get_terms('evidence_hub_country', 'hide_empty=0'),
 					),
 				));
-				*/
+				
 				
 
 			// Add metaboxes
@@ -155,25 +180,51 @@ if(!class_exists('Location_Template'))
     	 */
     	public function add_meta_boxes()
     	{
-    		// Add this metabox to every selected post
+// Add this metabox to every selected post
     		add_meta_box( 
-    			sprintf('wp_evidence_hub_%s_section', self::POST_TYPE),
+    			sprintf('wp_evidence_hub_%s_side_section', self::POST_TYPE),
     			sprintf('%s Information', ucwords(str_replace("_", " ", self::POST_TYPE))),
-    			array(&$this, 'add_inner_meta_boxes'),
+    			array(&$this, 'add_inner_meta_boxes_side'),
     			self::POST_TYPE,
 				'side'
-    	    );					
+    	    );	
+			remove_meta_box('tagsdiv-evidence_hub_country',self::POST_TYPE,'side');
+			
+    					
     	} // END public function add_meta_boxes()
 
+		 /**
+		 * called off of the add meta box
+		 */		
+		public function add_inner_meta_boxes_side($post)
+		{		
+			$sub_options = Evidence_Hub::filterOptions($this->options, 'position', 'side');
+			include(sprintf("%s/custom_post_metaboxes.php", dirname(__FILE__)));			
+		} // END public function add_inner_meta_boxes($post)
+		
 		/**
 		 * called off of the add meta box
 		 */		
 		public function add_inner_meta_boxes($post)
 		{		
 			// Render the job order metabox
-			
-			include(sprintf("%s/custom_post_side_metabox.php", dirname(__FILE__)));			
+			$sub_options = Evidence_Hub::filterOptions($this->options, 'position', 'bottom');
+			include(sprintf("%s/custom_post_metaboxes.php", dirname(__FILE__)));			
 		} // END public function add_inner_meta_boxes($post)
+		
+		public function set_countries(){
+			$jsonIterator = new RecursiveIteratorIterator(
+					 new RecursiveArrayIterator(json_decode(file_get_contents(EVIDENCE_HUB_PATH."/lib/countries.json"), TRUE)),
+					 RecursiveIteratorIterator::SELF_FIRST);
+			$countries = array();
+			foreach ($jsonIterator as $key => $val) {
+				if(!is_array($val)) {
+					$countries[$key] = $val;
+				} 
+			}
+			return $countries;
+		}
+		
 
 	} // END class Post_Type_Template
 } // END if(!class_exists('Post_Type_Template'))

@@ -8,7 +8,28 @@
 	overflow-x: hidden;
 }
 
-.cit-element input[type="text"] {
-	width:98%;	
+#evidence_hub_options #evidence_hub_country {
+	width:98%;
 }
+
+
+.eh_edit_location{
+	text-align:right;	
+}
+.eh_input {
+	display: table-row; 
+}
+.eh_input label { 
+	white-space: nowrap; display: table-cell; 
+}
+.eh_input span { 
+	width: 100%; display: table-cell; 
+}
+.eh_input input { 
+	width: 100%; display: block; 
+}
+.eh_pol{
+	font-weight:bold;
+}
+
 

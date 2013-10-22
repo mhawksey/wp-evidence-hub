@@ -22,6 +22,10 @@ if(!class_exists('Hypothesis_Template'))
     		add_action('admin_init', array(&$this, 'admin_init'));
 			add_action('manage_edit-'.self::POST_TYPE.'_columns', array(&$this, 'columns'));
 			add_action('manage_'.self::POST_TYPE.'_posts_custom_column', array(&$this, 'column'),10 ,2);
+			add_filter('post_type_link', array(&$this, 'custom_post_type_link'), 1, 3);
+		
+			
+			Evidence_Hub::$post_types[] = self::POST_TYPE;
 			
     	} // END public function __construct()
 
@@ -32,9 +36,19 @@ if(!class_exists('Hypothesis_Template'))
     	{
     		// Initialize Post Type
     		$this->create_post_type();
-    		add_action('save_post', array(&$this, 'save_post'));
+    		add_action('save_post', array(&$this, 'save_post')); 
+			
     	} // END public function init()
 		
+		public function custom_post_type_link($post_link, $post = 0, $leavename = false) {	
+			
+				
+			if ($post->post_type == 'hypothesis') {
+				return str_replace('%post_id%', $post->ID, $post_link);
+			} else {
+				return $post_link;
+			}
+		}
 		public function columns($columns) {
 			$columns = array(
 				'cb' => '<input type="checkbox" />',
@@ -49,11 +63,11 @@ if(!class_exists('Hypothesis_Template'))
 			global $post;
 			switch (str_replace('evidence_hub_', '', $column)) {
 			case 'rag':
-				$rag = get_post_meta( $post_id, $column, true );
+				$rag = wp_get_object_terms( $post_id, $column );
 				if ( empty( $rag ) )
 				echo __( 'Empty' );
 				else
-					printf( __( '%s' ), ucwords($rag) );
+					printf( __( '%s' ),$rag[0]->name );
 				break;
 			default :
 				break;
@@ -87,17 +101,22 @@ if(!class_exists('Hypothesis_Template'))
     				'public' => true,
     				'description' => __("A hypothesis"),
     				'supports' => array(
-    					'title', 'editor', 'excerpt', 
+    					'title', 'editor', 'excerpt', 'author',
     				),
 					'has_archive' => self::ARCHIVE_SLUG,
 					'rewrite' => array(
-						'slug' => self::ARCHIVE_SLUG,
+						'slug' => self::ARCHIVE_SLUG.'/%post_id%',
 						'with_front' => false,
 					),
 					'menu_position' => 30,
 					'menu_icon' => EVIDENCE_HUB_URL.'/images/icons/hyp.png',
     			)
     		);
+
+			
+			$args = Evidence_Hub::get_taxonomy_args("RAG Status","RAG Status");
+		
+			register_taxonomy( 'evidence_hub_rag', self::POST_TYPE, $args );
     	}
 	
     	/**
@@ -118,7 +137,11 @@ if(!class_exists('Hypothesis_Template'))
     			{
     				// Update the post's meta field
 					$field_name = "evidence_hub_$name";
-    				update_post_meta($post_id, $field_name, $_POST[$field_name]);
+					if ($option['save_as'] == 'term'){
+						wp_set_object_terms( $post_id, $_POST[$field_name], $field_name);
+					} else {
+    					update_post_meta($post_id, $field_name, $_POST[$field_name]);
+					}
     			}
     		}
     		else
@@ -135,12 +158,10 @@ if(!class_exists('Hypothesis_Template'))
 			$this->options = array_merge($this->options, array(
 				'rag' => array(
 					'type' => 'select',
+					'save_as' => 'term',
 					'position' => 'side',
 					'label' => "RAG",
-					'options' => array (
-								'red' => 'Red',
-								'amber' => 'Amber',
-								'green' => 'Green'),
+					'options' => get_terms('evidence_hub_rag', 'hide_empty=0&orderby=id'),
 					),
 				));
 			// Add metaboxes
@@ -159,7 +180,8 @@ if(!class_exists('Hypothesis_Template'))
     			array(&$this, 'add_inner_meta_boxes_side'),
     			self::POST_TYPE,
 				'side'
-    	    );					
+    	    );	
+			remove_meta_box('tagsdiv-evidence_hub_rag',self::POST_TYPE,'side');				
     	} // END public function add_meta_boxes()
 
 		 /**
@@ -167,7 +189,7 @@ if(!class_exists('Hypothesis_Template'))
 		 */		
 		public function add_inner_meta_boxes_side($post)
 		{		
-			$sub_options = WP_Evidence_Hub::filterOptions($this->options, 'side');
+			$sub_options = Evidence_Hub::filterOptions($this->options, 'position', 'side');
 			include(sprintf("%s/custom_post_metaboxes.php", dirname(__FILE__)));			
 		} // END public function add_inner_meta_boxes($post)
 		
@@ -177,7 +199,7 @@ if(!class_exists('Hypothesis_Template'))
 		public function add_inner_meta_boxes($post)
 		{		
 			// Render the job order metabox
-			$sub_options = WP_Evidence_Hub::filterOptions($this->options, 'bottom');
+			$sub_options = Evidence_Hub::filterOptions($this->options, 'position', 'bottom');
 			include(sprintf("%s/custom_post_metaboxes.php", dirname(__FILE__)));			
 		} // END public function add_inner_meta_boxes($post)
 
