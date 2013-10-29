@@ -43,19 +43,30 @@ var path = sankey.link();
       .layout(32);
  
 // add in the links
-  var link = svg.append("g").selectAll(".link")
-      .data(graph.links)
-    .enter().append("path")
-      .attr("class", "link")
-      .attr("d", path)
-      .style("stroke-width", function(d) { return Math.max(1, d.dy); })
-      .sort(function(a, b) { return b.dy - a.dy; });
- 
-// add the link titles
+  var link = svg.append("g").selectAll(".linkpath")
+	  .data(graph.links)
+	 .enter()
+	 .append("svg:a")
+	  .attr("xlink:href", function(d) { 
+						var ev = (d.source.type == 'hypothesis') ? 'evidence' : '';
+						return d.source.url+ev+'/'+d.target.type+'/'+d.target.id; })
+	  .attr("class", "linkpath")
+	  .sort(function(a, b) { return b.dy - a.dy; });
+			  
+			  // add the link titles
   link.append("title")
         .text(function(d) {
       	return d.source.name + " → " + 
                 d.target.name + "\n" + format(d.value); });
+				
+							
+	link.append("path")
+	  .attr("class", "link")
+	  .attr("d", path)
+	  .style("stroke-width", function(d) { return Math.max(1, d.dy); });
+			  
+ 
+
  
 // add in the nodes
   var node = svg.append("g").selectAll(".node")
@@ -78,7 +89,7 @@ var path = sankey.link();
       .attr("height", function(d) { return d.dy; })
       .attr("width", sankey.nodeWidth())
       .style("fill", function(d) { 
-		  return d.color = color(d.name.replace(/ .*/, "")); })
+		  return d.color = d.fill || color(d.name.replace(/ .*/, "")); })
       .style("stroke", function(d) { 
 		  return d3.rgb(d.color).darker(2); })
     .append("title")

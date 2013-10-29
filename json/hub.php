@@ -35,11 +35,12 @@ class JSON_API_Hub_Controller {
 																			'key' => 'evidence_hub_hypothesis_id',
 																			'value' => $tree['children'][$key]['id'],
 																			'compare' => '='
-																		),
+																		)),
+																	 'tax_query' => array(
 																		array(
-																			'key' => 'evidence_hub_polarity',
-																			'value' => '1',
-																			'compare' => '='
+																			'taxonomy' => 'evidence_hub_polarity',
+																			'field' => 'slug',
+																			'terms' => 'pos'
 																		)
 																	)), 'Positive +ve');
 																	
@@ -49,12 +50,13 @@ class JSON_API_Hub_Controller {
 																'key' => 'evidence_hub_hypothesis_id',
 																'value' => $tree['children'][$key]['id'],
 																'compare' => '='
-															),
-															array(
-																'key' => 'evidence_hub_polarity',
-																'value' => '-1',
-																'compare' => '='
-															)
+															)),
+														'tax_query' => array(
+																		array(
+																			'taxonomy' => 'evidence_hub_polarity',
+																			'field' => 'slug',
+																			'terms' => 'neg'
+																		)
 														)), 'Negative -ve', array('Polarity' => 'evidence_hub_polarity'));
 		}
 

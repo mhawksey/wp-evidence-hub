@@ -8,8 +8,8 @@ class Evidence_Hub_Shortcode_Evidence_Meta extends Evidence_Hub_Shortcode {
 		'post_ids' => false,
 		'title' => false,
 		'location' => 'header',
-		'header_terms' => 'polarity,sector,country',
-		'footer_terms' => 'citation',
+		'header_terms' => 'polarity,sector,country,hypothesis',
+		'footer_terms' => 'resource_link,citation',
 		'no_evidence_message' => "There is no meta data for this evidence",
 		'title_tag' => 'h4',
 	);
@@ -48,7 +48,7 @@ class Evidence_Hub_Shortcode_Evidence_Meta extends Evidence_Hub_Shortcode {
 		$errors = array();
 
 		if (empty($post_ids)) $errors[] = "No posts ID provided";
-		$out = array();
+		
 		foreach ($post_ids as $post_id) {
 			$post = Evidence_Hub::add_meta(get_post($post_id));
 			if (!$post) {
@@ -56,31 +56,37 @@ class Evidence_Hub_Shortcode_Evidence_Meta extends Evidence_Hub_Shortcode {
 			} else if (!in_array(get_post_type($post), self::$post_types_with_evidence)) {
 				$errors[] = "<a href='".get_permalink($post->ID)."'>$post->post_title</a> is not the correct type of post";
 			} else if ($location=="header") { 
-				foreach (explode(',', $header_terms) as $type) {
-					$type = trim($type);
-					$slug = $type."_slug";
-					if (!is_wp_error($slug_url = get_term_link($post->$slug,"evidence_hub_".$type)))
-						$out[] = __(sprintf('<span class="meta_label">%s</span>: <a href="%s">%s</a>', ucwords($type),$slug_url , $post->$type));
-					else if ($post->$type)
-						$out[] = __(sprintf('<span class="meta_label">%s</span>: %s', ucwords($type),$post->$type)); 
-				}?>
-	  <?php } else if ($location=="footer") { 
-				foreach (explode(',', $footer_terms) as $type) {
-					$type = trim($type);
-					$slug = $type."_slug";
-					if (!is_wp_error($slug_url = get_term_link($post->$slug,"evidence_hub_".$type)))
-						$out[] = __(sprintf('<span class="meta_label">%s</span>: <a href="%s">%s</a>', ucwords($type),$slug_url , $post->$type));
-					else if ($post->$type)
-						$out[] = __(sprintf('<span class="meta_label">%s</span>: %s', ucwords($type),$post->$type));
-				}
+				$this->meta_bar($post, $header_terms);
+			} else if ($location=="footer") { 
+	  			$this->meta_bar($post, $footer_terms);
 			}
-			if(!empty($out)){ ?>
-				<div id="evidence-meta"><?php echo implode(" | ", $out); ?></div>
-      <?php }
 		}
 		
 		if (count($errors)) return "[Shortcode errors (".$this->shortcode."): ".implode(', ', $errors)."]";
 		
 		return ob_get_clean();
+	}
+	
+	function meta_bar($post, $options){
+		$out = array();
+		foreach (explode(',', $options) as $type) {
+			$type = trim($type);
+			$slug = $type."_slug";
+			//print_r("<!-- ".json_encode($post)." -->");
+			print_r("<!-- ".json_encode($fields)." -->");
+			if (!is_wp_error($slug_url = get_term_link($post->$slug,"evidence_hub_".$type)) || ($type=="citation" && $post->$type)){
+				if ($type=="citation"){
+					$slug_url = $post->$type;
+				}
+				$out[] = __(sprintf('<span class="meta_label">%s</span>: <a href="%s">%s</a>', ucwords(str_replace("_", " ",$type)),$slug_url , $post->$type));
+			} else if ($post->$type) {
+				$out[] = __(sprintf('<span class="meta_label">%s</span>: %s', ucwords(str_replace("_", " ",$type)),$post->$type));
+			} else if ($type == 'hypothesis') {
+				$out[] =  __(sprintf('<span class="meta_label">%s</span>: <a href="%s">%s</a>', ucwords($type),get_permalink($post->evidence_hub_hypothesis_id) , get_the_title($post->evidence_hub_hypothesis_id)));
+			}
+		}
+		if(!empty($out)){ 
+			echo '<div id="evidence-meta">'.implode(" | ", $out).'</div>';
+       }	
 	}
 }

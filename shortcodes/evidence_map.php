@@ -42,6 +42,7 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
         <script type="application/javascript">
 				/* <![CDATA[ */
 		var MyAjax = {
+			pluginurl: "<?php echo EVIDENCE_HUB_URL; ?>",
 			ajaxurl: "<?php echo admin_url();?>admin-ajax.php"
 		};
 		/* ]]> */
@@ -171,42 +172,14 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
 		.link:hover {
 		  stroke-opacity: .5;
 		}
+
 		 
 		</style>
-
-
-        <div id="control">
-            <div id="text">
-                <a href="https://twitter.com/share"
-                class="twitter-share-button"
-                data-url="http://labs.wnstnsmth.net/worldoil"
-                data-text="Global Oil Production & Consumption |"
-                data-via="wnstns"
-                data-count="horizontal"
-                data-size="medium"
-                data-dnt="true">Tweet</a>
-                <p>
-                    Instead of writing yet another paper, I handed in this visualization for the <a href="http://www.leru.org/index.php/public/activities/other-activities/bright/">LERU Bright 2013 Student Conference</a>
-                    which will be held in August in Freiburg, Germany. This year's conference topic is "Energy Transition in the 21st Century" and I am part of the "Dependencies" working group.
-                </p>
-                <p>
-                    This <a href="http://www.monde-diplomatique.de/pm/.atlas3">"Atlas der Globalisierung"</a>-inspired visualization, based on <a href="http://www.bp.com/en/global/corporate/about-bp/statistical-review-of-world-energy-2013.html">very recent data by BP</a>, allows the reader to quickly grasp the temporal and spatial differences in oil consumption and production.
-                    On one hand, during certain periods of history, some nations consumed almost as much oil as the rest of the world together. On the other hand, the data of the last ten years show a growing divergence between consumption and production.
-                    After all, I hope this work makes clear that nations are heavily interdependent when it comes to oil - the main driver of our global economy.
-                </p>
-                <p>
-                    Crafted with <a href="http://d3js.org">D3.js</a>.
-                </p>
-                <p>
-                    If you are interested in coming projects, follow me on <a href="http://twitter.com/wnstns">Twitter</a>.
-                </p>
-            </div>
-            <br>
-        </div>
-        <div id="evidence-map">
+		
+          <div id="evidence-map">
                 <div id="loading">
-            Loading...
-        </div>
+                    Loading...
+                </div>
 
             <header>
                 <h1>OER Research Hub - Evidence Map</h1>
@@ -229,8 +202,8 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
                     Geodata: <a href="https://github.com/mbostock/topojson/blob/master/examples/world-110m.json">mbostock/topojson</a>            
                </small>    
             </div>
-
-        </div>
+		  </div>
+        
         <script type="text/javascript">
             window.addEvent('domready', function() {
                 init();
@@ -257,10 +230,12 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
 		
 		function onEnterEvidenceMap(){
 			jQuery('#impressum').show();
+			jQuery('#evidence-map').css('height','100%');
 			jQuery('#ui').show();
 		}
 		function onExitEvidenceMap(){
 			jQuery('#impressum').hide();
+			jQuery('#evidence-map').css('height','');
 			jQuery('#ui').hide();
 		}
 </script>

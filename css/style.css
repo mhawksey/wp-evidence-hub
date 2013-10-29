@@ -43,5 +43,20 @@ font-weight:normal
 .evidence-box ul li ul {
 margin-top:0px;	
 }
+#evidence-meta {
+font-size:90%;	
+text-align:left;
+}
+#evidence-meta a {
+	-ms-word-break: break-all;
+     word-break: break-all;
+
+     /* Non standard for webkit */
+     word-break: break-word;
+
+-webkit-hyphens: auto;
+   -moz-hyphens: auto;
+        hyphens: auto;
+}
 
 

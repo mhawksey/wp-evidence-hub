@@ -88,7 +88,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 				$pol_terms = get_terms('evidence_hub_polarity', 'hide_empty=0&orderby=id');
 				$sec_terms = get_terms('evidence_hub_sector', 'hide_empty=0&orderby=id');
 				foreach ( $pol_terms as $term ) {
-					$nodes[] = array("name" => $term->name, "url" => $base_link."evidence/polarity/".$term->slug, "id" => $term->slug, "type" => "polarity");
+					$nodes[] = array("name" => $term->name, "url" => $base_link."evidence/polarity/".$term->slug, "id" => $term->slug, "type" => "polarity", "fill" => json_decode($term->description)->fill);
 					$totals[$term->name] = array("total" => 0, "slug" => $term->slug, "sector" => array());
 					foreach ($evidence as $ev) {
 						if ($ev->polarity == $term->name)
@@ -99,7 +99,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 				}
 				
 				foreach ( $sec_terms as $term ) {
-					$nodes[] = array("name" => $term->name, "url" => $base_link."evidence/sector/".$term->slug, "id" => $term->slug, "type" => "sector");
+					$nodes[] = array("name" => $term->name, "url" => $base_link."evidence/sector/".$term->slug, "id" => $term->slug, "type" => "sector", "fill" => json_decode($term->description)->fill);
 					foreach($totals as $key => $val){
 						$totals[$key]["sector"][$term->name] = array("total" => 0, "ids" => array());
 						foreach ($evidence as $ev) {

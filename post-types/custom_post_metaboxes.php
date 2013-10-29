@@ -14,10 +14,12 @@
 				$user_option_count++;
 				$name = "evidence_hub_$name";
 				$style = "eh_$name";
+				
 				if ($option['save_as'] == 'term'){
 					$value = wp_get_object_terms($post->ID, $name); 
 				} else {
 					$value = get_post_meta( $post->ID, $name, true );
+					
 				}
 			?>
 			
@@ -50,6 +52,41 @@
 							placeholder="dd/mm/yyyy"
 							
 						/>
+                     <?php } else if ($option['type'] == 'project') { ?>
+						<input
+							class="newtag form-input-tip"
+							type="text"
+                            autocomplete="off"
+							name="<?php echo $name; ?>_field"
+							id="<?php echo $name; ?>_field"
+							value="<?php echo get_the_title($value); ?>"
+                            placeholder="Start typing a <?php echo $option['type'];?>"
+						/><?php if ($option['descr']){?>
+                        <span class="description"><?php echo $option['descr'] ?></span>
+                        <? } ?>
+                        <input
+							type="hidden"
+							name="<?php echo $name; ?>"
+							id="<?php echo $name; ?>"
+							value="<?php echo $value; ?>"
+						/>
+                        <div id="menu-container" style="position:absolute; width: 256px;"></div>
+							<?php 
+								$latLong = array(0,0);
+								$zoom = 13;
+								if ($value){
+									$latLong[0] = get_post_meta($value, '_pronamic_google_maps_latitude', true );
+									$latLong[1] = get_post_meta($value, '_pronamic_google_maps_longitude', true );
+									$zoom = get_post_meta($value, '_pronamic_google_maps_zoom', true );
+									/*$maphtml = '<div id="MapHolder" style="height:260px"></div><script>var map = L.map("MapHolder").setView([0, 0], 13);
+									L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {attribution: "&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors"}).addTo(map);
+									var marker = L.marker([0, 0]).addTo(map);</script>';*/
+								} 
+								$maphtml = sprintf('<div id="MapHolder" style="height:260px;%s"></div><script>var map = L.map("MapHolder").setView([%s], %s);
+								L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {attribution: "&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors"}).addTo(map);
+								var marker = L.marker([%s]).addTo(map);</script>', ($value) ? '' : 'display:none', implode(",",$latLong), $zoom, implode(",",$latLong));  
+								  
+                            ?>
                     <?php } else if ($option['type'] == 'location') { ?>
 						<input
 							class="newtag form-input-tip"
@@ -59,7 +96,7 @@
 							id="<?php echo $name; ?>_field"
 							value="<?php echo get_the_title($value); ?>"
                             placeholder="Start typing a location"
-						/>
+						/><!-- 
                         <input
 							type="hidden"
 							name="<?php echo $name; ?>"
@@ -67,9 +104,14 @@
 							value="<?php echo $value; ?>"
 						/>
                         <div id="menu-container" style="position:absolute; width: 256px;"></div>
-								<?php if ($value)
-									$maphtml = '<div id="pronamicMapHolder">'.Evidence_Hub::get_pronamic_google_map($value).'</div>';
-                                ?>
+							<?php if ($value){
+									global $post;
+									$originalpost = $post;
+									//$maphtml = '<!-- '.$post->post_type.'--><div id="pronamicMapHolder">'.Evidence_Hub::get_pronamic_google_map($value).'</div><!-- '.$post->post_type.'-->';
+									$post = $originalpost; 
+								  }	
+                            ?>
+                            -->
 					<?php } else if ($option['type'] == 'select') { ?>
 								
 						<select

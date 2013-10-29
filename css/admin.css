@@ -6,6 +6,7 @@
 	height: 200px; 
 	overflow-y: scroll; 
 	overflow-x: hidden;
+     z-index: 9999 !important;
 }
 
 #evidence_hub_options #evidence_hub_country {
@@ -20,7 +21,12 @@
 	display: table-row; 
 }
 .eh_input label { 
-	white-space: nowrap; display: table-cell; 
+	white-space: nowrap; 
+	display: table-cell; 
+
+}
+#wp_evidence_hub_evidence_side_section .eh_input label{
+	vertical-align: baseline;
 }
 .eh_input span { 
 	width: 100%; display: table-cell; 
@@ -30,6 +36,13 @@
 }
 .eh_pol{
 	font-weight:bold;
+}
+#pronamic-google-maps-meta-box tr:nth-child(1), #pronamic-google-maps-meta-box tr:nth-child(3){
+display:none;	
+}
+#pronamic-google-maps-meta-box #pgm-canvas {
+	width: 550px !important;
+	height: 300px !important;
 }
 
 

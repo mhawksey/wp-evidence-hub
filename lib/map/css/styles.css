@@ -205,7 +205,7 @@ svg #map .country {
     fill: rgb(226, 226, 226)
 }
 
-svg #map .country.selected {
+svg #map .country.selected, svg #map .country.active {
     fill: rgb(200, 200, 200);
 }
 svg #map .country-boundaries {
@@ -397,4 +397,3 @@ html.ie8 .navigation {
 	top: -50px;
 	text-align: right;
 }
-

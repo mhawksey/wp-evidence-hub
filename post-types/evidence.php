@@ -22,8 +22,8 @@ if(!class_exists('Evidence_Template'))
     		add_action('admin_init', array(&$this, 'admin_init'));
 			add_action('manage_edit-'.self::POST_TYPE.'_columns', array(&$this, 'columns'));
 			add_action('manage_'.self::POST_TYPE.'_posts_custom_column', array(&$this, 'column'),10 ,2);
-			add_action('wp_ajax_evidence_hub_location_callback', array(&$this, 'ajax_evidence_hub_location_callback') );
-			add_action('wp_ajax_evidence_hub_if_location_exists_by_value', array(&$this, 'ajax_evidence_hub_if_location_exists_by_value') );
+			add_action('wp_ajax_evidence_hub_project_callback', array(&$this, 'ajax_evidence_hub_project_callback') );
+			add_action('wp_ajax_evidence_hub_if_project_exists_by_value', array(&$this, 'ajax_evidence_hub_if_project_exists_by_value') );
 			
 			
 			Evidence_Hub::$post_types[] = self::POST_TYPE;
@@ -238,14 +238,6 @@ if(!class_exists('Evidence_Template'))
 					)
 			 ));
 			 $this->options = array_merge($this->options, array(
-				'location_id' => array(
-					'type' => 'location',
-					'save_as' => 'post_meta',
-					'position' => 'side',
-					'label' => 'Location'
-					)
-			 ));
-			 $this->options = array_merge($this->options, array(
 				'country' => array(
 					'type' => 'select',
 					'save_as' => 'term',
@@ -255,13 +247,23 @@ if(!class_exists('Evidence_Template'))
 					),
 			 ));
 			 $this->options = array_merge($this->options, array(
-				'evidence_citation' => array(
+				'project_id' => array(
+					'type' => 'project',
+					'save_as' => 'post_meta',
+					'position' => 'side',
+					'label' => 'Project/Org',
+					'descr' => 'Optional field to associate evidence to a project',
+					)
+			 ));
+			 $this->options = array_merge($this->options, array(
+				'citation' => array(
 					'type' => 'text',
 					'save_as' => 'post_meta',
 					'position' => 'bottom',
 					'label' => 'Citation'
 					)
 			 ));
+
 			
 			// Add metaboxes
     		add_action('add_meta_boxes', array(&$this, 'add_meta_boxes'));
@@ -275,20 +277,21 @@ if(!class_exists('Evidence_Template'))
     	 */
     	public function add_meta_boxes()
     	{
-    		// Add this metabox to every selected post
+    		// Add this metabox to every selected post	
     		add_meta_box( 
+    			sprintf('wp_evidence_hub_%s_section', self::POST_TYPE),
+    			sprintf('%s Information', ucwords(str_replace("_", " ", self::POST_TYPE))),
+    			array(&$this, 'add_inner_meta_boxes'),
+    			self::POST_TYPE,
+				'normal',
+				'high'
+    	    );
+			add_meta_box( 
     			sprintf('wp_evidence_hub_%s_side_section', self::POST_TYPE),
     			sprintf('%s Information', ucwords(str_replace("_", " ", self::POST_TYPE))),
     			array(&$this, 'add_inner_meta_boxes_side'),
     			self::POST_TYPE,
 				'side'
-    	    );	
-    		add_meta_box( 
-    			sprintf('wp_evidence_hub_%s_section', self::POST_TYPE),
-    			sprintf('%s Citations', ucwords(str_replace("_", " ", self::POST_TYPE))),
-    			array(&$this, 'add_inner_meta_boxes'),
-    			self::POST_TYPE,
-				'normal'
     	    );
 			remove_meta_box('tagsdiv-evidence_hub_country',self::POST_TYPE,'side');
 			remove_meta_box('tagsdiv-evidence_hub_sector',self::POST_TYPE,'side');
@@ -317,22 +320,24 @@ if(!class_exists('Evidence_Template'))
 		
 		
 		
-		public function ajax_evidence_hub_location_callback() {
+		public function ajax_evidence_hub_project_callback() {
 			global $wpdb;
+			
 			// if search term exists
-			if ( $search_term = ( isset( $_POST[ 'evidence_hub_location_search_term' ] ) && ! empty( $_POST[ 'evidence_hub_location_search_term' ] ) ) ? $_POST[ 'evidence_hub_location_search_term' ] : NULL ) {
-				if ( ( $locations = $wpdb->get_results( "SELECT posts.ID, posts.post_title, postmeta.meta_value  FROM $wpdb->posts posts INNER JOIN $wpdb->postmeta postmeta ON postmeta.post_id = posts.ID AND postmeta.meta_key ='_pronamic_google_maps_address' WHERE ( posts.post_title LIKE '%$search_term%' OR postmeta.meta_value LIKE '%$search_term%' AND posts.post_type = 'location' AND post_status = 'publish' ) ORDER BY posts.post_title" ) )
-				&& is_array( $locations ) ) {
+			if ( $search_term = ( isset( $_POST[ 'evidence_hub_project_search_term' ] ) && ! empty( $_POST[ 'evidence_hub_project_search_term' ] ) ) ? $_POST[ 'evidence_hub_project_search_term' ] : NULL ) {
+				if ( ( $projects = $wpdb->get_results( "SELECT posts.ID, posts.post_title, postmeta.meta_value  FROM $wpdb->posts posts INNER JOIN $wpdb->postmeta postmeta ON postmeta.post_id = posts.ID AND postmeta.meta_key ='_pronamic_google_maps_address' WHERE ( (posts.post_title LIKE '%$search_term%' OR postmeta.meta_value LIKE '%$search_term%') AND posts.post_type = 'project' AND post_status = 'publish' ) ORDER BY posts.post_title" ) )
+				&& is_array( $projects ) ) {
 					$results = array();
 					// loop through each user to make sure they are allowed
-					foreach ( $locations  as $location ) {								
+					foreach ( $projects  as $project ) {								
 							$results[] = array(
-								'location_id'	=> $location->ID,
-								'label'			=> $location->post_title,
-								'address'		=> $location->meta_value, 
+								'project_id'	=> $project->ID,
+								'label'			=> $project->post_title,
+								'address'		=> $project->meta_value, 
 								);
 					}
 					// "return" the results
+					//wp_reset_postmeta();
 					echo json_encode( $results );
 				}
 			}
@@ -340,27 +345,29 @@ if(!class_exists('Evidence_Template'))
 		}
 		
 		
-		public function ajax_evidence_hub_if_location_exists_by_value() {
-			if ( $location_id = ( isset( $_POST[ 'autocomplete_eh_location_id' ] ) && ! empty( $_POST[ 'autocomplete_eh_location_id' ] ) ) ? $_POST[ 'autocomplete_eh_location_id' ] : NULL ) {
-				$location_name = $_POST[ 'autocomplete_eh_location_value' ];
+		public function ajax_evidence_hub_if_project_exists_by_value() {
+			if ( $project_id = ( isset( $_POST[ 'autocomplete_eh_project_id' ] ) && ! empty( $_POST[ 'autocomplete_eh_project_id' ] ) ) ? $_POST[ 'autocomplete_eh_project_id' ] : NULL ) {
+				$project_name = $_POST[ 'autocomplete_eh_project_value' ];
 			
-				$actual_location_name = get_the_title($location_id);
+				$actual_project_name = get_the_title($project_id);
 				
-				if($location_name !== $actual_location_name){
+				if($project_name !== $actual_project_name){
 					echo json_encode( (object)array( 'notamatch' => 1 ) );
 					die();
 				} else {
-					$mapcode = Evidence_Hub::get_pronamic_google_map($location_id);		
+					//$mapcode = Evidence_Hub::get_pronamic_google_map($project_id);	
 					echo json_encode( (object)array( 'valid' => 1,
-													 'map' => $mapcode,
-													 'country' 		=> ($loc = wp_get_object_terms($location_id, 'evidence_hub_country')) ? $loc[0]->slug : NULL,));
+													 //'map' => $mapcode,
+													 'country' => ($loc = wp_get_object_terms($project_id, 'evidence_hub_country')) ? $loc[0]->slug : NULL,
+													 'lat' => get_post_meta($project_id, '_pronamic_google_maps_latitude', true ),
+													 'lng' => get_post_meta($project_id, '_pronamic_google_maps_longitude', true ),
+													 'zoom' => get_post_meta($project_id, '_pronamic_google_maps_zoom', true )));
 					die();
 				}
 			} 
 			echo json_encode( (object)array( 'noid' => 1 ) );
 			die();
 		}
-
 		  
 	} // END class Post_Type_Template
 } // END if(!class_exists('Post_Type_Template'))

@@ -113,19 +113,19 @@ window.onload=function(){
 		  .data(bar_data);
 	  bars.selectAll("rect.malebar")
 		.transition()
-		  .attr("width", function(d) { return total(d.barNeg); });
+		  .attr("width", function(d) { return total(d.barPos); });
 	  bars.selectAll("rect.femalebar")
 		.transition()
-		  .attr("x", function(d) { return innerMargin - total(d.barPos) - 2 * labelSpace; }) 
-		  .attr("width", function(d) { return total(d.barPos); });
+		  .attr("x", function(d) { return innerMargin - total(d.barNeg) - 2 * labelSpace; }) 
+		  .attr("width", function(d) { return total(d.barNeg); });
 	
 	  bars.selectAll("text.malebar")
-		  .text(function(d) { return commas(d.barNeg); })
-		.transition()
-		  .attr("x", function(d) { return innerMargin + total(d.barNeg); });
-	  bars.selectAll("text.femalebar")
 		  .text(function(d) { return commas(d.barPos); })
 		.transition()
-		  .attr("x", function(d) { return innerMargin - total(d.barPos) - 2 * labelSpace; });
+		  .attr("x", function(d) { return innerMargin + total(d.barPos); });
+	  bars.selectAll("text.femalebar")
+		  .text(function(d) { return commas(d.barNeg); })
+		.transition()
+		  .attr("x", function(d) { return innerMargin - total(d.barNeg) - 2 * labelSpace; });
 	}
 }

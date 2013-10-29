@@ -10,22 +10,21 @@ Author: Rachel Carden
 Author URI: http://www.rachelcarden.com
 */
 
-var errorDNA = "The location does not exist. <a href='?post_type=location' target='_blank'>Add New Location</a>";
-
+var errorDNA = "The project does not exist. <a href='?post_type=project' target='_blank'>Add New Project if required</a>";
 
 jQuery.noConflict()(function(){
 	jQuery.ui.autocomplete.prototype._resizeMenu = function () {
 	  var ul = this.menu.element;
 	  ul.outerWidth(this.element.outerWidth());
 	}
-	jQuery( 'input#evidence_hub_location_id_field' ).each( function() {
+	jQuery( 'input#evidence_hub_project_id_field' ).each( function() {
 	
-		var $evidence_hub_location_id_field = jQuery( 'input#evidence_hub_location_id_field' );	
+		var $evidence_hub_project_id_field = jQuery( 'input#evidence_hub_project_id_field' );	
 
 		
 		// autocomplete new tags
-		if ( $evidence_hub_location_id_field.size() > 0 ) {
-			$evidence_hub_location_id_field.autocomplete({
+		if ( $evidence_hub_project_id_field.size() > 0 ) {
+			$evidence_hub_project_id_field.autocomplete({
 				delay: 100,
 				minLength: 1,
 				appendTo: '#menu-container',
@@ -37,13 +36,13 @@ jQuery.noConflict()(function(){
 						cache: false,
 						dataType: 'json',
 						data: {
-							action: 'evidence_hub_location_callback',
-							evidence_hub_location_search_term: $request.term,
+							action: 'evidence_hub_project_callback',
+							evidence_hub_project_search_term: $request.term,
 						},
 						success: function( $data ){
 							$response( jQuery.map( $data, function( $item ) {
 								return {
-									location_id: $item.location_id,
+									project_id: $item.project_id,
 									address: $item.address,
 									value: $item.label,
 									label: $item.label,
@@ -64,7 +63,7 @@ jQuery.noConflict()(function(){
 					autocomplete_eh_remove_error_message();
 					
 					// change the saved post author
-					autocomplete_eh_change_location( $ui.item.location_id, $ui.item.label  );
+					autocomplete_eh_change_project( $ui.item.project_id, $ui.item.label  );
 					
 				},
 				response: function( $event, $ui ) {
@@ -85,7 +84,7 @@ jQuery.noConflict()(function(){
 					
 					// get the saved author display name. we'll need it later.
 					if ($ui.item != null)
-						autocomplete_eh_change_location( $ui.item.location_id, $ui.item.label );
+						autocomplete_eh_change_project( $ui.item.project_id, $ui.item.label );
 					else 
 						autocomplete_eh_add_error_message( errorDNA );
 				}
@@ -98,7 +97,7 @@ jQuery.noConflict()(function(){
 });
 
 function autocomplete_eh_stop_loading_spinner() {
-	jQuery( 'input#evidence_hub_location_id_field' ).removeClass( 'ui-autocomplete-loading' );
+	jQuery( 'input#evidence_hub_project_id_field' ).removeClass( 'ui-autocomplete-loading' );
 }
 
 function autocomplete_eh_remove_error_message() {
@@ -109,24 +108,24 @@ function autocomplete_eh_add_error_message( $message ) {
 
 	// remove any existing error message
 	autocomplete_eh_remove_error_message();
-	jQuery( '#pronamicMapHolder' ).empty();
+	//jQuery( '#pronamicMapHolder' ).empty();
 	// add a new error message
 	var $autocomplete_eh_error_message = jQuery( '<div id="autocomplete_eh_error_message">' + $message + '</div>' );
-	jQuery( '#pronamicMapHolder' ).after( $autocomplete_eh_error_message );
+	jQuery( '#evidence_hub_project_id' ).after( $autocomplete_eh_error_message );
 	
 }
 
-function autocomplete_eh_change_location(id, label){
-	var $evidence_hub_location_id_field = jQuery( 'input#evidence_hub_location_id_field' );	
-	var $evidence_hub_location_id = jQuery( 'input#evidence_hub_location_id' );
+function autocomplete_eh_change_project(id, label){
+	var $evidence_hub_project_id_field = jQuery( 'input#evidence_hub_project_id_field' );	
+	var $evidence_hub_project_id = jQuery( 'input#evidence_hub_project_id' );
 	
-	$evidence_hub_location_id_field.val(label);
-	$evidence_hub_location_id.val(id);
+	$evidence_hub_project_id_field.val(label);
+	$evidence_hub_project_id.val(id);
 
 		
-	var $saved_location_id = $evidence_hub_location_id.val();
+	var $saved_project_id = $evidence_hub_project_id.val();
 	
-	var $entered_user_value = $evidence_hub_location_id_field.val();
+	var $entered_user_value = $evidence_hub_project_id_field.val();
 
 	// see if the user exists
 	jQuery.ajax({
@@ -136,24 +135,31 @@ function autocomplete_eh_change_location(id, label){
 		cache: false,
 		dataType: 'json',
 		data: {
-			action: 'evidence_hub_if_location_exists_by_value',
-			autocomplete_eh_location_value: $entered_user_value,
-			autocomplete_eh_location_id: $saved_location_id
+			action: 'evidence_hub_if_project_exists_by_value',
+			autocomplete_eh_project_value: $entered_user_value,
+			autocomplete_eh_project_id: $saved_project_id
 		},
-		success: function( $location ){
+		success: function( $project ){
 			
 			// if the user exists
-			if ( $location.valid ) {
-				jQuery( '#pronamicMapHolder' ).html($location.map);	
-				jQuery( '.pgm' ).pronamicGoogleMaps();
-				jQuery( '.pgmm' ).pronamicGoogleMapsMashup();
+			if ( $project.valid ) {
+				jQuery( '#MapHolder' ).show();
+				map.setView([$project.lat, $project.lng], $project.zoom);
+				marker.setLatLng([$project.lat, $project.lng]).update();	
 				
-				if ($location.country)
-					jQuery( '#evidence_hub_country' ).val($location.country);
+				if ($project.lat)
+					jQuery( '#pgm-lat-field' ).val($project.lat);
+				
+				if ($project.lng)
+					jQuery( '#pgm-lng-field' ).val($project.lng);
+					
+				if ($project.country)
+					jQuery( '#evidence_hub_country' ).val($project.country);
 				else
 					jQuery( '#evidence_hub_country' ).val('');
 				
-			} else if ( $location.notamatch ||  $location.noid) {
+			} else if ( $project.notamatch ||  $project.noid) {
+				jQuery( '#MapHolder' ).hide();
 				autocomplete_eh_add_error_message( errorDNA );
 			} 			
 		}
@@ -164,14 +170,14 @@ function autocomplete_eh_change_location(id, label){
 	jQuery("#pgm-reverse-geocode-button").on('click' ,function() {
 		jQuery("#pronamic-google-maps-meta-box").data('pgm-meta-box').reverseGeocode = function() {
 			var $ = jQuery;
-			var geocoder = new google.maps.Geocoder();
+		    var geocoder = new google.maps.Geocoder();
 			var fields = {};
 			fields.latitude = $("#pgm-lat-field");
 			fields.longitude = $("#pgm-lng-field");
 			fields.address = $("#pgm-address-field");
-			var location =  new google.maps.LatLng(fields.latitude.val(), fields.longitude.val());
+			var project =  new google.maps.LatLng(fields.latitude.val(), fields.longitude.val());
 
-			geocoder.geocode({"latLng": location} , function(results, status) {
+			geocoder.geocode({"latLng": project} , function(results, status) {
 				if(status == google.maps.GeocoderStatus.OK) {
 					if(results[0]) {
 						var address = results[0].formatted_address;
