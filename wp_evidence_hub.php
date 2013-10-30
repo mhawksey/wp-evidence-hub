@@ -122,8 +122,6 @@ if(!class_exists('Evidence_Hub'))
     	public function init()
     	{	
 			
-			add_rewrite_rule("^lab/", "http://sites.hawksey.info/oerhub/wp-content/plugins/wp-evidence-hub/lab/map/", "top");
-			
 			add_rewrite_rule("^country/([^/]+)/evidece/polarity/([^/]+)/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&polarity=$matches[2]&sector=$matches[3]&paged=$matches[4]','top');
 			add_rewrite_rule("^country/([^/]+)/evidence/polarity/([^/]+)/sector/([^/]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&polarity=$matches[2]&sector=$matches[3]','top');
 			
@@ -428,6 +426,7 @@ if(!class_exists('Evidence_Hub'))
 			$posts_termed = array();
 			foreach ($posts as $post_id){
 				$post = array();
+				$post['ID'] = $post_id;
 				foreach (get_post_custom($post_id) as $key => $value) {
 					if (strpos($key, 'evidence_hub') !== 0) continue;
 					$key = substr($key, 13);
@@ -474,6 +473,7 @@ if(!class_exists('Evidence_Hub'))
 			$title = "World";
 			$nodes = array();
 			$links = array();
+			$markers = array();
 			$totals = array();
 			$nodesList = array();
 			
@@ -490,6 +490,7 @@ if(!class_exists('Evidence_Hub'))
 				$title = $term->name;
 			}
 			$posts = Evidence_Hub::add_terms(get_posts($args));
+			
 			$polarities = get_terms('evidence_hub_polarity');
 			$hypotheses = get_posts(array('post_type' => 'hypothesis', // my custom post type
 										   'posts_per_page' => -1,
@@ -498,6 +499,17 @@ if(!class_exists('Evidence_Hub'))
 										   'order' => 'ASC',
 										   'fields' => 'ids'));
 			$sectors = get_terms('evidence_hub_sector');
+			if ($country_slug != "World"){
+				foreach ($posts as $post){
+					$markers[] = array("id" => $post['ID'],
+									   "name" => get_the_title($post['ID']),
+									   "url" => get_permalink($post['ID']),
+									   "lat" => get_post_meta($post['ID'], '_pronamic_google_maps_latitude', true ),
+									   "lng" => get_post_meta($post['ID'], '_pronamic_google_maps_longitude', true ),
+									   "sector" => $post['sector_slug'],
+									   "polarity" =>  $post['polarity_slug']);
+				}
+			}
 			
 			foreach($hypotheses as $hypothesis){
 				$hposts = Evidence_Hub::filterOptions($posts, 'hypothesis_id', $hypothesis);
@@ -523,7 +535,7 @@ if(!class_exists('Evidence_Hub'))
 					}
 				}
 			}	
-			$graph = array('nodes' => $nodes, 'links' => $links, 'title' => $title);
+			$graph = array('nodes' => $nodes, 'links' => $links, 'title' => $title, 'markers' => $markers);
 			print_r(json_encode($graph));
 			die();
 		}
@@ -546,6 +558,7 @@ if(!class_exists('Evidence_Hub'))
                   </div>
                </fieldset><?php
 		}
+		
 		
 		/**
 		 * Activate the plugin

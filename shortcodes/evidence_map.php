@@ -42,9 +42,15 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
         <script type="application/javascript">
 				/* <![CDATA[ */
 		var MyAjax = {
-			pluginurl: "<?php echo EVIDENCE_HUB_URL; ?>",
-			ajaxurl: "<?php echo admin_url();?>admin-ajax.php"
+			pluginurl: getPath('<?php echo EVIDENCE_HUB_URL; ?>'),
+			ajaxurl: getPath('<?php echo admin_url();?>admin-ajax.php')
 		};
+		function getPath(url) {
+			var a = document.createElement('a');
+			a.href = url;
+			return a.pathname.charAt(0) != '/' ? '/' + a.pathname : a.pathname;
+		}
+		var test = getPath('<?php echo EVIDENCE_HUB_URL; ?>');
 		/* ]]> */
 		<?php 
 		$handle = fopen(EVIDENCE_HUB_PATH.'/lib/map/data/world-country-names.csv', 'r'); 
@@ -132,13 +138,23 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
 		
         <script src="<?php echo plugins_url( 'lib/map/src/control.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
         <script src="<?php echo plugins_url( 'js/sankey.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
-
+        
+        <link rel="stylesheet" type="text/css" href="<?php echo plugins_url( 'lib/map/css/skeleton.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
+        <link rel="stylesheet" type="text/css" href="<?php echo plugins_url( 'lib/map/css/styles.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
+        <!--[if gte IE 7]>
+           <style>svg { height: 450px }</style>
+        <![endif]-->
         <!-- main script -->
         <script src="<?php echo plugins_url( 'lib/map/src/main.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
 
-        <link rel="stylesheet" type="text/css" href="<?php echo plugins_url( 'lib/map/css/skeleton.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
-        <link rel="stylesheet" type="text/css" href="<?php echo plugins_url( 'lib/map/css/styles.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
+        
         <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        <!--[if lte IE 10]>
+        <style>
+        #fullscreen-button { display:none; };
+        </style>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
 

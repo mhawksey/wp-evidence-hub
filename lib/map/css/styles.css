@@ -126,6 +126,7 @@ h1 {
     border-radius: 5px;
     pointer-events: none;
     opacity: 0;
+	max-width:200px;
 }
 #loading {
     background-color: rgba(255,255,255,0.9);
@@ -165,7 +166,7 @@ div#ui {
     width: auto;
     margin-left: 30px;
     position: absolute;
-    top: 100px;
+    top: 120px;
 }
 
 div#ui #yearDisplay {
@@ -224,6 +225,29 @@ svg #map .negative {
     fill: rgb(85, 85, 85);
     stroke: #ffffff;
     opacity: 0.6;
+}
+svg #markers {
+	opacity: 0.6;
+	
+}
+svg #markers .pos {
+    stroke: rgb(255, 146, 6);
+}
+svg #markers .neg {
+    stroke: rgb(85, 85, 85);
+}
+
+svg #markers .college {
+    fill: #b544a5;
+}
+svg #markers .school-k12 {
+    fill: #1badcf;
+}
+svg #markers .higher-education {
+    fill: #fd9417;
+}
+svg #markers .informal {
+    fill: #a9c94d;
 }
 
 svg #map .graticule {
