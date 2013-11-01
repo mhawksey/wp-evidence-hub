@@ -51,13 +51,13 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 		
 		$errors = array();
 		?>
-<div class="evidence-list">
+		<div class="evidence-list">
 				<<?php echo $title_tag; ?>>
 					<?php if (!$title) { ?>
 						Evidence 
 					<?php } else echo $title; ?>
 				</<?php echo $title_tag; ?>>
- <div id="sankey-chart"></div>
+ 		<div id="sankey-chart"></div>
 		<?
 		if (empty($post_ids)) $errors[] = "No posts ID provided";
 		foreach ($post_ids as $post_id) {
@@ -81,8 +81,6 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 				$links = array();
 				$base_link = get_permalink();
 				$totals = array();
-				
-		
 				
 				$nodes[] = array("name" => get_the_title(), "url" => $base_link, "id" => get_the_ID(), "type" => "hypothesis" );
 				$pol_terms = get_terms('evidence_hub_polarity', 'hide_empty=0&orderby=id');
@@ -118,47 +116,47 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 				$graph['nodes'] = $nodes;
 				$graph['links'] = $links;
 				
-			if ($sankey == 1 && !empty($evidence)): // <-- start of sankey if single
-		?>
-		<style>
- 
-.node rect {
-  /*cursor: move;*/
-  fill-opacity: .9;
-  shape-rendering: crispEdges;
-}
- 
-.node text {
-  pointer-events: none;
-  text-shadow: 0 1px 0 #fff;
-}
-.node text.hide {
-  display:none;
-}
- 
-.link {
-  fill: none;
-  stroke: #000;
-  stroke-opacity: .2;
-}
- 
-.link:hover {
-  stroke-opacity: .5;
-}
- 
-</style>
-
- <script> 
- var graph = <?php print_r(json_encode($graph, JSON_PRETTY_PRINT)); ?>;
- var margin = {top: 1, right: 1, bottom: 1, left: 1},
-    width = document.getElementById("content").offsetWidth - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
-
-</script>
-
- <script src="<?php echo plugins_url( 'js/sankey.js' , EVIDENCE_HUB_REGISTER_FILE )?>"></script>
- <script src="<?php echo plugins_url( 'js/sankey-control.js' , EVIDENCE_HUB_REGISTER_FILE )?>"></script>
- <?php endif; // end of sankey if single ?>
+				if ($sankey == 1 && !empty($evidence)){ // <-- start of sankey if single
+					?>
+					<style>
+			 
+					.node rect {
+					  /*cursor: move;*/
+					  fill-opacity: .9;
+					  shape-rendering: crispEdges;
+					}
+					 
+					.node text {
+					  pointer-events: none;
+					  text-shadow: 0 1px 0 #fff;
+					}
+					.node text.hide {
+					  display:none;
+					}
+					 
+					.link {
+					  fill: none;
+					  stroke: #000;
+					  stroke-opacity: .2;
+					}
+					 
+					.link:hover {
+					  stroke-opacity: .5;
+					}
+					 
+					</style>
+			
+					 <script> 
+					 var graph = <?php print_r(json_encode($graph, JSON_PRETTY_PRINT)); ?>;
+					 var margin = {top: 1, right: 1, bottom: 1, left: 1},
+						width = document.getElementById("content").offsetWidth - margin.left - margin.right,
+						height = 400 - margin.top - margin.bottom;
+					
+					</script>
+					
+					 <script src="<?php echo plugins_url( 'js/sankey.js' , EVIDENCE_HUB_REGISTER_FILE )?>"></script>
+					 <script src="<?php echo plugins_url( 'js/sankey-control.js' , EVIDENCE_HUB_REGISTER_FILE )?>"></script>
+				 <?php } // end of sankey if single ?>
 			
 
 				<?php if (empty($evidence)) { ?>
