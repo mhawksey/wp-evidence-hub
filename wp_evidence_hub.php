@@ -56,12 +56,13 @@ if(!class_exists('Evidence_Hub'))
             $Evidence_Hub_Settings = new Evidence_Hub_Settings();
 			require_once(sprintf("%s/settings/cache.php", EVIDENCE_HUB_PATH));
 			$Evidence_Hub_Settings_Cache = new Evidence_Hub_Settings_Cache();
-        	
+			
 			require_once(sprintf("%s/shortcodes/shortcode.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/evidence_summary.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/evidence_meta.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/evidence_map.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/hypothesis_bars.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/evidence_geomap.php", EVIDENCE_HUB_PATH));
 			
 			// Register custom post types - hypothesis
 			require_once(sprintf("%s/post-types/hypothesis.php", EVIDENCE_HUB_PATH));
@@ -92,11 +93,8 @@ if(!class_exists('Evidence_Hub'))
 			if (!class_exists('Facetious')){
 				require_once(sprintf("%s/lib/facetious/facetious.php", EVIDENCE_HUB_PATH));
 			}
+			
 
-			if (!class_exists('Leafletmapsmarker')){
-				//require_once(sprintf("%s/lib/leaflet-maps-marker/leaflet-maps-marker.php", EVIDENCE_HUB_PATH));
-				//$Leaflet = new Leafletmapsmarker();
-			}
 			
 			add_filter('json_api_controllers', array(&$this,'add_hub_controller'));
 			add_filter('json_api_hub_controller_path', array(&$this,'set_hub_controller_path'));
@@ -540,6 +538,36 @@ if(!class_exists('Evidence_Hub'))
 			die();
 		}
 		
+	
+		public function generate_excerpt($post_id = false) {
+			if ($post_id) $post = is_numeric($post_id) ? get_post($post_id) : $post_id;
+			else $post = $GLOBALS['post'];
+	
+			if (!$post) return '';
+			if (isset($post->post_excerpt) && !empty($post->post_excerpt)) return $post->post_excerpt;
+			if (!isset($post->post_content)) return '';
+		
+			$content = $raw_content = $post->post_content;
+		
+			if (!empty($content)) {
+				$content = strip_shortcodes($content);
+				$content = apply_filters('the_content', $content);
+				$content = str_replace(']]>', ']]&gt;', $content);
+				$content = strip_tags($content);
+	
+				$excerpt_length = apply_filters('excerpt_length', 55);
+				$words = preg_split("/[\n\r\t ]+/", $content, $excerpt_length + 1, PREG_SPLIT_NO_EMPTY);
+				if (count($words) > $excerpt_length) {
+					array_pop($words);
+					$content = implode(' ', $words);
+					$content .= "...";
+				} else $content = implode(' ', $words);
+			}
+		
+			return apply_filters('wp_trim_excerpt', $content, $raw_content);
+		}
+	
+		
 		public static function get_select_quick_edit($options, $column_name){
 			?><fieldset class="inline-edit-col-right">
                   <div class="inline-edit-group">
@@ -558,6 +586,8 @@ if(!class_exists('Evidence_Hub'))
                   </div>
                </fieldset><?php
 		}
+		
+
 		
 		
 		/**

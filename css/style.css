@@ -59,4 +59,63 @@ text-align:left;
         hyphens: auto;
 }
 
-
+#evidence-map {
+	width:100%;	
+	background-color: #fff;
+}
+#evidence-map img{
+	box-shadow:none;	
+}
+#fullscreen-button { 
+	float: right;
+}
+.leaflet-popup .popt{
+	display: table
+}
+.leaflet-popup .poptr{
+	display: table-row;
+}
+.leaflet-popup .poptc{
+	display: table-cell;
+}
+.leaflet-popup .poptc.h{
+	padding-right: 5px;
+	font-weight: bold;
+}
+#evidence-map fieldset {
+	position: relative;
+	top: 35px;
+	text-align: right;
+	right: 5px;
+	z-index:999;
+}
+#evidence-map fieldset div {
+	display: inline;
+	border-radius: 8px;
+	-o-border-radius: 8px;
+	-icab-border-radius: 8px;
+	-khtml-border-radius: 8px;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	border: 1px solid rgb(208, 208, 208);
+	margin-right: 5px;
+	padding: 4px 5px 6px;
+	vertical-align:baseline;
+}
+#evidence-map .eh_evidence_hub_type {
+	background: rgb(252, 221, 236);
+}
+#evidence-map .eh_evidence_hub_hypothesis_id {
+	background: rgb(234, 236, 245);
+}
+#evidence-map .eh_evidence_hub_polarity{
+	background: rgb(255, 233, 194);
+}
+#evidence-map .eh_evidence_hub_sector{
+	background: rgb(229, 255, 254);
+}
+.fieldsetFull{
+	position:relative;
+	bottom: 50px;
+	left: 15px;	
+}

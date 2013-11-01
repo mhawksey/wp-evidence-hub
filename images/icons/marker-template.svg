@@ -1,0 +1,989 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.094"
+   height="1052.362"
+   id="svg3059"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="marker-template.svg">
+  <metadata
+     id="metadata3131">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1680"
+     inkscape:window-height="1028"
+     id="namedview3129"
+     showgrid="false"
+     inkscape:snap-global="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:zoom="4.4211812"
+     inkscape:cx="387.15124"
+     inkscape:cy="613.38531"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg3059">
+    <sodipodi:guide
+       orientation="0,1"
+       position="362.12042,687.82524"
+       id="guide4419" />
+  </sodipodi:namedview>
+  <defs
+     id="defs3061">
+    <linearGradient
+       id="b">
+      <stop
+         offset="0"
+         stop-color="#2e6c97"
+         id="stop3064" />
+      <stop
+         offset="1"
+         stop-color="#3883b7"
+         id="stop3066" />
+    </linearGradient>
+    <linearGradient
+       id="a">
+      <stop
+         offset="0"
+         stop-color="#126fc6"
+         id="stop3069" />
+      <stop
+         offset="1"
+         stop-color="#4c9cd1"
+         id="stop3071" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#a"
+       x1="351.138"
+       y1="551.589"
+       x2="351.138"
+       y2="512.928"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-2.715)"
+       id="linearGradient3073" />
+    <linearGradient
+       xlink:href="#a"
+       x1="318.571"
+       y1="550.052"
+       x2="318.571"
+       y2="512.422"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(94.732 2.054)"
+       id="linearGradient3075" />
+    <linearGradient
+       xlink:href="#a"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(-1 0 0 1 731.268 2.054)"
+       x1="318.571"
+       y1="550.052"
+       x2="318.571"
+       y2="512.422"
+       id="linearGradient3077" />
+    <linearGradient
+       xlink:href="#a"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(94.232 2.054)"
+       x1="318.571"
+       y1="550.052"
+       x2="318.571"
+       y2="512.422"
+       id="linearGradient3079" />
+    <linearGradient
+       xlink:href="#a"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-28.58 -.437)"
+       x1="445.301"
+       y1="541.286"
+       x2="445.301"
+       y2="503.72"
+       id="linearGradient3081" />
+    <linearGradient
+       xlink:href="#b"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(63 -.438)"
+       x1="351.748"
+       y1="522.774"
+       x2="351.748"
+       y2="503.721"
+       id="linearGradient3083" />
+    <linearGradient
+       xlink:href="#a"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-28.58 -.437)"
+       x1="445.301"
+       y1="541.286"
+       x2="445.301"
+       y2="503.72"
+       id="linearGradient3085" />
+    <linearGradient
+       xlink:href="#b"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(63 -.438)"
+       x1="351.748"
+       y1="522.774"
+       x2="351.748"
+       y2="503.721"
+       id="linearGradient3087" />
+    <linearGradient
+       xlink:href="#a"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-28.58 -.437)"
+       x1="445.301"
+       y1="541.286"
+       x2="445.301"
+       y2="503.72"
+       id="linearGradient3089" />
+    <linearGradient
+       xlink:href="#b"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(63 -.438)"
+       x1="351.748"
+       y1="522.774"
+       x2="351.748"
+       y2="503.721"
+       id="linearGradient3091" />
+    <linearGradient
+       xlink:href="#a"
+       id="c"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-28.846 -.287)"
+       x1="445.301"
+       y1="541.286"
+       x2="445.301"
+       y2="503.72" />
+    <linearGradient
+       xlink:href="#b"
+       id="d"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(62.734 -.288)"
+       x1="351.748"
+       y1="522.774"
+       x2="351.748"
+       y2="503.721" />
+    <linearGradient
+       xlink:href="#a"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-28.846 -.287)"
+       x1="445.301"
+       y1="541.286"
+       x2="445.301"
+       y2="503.72"
+       id="linearGradient3095" />
+    <linearGradient
+       xlink:href="#b"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(62.734 -.288)"
+       x1="351.748"
+       y1="522.774"
+       x2="351.748"
+       y2="503.721"
+       id="linearGradient3097" />
+    <linearGradient
+       xlink:href="#a-7"
+       id="c-1"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(8.7788204,1.261037)"
+       x1="445.30099"
+       y1="541.28601"
+       x2="445.30099"
+       y2="503.72" />
+    <linearGradient
+       id="a-7">
+      <stop
+         offset="0"
+         stop-color="#126fc6"
+         id="stop3069-4"
+         style="stop-color:#e86f22;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#4c9cd1"
+         id="stop3071-0"
+         style="stop-color:#df7619;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#b-4"
+       id="d-9"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(100.35882,1.260037)"
+       x1="351.74799"
+       y1="522.77399"
+       x2="351.74799"
+       y2="503.72101" />
+    <linearGradient
+       id="b-4">
+      <stop
+         offset="0"
+         stop-color="#2e6c97"
+         id="stop3064-8" />
+      <stop
+         offset="1"
+         stop-color="#3883b7"
+         id="stop3066-8" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#a-7-2"
+       id="c-1-2"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-69.202177,-126.03187)"
+       x1="445.30099"
+       y1="541.28601"
+       x2="445.30099"
+       y2="503.72" />
+    <linearGradient
+       id="a-7-2">
+      <stop
+         offset="0"
+         stop-color="#126fc6"
+         id="stop3069-4-6"
+         style="stop-color:#fdac4d;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#4c9cd1"
+         id="stop3071-0-4"
+         style="stop-color:#fd9417;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#b-4-7"
+       id="d-9-0"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(22.377823,-126.03287)"
+       x1="351.74799"
+       y1="522.77399"
+       x2="351.74799"
+       y2="503.72101" />
+    <linearGradient
+       id="b-4-7">
+      <stop
+         offset="0"
+         stop-color="#2e6c97"
+         id="stop3064-8-0"
+         style="stop-color:#8b510c;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#3883b7"
+         id="stop3066-8-3"
+         style="stop-color:#7b480b;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#a-7-2"
+       id="c-1-2-4"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-69.428361,-80.795084)"
+       x1="445.30099"
+       y1="541.28601"
+       x2="445.30099"
+       y2="503.72" />
+    <linearGradient
+       id="a-7-2-0">
+      <stop
+         offset="0"
+         stop-color="#126fc6"
+         id="stop3069-4-6-0"
+         style="stop-color:#e86f22;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#4c9cd1"
+         id="stop3071-0-4-5"
+         style="stop-color:#df7619;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#b-4-7"
+       id="d-9-0-3"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(22.151639,-80.796084)"
+       x1="351.74799"
+       y1="522.77399"
+       x2="351.74799"
+       y2="503.72101" />
+    <linearGradient
+       id="b-4-7-1">
+      <stop
+         offset="0"
+         stop-color="#2e6c97"
+         id="stop3064-8-0-0" />
+      <stop
+         offset="1"
+         stop-color="#3883b7"
+         id="stop3066-8-3-6" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#a-7-2-4"
+       id="c-1-2-4-0"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-33.578216,-79.66416)"
+       x1="445.30099"
+       y1="541.28601"
+       x2="445.30099"
+       y2="503.72" />
+    <linearGradient
+       id="a-7-2-4">
+      <stop
+         offset="0"
+         stop-color="#126fc6"
+         id="stop3069-4-6-5"
+         style="stop-color:#c769b8;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#4c9cd1"
+         id="stop3071-0-4-4"
+         style="stop-color:#b544a5;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#b-4-7-5"
+       id="d-9-0-3-9"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(58.001784,-79.66516)"
+       x1="351.74799"
+       y1="522.77399"
+       x2="351.74799"
+       y2="503.72101" />
+    <linearGradient
+       id="b-4-7-5">
+      <stop
+         offset="0"
+         stop-color="#2e6c97"
+         id="stop3064-8-0-6"
+         style="stop-color:#7c2e70;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#3883b7"
+         id="stop3066-8-3-4"
+         style="stop-color:#58210b;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#a-7-2-4"
+       id="c-1-2-8"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-33.352036,-124.90095)"
+       x1="445.30099"
+       y1="541.28601"
+       x2="445.30099"
+       y2="503.72" />
+    <linearGradient
+       id="linearGradient4127">
+      <stop
+         offset="0"
+         stop-color="#126fc6"
+         id="stop4129"
+         style="stop-color:#fdac4d;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#4c9cd1"
+         id="stop4131"
+         style="stop-color:#fd9417;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#b-4-7-5"
+       id="d-9-0-2"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(58.227964,-124.90195)"
+       x1="351.74799"
+       y1="522.77399"
+       x2="351.74799"
+       y2="503.72101" />
+    <linearGradient
+       id="linearGradient4134">
+      <stop
+         offset="0"
+         stop-color="#2e6c97"
+         id="stop4136"
+         style="stop-color:#8b510c;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#3883b7"
+         id="stop4138"
+         style="stop-color:#7b480b;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#a-7-2-4-4"
+       id="c-1-2-4-0-8"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(2.6111979,-78.987438)"
+       x1="445.30099"
+       y1="541.28601"
+       x2="445.30099"
+       y2="503.72" />
+    <linearGradient
+       id="a-7-2-4-4">
+      <stop
+         offset="0"
+         stop-color="#126fc6"
+         id="stop3069-4-6-5-9"
+         style="stop-color:#60cfea;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#4c9cd1"
+         id="stop3071-0-4-4-2"
+         style="stop-color:#1badcf;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#b-4-7-5-7"
+       id="d-9-0-3-9-0"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(94.191198,-78.988438)"
+       x1="351.74799"
+       y1="522.77399"
+       x2="351.74799"
+       y2="503.72101" />
+    <linearGradient
+       id="b-4-7-5-7">
+      <stop
+         offset="0"
+         stop-color="#2e6c97"
+         id="stop3064-8-0-6-0"
+         style="stop-color:#137c97;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#3883b7"
+         id="stop3066-8-3-4-6"
+         style="stop-color:#0d5465;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#a-7-2-4-4"
+       id="c-1-2-8-0"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(2.8373779,-124.22423)"
+       x1="445.30099"
+       y1="541.28601"
+       x2="445.30099"
+       y2="503.72" />
+    <linearGradient
+       id="linearGradient4214">
+      <stop
+         offset="0"
+         stop-color="#126fc6"
+         id="stop4216"
+         style="stop-color:#c769b8;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#4c9cd1"
+         id="stop4218"
+         style="stop-color:#b544a5;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#b-4-7-5-7"
+       id="d-9-0-2-7"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(94.417378,-124.22523)"
+       x1="351.74799"
+       y1="522.77399"
+       x2="351.74799"
+       y2="503.72101" />
+    <linearGradient
+       id="linearGradient4221">
+      <stop
+         offset="0"
+         stop-color="#2e6c97"
+         id="stop4223"
+         style="stop-color:#7c2e70;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#3883b7"
+         id="stop4225"
+         style="stop-color:#58210b;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#a-7-2-4-4-9"
+       id="c-1-2-4-0-8-4"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(35.407863,-78.761264)"
+       x1="445.30099"
+       y1="541.28601"
+       x2="445.30099"
+       y2="503.72" />
+    <linearGradient
+       id="a-7-2-4-4-9">
+      <stop
+         offset="0"
+         stop-color="#126fc6"
+         id="stop3069-4-6-5-9-2"
+         style="stop-color:#bcd472;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#4c9cd1"
+         id="stop3071-0-4-4-2-6"
+         style="stop-color:#a9c94d;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#b-4-7-5-7-7"
+       id="d-9-0-3-9-0-5"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(126.98786,-78.762264)"
+       x1="351.74799"
+       y1="522.77399"
+       x2="351.74799"
+       y2="503.72101" />
+    <linearGradient
+       id="b-4-7-5-7-7">
+      <stop
+         offset="0"
+         stop-color="#2e6c97"
+         id="stop3064-8-0-6-0-7"
+         style="stop-color:#85a03c;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#3883b7"
+         id="stop3066-8-3-4-6-4"
+         style="stop-color:#526225;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#a-7-2-4-4-9"
+       id="c-1-2-8-0-5"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(35.634043,-123.99805)"
+       x1="445.30099"
+       y1="541.28601"
+       x2="445.30099"
+       y2="503.72" />
+    <linearGradient
+       id="linearGradient4301">
+      <stop
+         offset="0"
+         stop-color="#126fc6"
+         id="stop4303"
+         style="stop-color:#60cfea;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#4c9cd1"
+         id="stop4305"
+         style="stop-color:#1badcf;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#b-4-7-5-7-7"
+       id="d-9-0-2-7-7"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(127.21404,-123.99905)"
+       x1="351.74799"
+       y1="522.77399"
+       x2="351.74799"
+       y2="503.72101" />
+    <linearGradient
+       id="linearGradient4308">
+      <stop
+         offset="0"
+         stop-color="#2e6c97"
+         id="stop4310"
+         style="stop-color:#137c97;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#3883b7"
+         id="stop4312"
+         style="stop-color:#0d5465;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#a"
+       id="c-1-2-3"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-105.39161,-126.48606)"
+       x1="445.30099"
+       y1="541.28601"
+       x2="445.30099"
+       y2="503.72" />
+    <linearGradient
+       id="a-7-2-6">
+      <stop
+         offset="0"
+         stop-color="#126fc6"
+         id="stop3069-4-6-7"
+         style="stop-color:#fdac4d;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#4c9cd1"
+         id="stop3071-0-4-1"
+         style="stop-color:#fd9417;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#b"
+       id="d-9-0-5"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(-13.811611,-126.48706)"
+       x1="351.74799"
+       y1="522.77399"
+       x2="351.74799"
+       y2="503.72101" />
+    <linearGradient
+       id="b-4-7-54">
+      <stop
+         offset="0"
+         stop-color="#2e6c97"
+         id="stop3064-8-0-02"
+         style="stop-color:#8b510c;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#3883b7"
+         id="stop3066-8-3-60"
+         style="stop-color:#7b480b;stop-opacity:1;" />
+    </linearGradient>
+  </defs>
+  <image
+     y="502.237"
+     x="369.375"
+     xlink:href="data:image/png;base64,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 0YvhJSIAAAAASUVORK5CYII="
+     height="41"
+     width="25"
+     id="image3099" />
+  <rect
+     y="507.575"
+     x="410.279"
+     height="14.5"
+     width="12.625"
+     fill="#fff"
+     id="rect3101" />
+  <path
+     d="M416.544 503.612c-6.573 0-12.044 5.691-12.044 11.866 0 2.778 1.564 6.308 2.694 8.746l9.306 17.872 9.262-17.872c1.13-2.438 2.738-5.791 2.738-8.746 0-6.175-5.383-11.866-11.956-11.866zm0 7.155c2.584.017 4.679 2.122 4.679 4.71s-2.095 4.663-4.679 4.679c-2.584-.017-4.679-2.09-4.679-4.679 0-2.588 2.095-4.693 4.679-4.71z"
+     fill="url(#c)"
+     stroke="url(#d)"
+     stroke-width="1.1"
+     stroke-linecap="round"
+     id="path3103" />
+  <text
+     style="line-height:125%"
+     x="403.75"
+     y="489.362"
+     font-size="4"
+     letter-spacing="0"
+     word-spacing="0"
+     font-family="Sans"
+     id="text3105">
+    <tspan
+       x="403.75"
+       y="489.362"
+       id="tspan3107">
+	    Use this one.
+	</tspan>
+    <tspan
+       x="403.75"
+       y="494.362"
+       id="tspan3109">
+	    Select it and the area around with box select.
+	</tspan>
+    <tspan
+       x="403.75"
+       y="499.362"
+       id="tspan3111">
+	    should be exactly 25x41 at 90dpi
+	</tspan>
+  </text>
+  <text
+     style="line-height:125%"
+     x="408.708"
+     y="563.751"
+     font-size="40"
+     letter-spacing="0"
+     word-spacing="0"
+     font-family="Sans"
+     id="text3113">
+    <tspan
+       x="408.708"
+       y="563.751"
+       font-size="4"
+       id="tspan3115">
+	    How to do the inset border:
+	</tspan>
+    <tspan
+       x="408.708"
+       y="568.751"
+       font-size="4"
+       id="tspan3117">
+	    Delete the existing inset border. Select the background, duplicate.
+	</tspan>
+    <tspan
+       x="408.708"
+       y="573.751"
+       font-size="4"
+       id="tspan3119">
+	    Path, Dynamic offset.
+	</tspan>
+    <tspan
+       x="408.708"
+       y="578.751"
+       font-size="4"
+       id="tspan3121">
+	    Fill: None, Stroke Paint: RGBA #ffffff1f
+	</tspan>
+    <tspan
+       x="408.708"
+       y="583.751"
+       font-size="4"
+       id="tspan3123">
+	    Zoom down to the top and grab the diamond, drag it down and fiddle it untill it looks in line
+	</tspan>
+    <tspan
+       x="408.708"
+       y="588.751"
+       font-size="4"
+       id="tspan3125">
+	    with the main color layers border.
+	</tspan>
+  </text>
+  <path
+     d="M416.531 504.719c-5.944 0-10.938 5.219-10.938 10.75 0 2.359 1.443 5.832 2.563 8.25l.031.031 8.313 15.969 8.25-15.969.031-.031c1.135-2.448 2.625-5.706 2.625-8.25 0-5.538-4.931-10.75-10.875-10.75zm0 4.969c3.168.021 5.781 2.601 5.781 5.781 0 3.18-2.613 5.761-5.781 5.781-3.168-.02-5.75-2.61-5.75-5.781 0-3.172 2.582-5.761 5.75-5.781z"
+     stroke="#fff"
+     stroke-width="1.1"
+     stroke-linecap="round"
+     stroke-opacity=".122"
+     fill="none"
+     id="path3127" />
+  <rect
+     style="fill:#ff9206"
+     y="381.83014"
+     x="369.92282"
+     height="14.5"
+     width="12.625"
+     id="rect3101-2"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-pro-higher-education.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:url(#c-1-2);stroke:url(#d-9-0);stroke-width:1.10000002;stroke-linecap:round"
+     inkscape:connector-curvature="0"
+     d="m 376.18783,377.86713 c -6.573,0 -12.044,5.691 -12.044,11.866 0,2.778 1.564,6.308 2.694,8.746 l 9.306,17.872 9.262,-17.872 c 1.13,-2.438 2.738,-5.791 2.738,-8.746 0,-6.175 -5.383,-11.866 -11.956,-11.866 z m 0,7.155 c 2.584,0.017 4.679,2.122 4.679,4.71 0,2.588 -2.095,4.663 -4.679,4.679 -2.584,-0.017 -4.679,-2.09 -4.679,-4.679 0,-2.588 2.095,-4.693 4.679,-4.71 z"
+     id="path3103-4"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-pro-higher-education.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:none;stroke:#ffffff;stroke-width:1.10000002;stroke-linecap:round;stroke-opacity:0.122"
+     inkscape:connector-curvature="0"
+     d="m 376.17483,378.97413 c -5.944,0 -10.938,5.219 -10.938,10.75 0,2.359 1.443,5.832 2.563,8.25 l 0.031,0.031 8.313,15.969 8.25,-15.969 0.031,-0.031 c 1.135,-2.448 2.625,-5.706 2.625,-8.25 0,-5.538 -4.931,-10.75 -10.875,-10.75 z m 0,4.969 c 3.168,0.021 5.781,2.601 5.781,5.781 0,3.18 -2.613,5.761 -5.781,5.781 -3.168,-0.02 -5.75,-2.61 -5.75,-5.781 0,-3.172 2.582,-5.761 5.75,-5.781 z"
+     id="path3127-5"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-pro-higher-education.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <rect
+     style="opacity:0.6;fill:#555555;fill-opacity:1"
+     y="427.06693"
+     x="369.69666"
+     height="14.5"
+     width="12.625"
+     id="rect3101-2-7"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-neg-higher-education.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:url(#c-1-2-4);fill-opacity:1;stroke:url(#d-9-0-3);stroke-width:1.10000002;stroke-linecap:round"
+     inkscape:connector-curvature="0"
+     d="m 375.96164,423.10392 c -6.573,0 -12.044,5.691 -12.044,11.866 0,2.778 1.564,6.308 2.694,8.746 l 9.306,17.872 9.262,-17.872 c 1.13,-2.438 2.738,-5.791 2.738,-8.746 0,-6.175 -5.383,-11.866 -11.956,-11.866 z m 0,7.155 c 2.584,0.017 4.679,2.122 4.679,4.71 0,2.588 -2.095,4.663 -4.679,4.679 -2.584,-0.017 -4.679,-2.09 -4.679,-4.679 0,-2.588 2.095,-4.693 4.679,-4.71 z"
+     id="path3103-4-5"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-neg-higher-education.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:none;stroke:#ffffff;stroke-width:1.10000002;stroke-linecap:round;stroke-opacity:0.122"
+     inkscape:connector-curvature="0"
+     d="m 375.94864,424.21092 c -5.944,0 -10.938,5.219 -10.938,10.75 0,2.359 1.443,5.832 2.563,8.25 l 0.031,0.031 8.313,15.969 8.25,-15.969 0.031,-0.031 c 1.135,-2.448 2.625,-5.706 2.625,-8.25 0,-5.538 -4.931,-10.75 -10.875,-10.75 z m 0,4.969 c 3.168,0.021 5.781,2.601 5.781,5.781 0,3.18 -2.613,5.761 -5.781,5.781 -3.168,-0.02 -5.75,-2.61 -5.75,-5.781 0,-3.172 2.582,-5.761 5.75,-5.781 z"
+     id="path3127-5-0"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-neg-higher-education.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <rect
+     style="fill:#ff9206"
+     y="382.96106"
+     x="405.77295"
+     height="14.5"
+     width="12.625"
+     id="rect3101-2-1"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-pro-college.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:url(#c-1-2-8);stroke:url(#d-9-0-2);stroke-width:1.10000002;stroke-linecap:round"
+     inkscape:connector-curvature="0"
+     d="m 412.03798,378.99805 c -6.573,0 -12.044,5.691 -12.044,11.866 0,2.778 1.564,6.308 2.694,8.746 l 9.306,17.872 9.262,-17.872 c 1.13,-2.438 2.738,-5.791 2.738,-8.746 0,-6.175 -5.383,-11.866 -11.956,-11.866 z m 0,7.155 c 2.584,0.017 4.679,2.122 4.679,4.71 0,2.588 -2.095,4.663 -4.679,4.679 -2.584,-0.017 -4.679,-2.09 -4.679,-4.679 0,-2.588 2.095,-4.693 4.679,-4.71 z"
+     id="path3103-4-6"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-pro-college.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:none;stroke:#ffffff;stroke-width:1.10000002;stroke-linecap:round;stroke-opacity:0.122"
+     inkscape:connector-curvature="0"
+     d="m 412.02498,380.10505 c -5.944,0 -10.938,5.219 -10.938,10.75 0,2.359 1.443,5.832 2.563,8.25 l 0.031,0.031 8.313,15.969 8.25,-15.969 0.031,-0.031 c 1.135,-2.448 2.625,-5.706 2.625,-8.25 0,-5.538 -4.931,-10.75 -10.875,-10.75 z m 0,4.969 c 3.168,0.021 5.781,2.601 5.781,5.781 0,3.18 -2.613,5.761 -5.781,5.781 -3.168,-0.02 -5.75,-2.61 -5.75,-5.781 0,-3.172 2.582,-5.761 5.75,-5.781 z"
+     id="path3127-5-8"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-pro-college.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <rect
+     style="opacity:0.6;fill:#555555;fill-opacity:1"
+     y="428.19785"
+     x="405.54678"
+     height="14.5"
+     width="12.625"
+     id="rect3101-2-7-3"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-neg-college.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:url(#c-1-2-4-0);fill-opacity:1;stroke:url(#d-9-0-3-9);stroke-width:1.10000002;stroke-linecap:round"
+     inkscape:connector-curvature="0"
+     d="m 411.81179,424.23484 c -6.573,0 -12.044,5.691 -12.044,11.866 0,2.778 1.564,6.308 2.694,8.746 l 9.306,17.872 9.262,-17.872 c 1.13,-2.438 2.738,-5.791 2.738,-8.746 0,-6.175 -5.383,-11.866 -11.956,-11.866 z m 0,7.155 c 2.584,0.017 4.679,2.122 4.679,4.71 0,2.588 -2.095,4.663 -4.679,4.679 -2.584,-0.017 -4.679,-2.09 -4.679,-4.679 0,-2.588 2.095,-4.693 4.679,-4.71 z"
+     id="path3103-4-5-1"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-neg-college.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:none;stroke:#ffffff;stroke-width:1.10000002;stroke-linecap:round;stroke-opacity:0.122"
+     inkscape:connector-curvature="0"
+     d="m 411.79879,425.34184 c -5.944,0 -10.938,5.219 -10.938,10.75 0,2.359 1.443,5.832 2.563,8.25 l 0.031,0.031 8.313,15.969 8.25,-15.969 0.031,-0.031 c 1.135,-2.448 2.625,-5.706 2.625,-8.25 0,-5.538 -4.931,-10.75 -10.875,-10.75 z m 0,4.969 c 3.168,0.021 5.781,2.601 5.781,5.781 0,3.18 -2.613,5.761 -5.781,5.781 -3.168,-0.02 -5.75,-2.61 -5.75,-5.781 0,-3.172 2.582,-5.761 5.75,-5.781 z"
+     id="path3127-5-0-4"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-neg-college.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <rect
+     style="fill:#ff9206"
+     y="383.63779"
+     x="441.96237"
+     height="14.5"
+     width="12.625"
+     id="rect3101-2-1-0"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-pro-school-k12.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:url(#c-1-2-8-0);stroke:url(#d-9-0-2-7);stroke-width:1.10000002;stroke-linecap:round"
+     inkscape:connector-curvature="0"
+     d="m 448.2274,379.67478 c -6.573,0 -12.044,5.691 -12.044,11.866 0,2.778 1.564,6.308 2.694,8.746 l 9.306,17.872 9.262,-17.872 c 1.13,-2.438 2.738,-5.791 2.738,-8.746 0,-6.175 -5.383,-11.866 -11.956,-11.866 z m 0,7.155 c 2.584,0.017 4.679,2.122 4.679,4.71 0,2.588 -2.095,4.663 -4.679,4.679 -2.584,-0.017 -4.679,-2.09 -4.679,-4.679 0,-2.588 2.095,-4.693 4.679,-4.71 z"
+     id="path3103-4-6-5"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-pro-school-k12.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:none;stroke:#ffffff;stroke-width:1.10000002;stroke-linecap:round;stroke-opacity:0.122"
+     inkscape:connector-curvature="0"
+     d="m 448.2144,380.78178 c -5.944,0 -10.938,5.219 -10.938,10.75 0,2.359 1.443,5.832 2.563,8.25 l 0.031,0.031 8.313,15.969 8.25,-15.969 0.031,-0.031 c 1.135,-2.448 2.625,-5.706 2.625,-8.25 0,-5.538 -4.931,-10.75 -10.875,-10.75 z m 0,4.969 c 3.168,0.021 5.781,2.601 5.781,5.781 0,3.18 -2.613,5.761 -5.781,5.781 -3.168,-0.02 -5.75,-2.61 -5.75,-5.781 0,-3.172 2.582,-5.761 5.75,-5.781 z"
+     id="path3127-5-8-6"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-pro-school-k12.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <rect
+     style="opacity:0.6;fill:#555555;fill-opacity:1"
+     y="428.87457"
+     x="441.73621"
+     height="14.5"
+     width="12.625"
+     id="rect3101-2-7-3-7"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-neg-school-k12.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:url(#c-1-2-4-0-8);fill-opacity:1;stroke:url(#d-9-0-3-9-0);stroke-width:1.10000002;stroke-linecap:round"
+     inkscape:connector-curvature="0"
+     d="m 448.00121,424.91157 c -6.573,0 -12.044,5.691 -12.044,11.866 0,2.778 1.564,6.308 2.694,8.746 l 9.306,17.872 9.262,-17.872 c 1.13,-2.438 2.738,-5.791 2.738,-8.746 0,-6.175 -5.383,-11.866 -11.956,-11.866 z m 0,7.155 c 2.584,0.017 4.679,2.122 4.679,4.71 0,2.588 -2.095,4.663 -4.679,4.679 -2.584,-0.017 -4.679,-2.09 -4.679,-4.679 0,-2.588 2.095,-4.693 4.679,-4.71 z"
+     id="path3103-4-5-1-3"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-neg-school-k12.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:none;stroke:#ffffff;stroke-width:1.10000002;stroke-linecap:round;stroke-opacity:0.122"
+     inkscape:connector-curvature="0"
+     d="m 447.98821,426.01857 c -5.944,0 -10.938,5.219 -10.938,10.75 0,2.359 1.443,5.832 2.563,8.25 l 0.031,0.031 8.313,15.969 8.25,-15.969 0.031,-0.031 c 1.135,-2.448 2.625,-5.706 2.625,-8.25 0,-5.538 -4.931,-10.75 -10.875,-10.75 z m 0,4.969 c 3.168,0.021 5.781,2.601 5.781,5.781 0,3.18 -2.613,5.761 -5.781,5.781 -3.168,-0.02 -5.75,-2.61 -5.75,-5.781 0,-3.172 2.582,-5.761 5.75,-5.781 z"
+     id="path3127-5-0-4-8"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-neg-school-k12.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <rect
+     style="fill:#ff9206"
+     y="383.86395"
+     x="474.75903"
+     height="14.5"
+     width="12.625"
+     id="rect3101-2-1-0-9"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-pro-informal.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:url(#c-1-2-8-0-5);stroke:url(#d-9-0-2-7-7);stroke-width:1.10000002;stroke-linecap:round"
+     inkscape:connector-curvature="0"
+     d="m 481.02406,379.90096 c -6.573,0 -12.044,5.691 -12.044,11.866 0,2.778 1.564,6.308 2.694,8.746 l 9.306,17.872 9.262,-17.872 c 1.13,-2.438 2.738,-5.791 2.738,-8.746 0,-6.175 -5.383,-11.866 -11.956,-11.866 z m 0,7.155 c 2.584,0.017 4.679,2.122 4.679,4.71 0,2.588 -2.095,4.663 -4.679,4.679 -2.584,-0.017 -4.679,-2.09 -4.679,-4.679 0,-2.588 2.095,-4.693 4.679,-4.71 z"
+     id="path3103-4-6-5-8"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-pro-informal.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:none;stroke:#ffffff;stroke-width:1.10000002;stroke-linecap:round;stroke-opacity:0.122"
+     inkscape:connector-curvature="0"
+     d="m 481.01106,381.00796 c -5.944,0 -10.938,5.219 -10.938,10.75 0,2.359 1.443,5.832 2.563,8.25 l 0.031,0.031 8.313,15.969 8.25,-15.969 0.031,-0.031 c 1.135,-2.448 2.625,-5.706 2.625,-8.25 0,-5.538 -4.931,-10.75 -10.875,-10.75 z m 0,4.969 c 3.168,0.021 5.781,2.601 5.781,5.781 0,3.18 -2.613,5.761 -5.781,5.781 -3.168,-0.02 -5.75,-2.61 -5.75,-5.781 0,-3.172 2.582,-5.761 5.75,-5.781 z"
+     id="path3127-5-8-6-3"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-pro-informal.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <rect
+     style="opacity:0.6;fill:#555555;fill-opacity:1"
+     y="429.10074"
+     x="474.53287"
+     height="14.5"
+     width="12.625"
+     id="rect3101-2-7-3-7-0"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-neg-informal.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:url(#c-1-2-4-0-8-4);fill-opacity:1;stroke:url(#d-9-0-3-9-0-5);stroke-width:1.10000002;stroke-linecap:round"
+     inkscape:connector-curvature="0"
+     d="m 480.79787,425.13775 c -6.573,0 -12.044,5.691 -12.044,11.866 0,2.778 1.564,6.308 2.694,8.746 l 9.306,17.872 9.262,-17.872 c 1.13,-2.438 2.738,-5.791 2.738,-8.746 0,-6.175 -5.383,-11.866 -11.956,-11.866 z m 0,7.155 c 2.584,0.017 4.679,2.122 4.679,4.71 0,2.588 -2.095,4.663 -4.679,4.679 -2.584,-0.017 -4.679,-2.09 -4.679,-4.679 0,-2.588 2.095,-4.693 4.679,-4.71 z"
+     id="path3103-4-5-1-3-2"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-neg-informal.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:none;stroke:#ffffff;stroke-width:1.10000002;stroke-linecap:round;stroke-opacity:0.122"
+     inkscape:connector-curvature="0"
+     d="m 480.78487,426.24475 c -5.944,0 -10.938,5.219 -10.938,10.75 0,2.359 1.443,5.832 2.563,8.25 l 0.031,0.031 8.313,15.969 8.25,-15.969 0.031,-0.031 c 1.135,-2.448 2.625,-5.706 2.625,-8.25 0,-5.538 -4.931,-10.75 -10.875,-10.75 z m 0,4.969 c 3.168,0.021 5.781,2.601 5.781,5.781 0,3.18 -2.613,5.761 -5.781,5.781 -3.168,-0.02 -5.75,-2.61 -5.75,-5.781 0,-3.172 2.582,-5.761 5.75,-5.781 z"
+     id="path3127-5-0-4-8-2"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-neg-informal.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <rect
+     style="fill:#ffffff;fill-opacity:1"
+     y="382.78958"
+     x="333.7334"
+     height="13.08635"
+     width="12.625"
+     id="rect3101-2-6"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-project.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:url(#c-1-2-3);stroke:url(#d-9-0-5);stroke-width:1.10000002000000000;stroke-linecap:round;fill-opacity:1.0"
+     inkscape:connector-curvature="0"
+     d="m 339.9984,377.41294 c -2.33205,0 -11.93091,8.15491 -12.044,11.866 -0.0846,2.77671 1.564,6.308 2.694,8.746 l 9.306,17.872 9.262,-17.872 c 1.13,-2.438 2.738,-5.791 2.738,-8.746 0,-3.68698 -9.90668,-11.866 -11.956,-11.866 z m 0,7.155 c 2.584,0.017 4.679,2.122 4.679,4.71 0,2.588 -2.095,4.663 -4.679,4.679 -2.584,-0.017 -4.679,-2.09 -4.679,-4.679 0,-2.588 2.095,-4.693 4.679,-4.71 z"
+     id="path3103-4-1"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-project.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90"
+     sodipodi:nodetypes="sscccsscscsc" />
+  <path
+     style="fill:none;stroke:#ffffff;stroke-width:1.10000002;stroke-linecap:round;stroke-opacity:0.122"
+     inkscape:connector-curvature="0"
+     d="m 339.9854,378.51994 c -1.53341,0 -10.938,7.85255 -10.938,10.75 0,2.359 1.443,5.832 2.563,8.25 l 0.031,0.031 8.313,15.969 8.25,-15.969 0.031,-0.031 c 1.135,-2.448 2.625,-5.706 2.625,-8.25 0,-2.82379 -9.51122,-10.75 -10.875,-10.75 z m 0,4.969 c 3.168,0.021 5.781,2.601 5.781,5.781 0,3.18 -2.613,5.761 -5.781,5.781 -3.168,-0.02 -5.75,-2.61 -5.75,-5.781 0,-3.172 2.582,-5.761 5.75,-5.781 z"
+     id="path3127-5-1"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-project.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90"
+     sodipodi:nodetypes="sscccccsscscsc" />
+</svg>
