@@ -13,7 +13,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Description
 ----
 
-This plugin was developed to gather and publishes evidence about the impact of open educational resources (OER). It is maintained by the [OER Research Hub project](http://oerresearchhub.org/).
+This plugin was developed to gather and publishes evidence about the impact of open educational resources (OER). It is maintained by the [OER Research Hub project](http://oerresearchhub.org/). Here's a [Site Demo](http://sites.hawksey.info/oerhub/)
 
 Build on [wp-plugin-template by Francis Yaconiello](https://github.com/fyaconiello/wp_plugin_template) and influenced by [Conferencer by mattdeclaire and
 briankwa](http://wordpress.org/plugins/conferencer/)
@@ -21,7 +21,8 @@ briankwa](http://wordpress.org/plugins/conferencer/)
 The plugin has a couple of shortcodes:  
 `[evidence_map]` - Overview of hub data and evidence flow  
 `[evidence_geomap]` - Plot of all evidence and projects  
-`[hypothesis_bar]` - Displays all the hypotheses and a summary of polarity  
+`[hypothesis_bar]` - Displays all the hypotheses and a summary of polarity 
+
 
 Libraries included
 ----
@@ -33,6 +34,7 @@ Requires at least: 3.0
 Tested up to: 3.4.1  
 Stable tag: 2.2.5  
 License: GPLv2 or later  
+http://wordpress.org/plugins/pronamic-google-maps/  
 
 **JSON API**  
 Contributors: dphiffer  
@@ -40,6 +42,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Requires at least: 2.8  
 Tested up to: 3.5.2  
 Stable tag: 1.1.1  
+http://wordpress.org/plugins/json-api/  
 
 **Facetious**  
 Contributors: codeforthepeople, johnbillion, s1m0nd, simonwheatley  
@@ -47,13 +50,18 @@ Requires at least: 3.4
 Tested up to: 3.5  
 Stable tag: trunk  
 License: GPL v2 or later  
+http://wordpress.org/plugins/facetious/  
 
 **Map (d3/SVG)**  
 @author    		Timo Grossenbacher  
 @copyright		CC BY-NC-SA 2.0 2013  
 @license		MIT License (http://www.opensource.org/licenses/mit-license.php)  
+http://labs.wnstnsmth.net/worldoil/   
 
- 
+**Other libraries**   
++ d3JS (including sankey)
++ LeafletJS (including OverlappingMarkerSpiderfier)
++ BigScreen
 
 
 Installation
