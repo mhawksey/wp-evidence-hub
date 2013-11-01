@@ -92,7 +92,7 @@ jQuery('#evidence-map select').on('change', function() {
 		shadow.show();
 		marks.show();
 	} else {
-		jQuery('.leaflet-marker-pane img').filter('.'+show.join('.')).show();
+		jQuery('.leaflet-shadow-pane img').filter('.'+show.join('.')).show();
 		jQuery('.leaflet-marker-pane img').filter('.'+show.join('.')).show();
 		
 	}
