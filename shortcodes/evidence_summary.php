@@ -30,7 +30,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 	}
 	
 	function prep_options() {
-		// Turn csv into array
+	   // Turn csv into array
 		if (!is_array($this->options['post_ids'])) $this->options['post_ids'] = array();
 		if (!empty($this->options['post_ids'])) $this->options['post_ids'] = explode(',', $this->options['post_ids']);
 
@@ -48,143 +48,92 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 	function content() {
 		ob_start();
 		extract($this->options);
-		
+		$post_id = implode(",", $this->options['post_ids']);
 		$errors = array();
 		?>
-		<div class="evidence-list">
-				<<?php echo $title_tag; ?>>
-					<?php if (!$title) { ?>
-						Evidence 
-					<?php } else echo $title; ?>
-				</<?php echo $title_tag; ?>>
- 		<div id="sankey-chart"></div>
+        <div class="evidence-list">
+            <<?php echo $title_tag; ?>>
+                <?php if (!$title) { ?>
+                    Evidence 
+                <?php } else echo $title; ?>
+            </<?php echo $title_tag; ?>>
+         <div id="sankey-chart"></div>
 		<?
-		if (empty($post_ids)) $errors[] = "No posts ID provided";
-		foreach ($post_ids as $post_id) {
-			$post = get_post($post_id);
+		$args = array('post_type' => 'evidence', // my custom post type
+    				   'posts_per_page' => -1,
+					   'post_status' => 'publish',
+					   'fields' => 'ids',
+					   'meta_query' => array(
+									array(
+										'key' => 'evidence_hub_hypothesis_id',
+										'value' => $post_id,
+										'compare' => '='
+									)
+								)); // show all posts);
+		$evidence = Evidence_Hub::add_terms(get_posts($args));
+		if (!empty($evidence) || !empty($no_evidence_message)) : 
+			$graph = array();
+			$nodes = array();
+			$links = array();
+			$base_link = get_permalink();
+			$table = array();
+			$nodesList = array();
 			
-			if (!$post) {
-				$errors[] = "$post_id is not a valid post ID";
-			} else if (!in_array(get_post_type($post), self::$post_types_with_evidence)) {
-				$errors[] = "<a href='".get_permalink($post->ID)."'>$post->post_title</a> is not the correct type of post";
+			$hposts_title = get_the_title($post_id);
+			
+			$nodes[] = array("name" => $hposts_title, "url" => $base_link, "id" => $post_id, "type" => "hypothesis" );
+			// get polarity and sector terms 
+			$polarities = get_terms('evidence_hub_polarity');
+			$sectors = get_terms('evidence_hub_sector');
+            echo '<div id="evidence-balance">'; //html 
+			foreach ($polarities as $polarity){
+				$pposts = Evidence_Hub::filterOptions($evidence, 'polarity_slug', $polarity->slug);
+				echo '<div class="evidence-box '.$polarity->slug.'">'; //html 
+				echo '<h4>'.$polarity->name.' Evidence ('.count($pposts).')</h4>'; //html
+				echo '<ul>'; //html
+				if (empty($nodeList[$polarity->name])){
+					$nodes[] = array("name" => $polarity->name, "url" => $base_link."/evidence/polarity/".$polarity->slug, "id" => $polarity->slug, "type" => "polarity", "fill" => json_decode($polarity->description)->fill);
+					$nodeList[$polarity->name] = 1;
+				}
+				if (count($pposts) > 0){ 
+					$links[] = array("source" => $hposts_title, "target" => $polarity->name, "value" => count($pposts));
+				}
+				foreach($sectors as $sector){
+					$sposts = Evidence_Hub::filterOptions($pposts, 'sector_slug', $sector->slug);
+					if (empty($nodeList[$sector->name])){
+						$nodes[] = array("name" => $sector->name, "url" => $base_link."/sector/".$sector->slug, "id" => $sector->slug, "type" => "sector", "fill" => json_decode($sector->description)->fill);
+						$nodeList[$sector->name] = 1;
+					}
+					if (count($sposts) > 0) {
+						$links[] = array("source" => $polarity->name, "target" => $sector->name, "value" => count($sposts));
+						echo '<li>'.$sector->name; //html
+						echo '<ul>'; //html 
+						foreach($sposts as $epost){
+							echo '<li><a href="'.get_permalink($epost['ID']).'">'.get_the_title($epost['ID']).'</a></li>'; //html
+						}
+						echo '</ul>'; //html
+						echo '</li>'; //html
+					}
+				}
+				echo '</ul>'; // html
+				echo '</div>'; //html end of div evidence-box
 			}
-		}
-		
-		if (count($errors)) return "[Shortcode errors (".$this->shortcode."): ".implode(', ', $errors)."]";
-		
-		$evidence = Evidence_Hub::get_evidence($post_ids);
-						
-		if (!empty($evidence) || !empty($no_evidence_message)) { 
-
-				$graph = array();
-				$nodes = array();
-				$links = array();
-				$base_link = get_permalink();
-				$totals = array();
-				
-				$nodes[] = array("name" => get_the_title(), "url" => $base_link, "id" => get_the_ID(), "type" => "hypothesis" );
-				$pol_terms = get_terms('evidence_hub_polarity', 'hide_empty=0&orderby=id');
-				$sec_terms = get_terms('evidence_hub_sector', 'hide_empty=0&orderby=id');
-				foreach ( $pol_terms as $term ) {
-					$nodes[] = array("name" => $term->name, "url" => $base_link."evidence/polarity/".$term->slug, "id" => $term->slug, "type" => "polarity", "fill" => json_decode($term->description)->fill);
-					$totals[$term->name] = array("total" => 0, "slug" => $term->slug, "sector" => array());
-					foreach ($evidence as $ev) {
-						if ($ev->polarity == $term->name)
-							$totals[$term->name]['total'] = $totals[$term->name]['total'] +1;
-					}
-					if ($totals[$term->name]['total'] > 0)
-						$links[] = array("source" => get_the_title(), "target" => $term->name, "value" => $totals[$term->name]['total']); 
-				}
-				
-				foreach ( $sec_terms as $term ) {
-					$nodes[] = array("name" => $term->name, "url" => $base_link."evidence/sector/".$term->slug, "id" => $term->slug, "type" => "sector", "fill" => json_decode($term->description)->fill);
-					foreach($totals as $key => $val){
-						$totals[$key]["sector"][$term->name] = array("total" => 0, "ids" => array());
-						foreach ($evidence as $ev) {
-							if ($ev->sector == $term->name && $ev->polarity == $key){
-								$totals[$key]["sector"][$term->name]["total"] = $totals[$key]["sector"][$term->name]["total"] +1;
-								$totals[$key]["sector"][$term->name]["ids"][] = $ev->ID;
-							}
-						}
-						if ($totals[$key]["sector"][$term->name]["total"] > 0) {
-							$links[] = array("source" => $key, "target" => $term->name, "value" => $totals[$key]["sector"][$term->name]["total"]);
-							//$totals[$key]["sub_ids"][] = $ev->ID;
-						}
-					}
-					
-				}
-				$graph['nodes'] = $nodes;
-				$graph['links'] = $links;
-				
-				if ($sankey == 1 && !empty($evidence)){ // <-- start of sankey if single
-					?>
-					<style>
-			 
-					.node rect {
-					  /*cursor: move;*/
-					  fill-opacity: .9;
-					  shape-rendering: crispEdges;
-					}
-					 
-					.node text {
-					  pointer-events: none;
-					  text-shadow: 0 1px 0 #fff;
-					}
-					.node text.hide {
-					  display:none;
-					}
-					 
-					.link {
-					  fill: none;
-					  stroke: #000;
-					  stroke-opacity: .2;
-					}
-					 
-					.link:hover {
-					  stroke-opacity: .5;
-					}
-					 
-					</style>
-			
-					 <script> 
-					 var graph = <?php print_r(json_encode($graph, JSON_PRETTY_PRINT)); ?>;
-					 var margin = {top: 1, right: 1, bottom: 1, left: 1},
-						width = document.getElementById("content").offsetWidth - margin.left - margin.right,
-						height = 400 - margin.top - margin.bottom;
-					
-					</script>
-					
-					 <script src="<?php echo plugins_url( 'js/sankey.js' , EVIDENCE_HUB_REGISTER_FILE )?>"></script>
-					 <script src="<?php echo plugins_url( 'js/sankey-control.js' , EVIDENCE_HUB_REGISTER_FILE )?>"></script>
-				 <?php } // end of sankey if single ?>
-			
-
-				<?php if (empty($evidence)) { ?>
-					<p><?php echo $no_evidence_message; ?></p>
-				<?php } else { ?>
-                	<div id="evidence-balance">
-                   
-                    <?php foreach ($totals as $polarity_key => $polarity) { ?>
-                    
-                      <div class="evidence-box <?php echo $polarity['slug'] ?>">
-                        <h4><?php echo $polarity_key;?> Evidence (<?php echo $polarity['total']; ?>)</h4>
-                        <ul>
-                        <?php foreach ($polarity['sector'] as $sector_name => $sector){ 
-							if ($sector['total']>0){ ?>
-								<li><?php echo $sector_name;?> <ul>
-								<?php foreach ($sector['ids'] as $ids) {
-									echo "<li><a href='".get_permalink($ids)."'>".get_the_title($ids)."</a></li>";
-								} ?>
-								</ul></li>
-					<?php 	} 
-					 	} ?>
-                        </ul></div>
-				<?php } ?>
-               </div>
-			   <?php } ?>
-		<?php } ?>
-		</div>
-	 <?php
-	  return ob_get_clean();
-	}
-}
+			$graph = array('nodes' => $nodes, 'links' => $links); ?>
+			<?php if ($sankey == 1): // <-- start of sankey if single ?>
+                        <script> 
+                        var graph = <?php print_r(json_encode($graph, JSON_PRETTY_PRINT)); ?>;
+                        var margin = {top: 1, right: 1, bottom: 1, left: 1},
+                            width = document.getElementById("content").offsetWidth - margin.left - margin.right,
+                            height = 400 - margin.top - margin.bottom;
+                        </script>
+                        <link rel="stylesheet" type="text/css" href="<?php echo plugins_url( 'lib/map/css/styles.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
+                        <script src="<?php echo plugins_url( 'js/sankey.js' , EVIDENCE_HUB_REGISTER_FILE )?>"></script>
+                        <script src="<?php echo plugins_url( 'js/sankey-control.js' , EVIDENCE_HUB_REGISTER_FILE )?>"></script>
+            <?php endif; // end of sankey if single and no evidence ?>
+		<?php else : // end of if !empty($evidence)?>
+                <p><?php echo $no_evidence_message; ?></p>
+        <?php endif; ?>
+		<?php echo '</div>'; //html end of evidence-balance ?>
+<?php return ob_get_clean();
+	} // end of function content
+} // enf od class

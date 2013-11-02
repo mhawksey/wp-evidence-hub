@@ -161,36 +161,6 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
         <!-- Mobile-spezifische Metatags
         ================================================== -->
         <!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">-->
-		<style>
-		 
-		.node rect {
-		  /*cursor: move;*/
-		  fill-opacity: .8;
-		  shape-rendering: crispEdges;
-		}
-		 
-		.node text {
-		  pointer-events: none;
-		  text-shadow: 0 1px 0 #fff;
-		  font-size:11px;
-		  font-family: "Open Sans", Helvetica, Arial, "Nimbus Sans L", sans-serif;
-		}
-		.node text.hide {
-		  display:none;
-		}
-		 
-		.link {
-		  fill: none;
-		  stroke: #000;
-		  stroke-opacity: .2;
-		}
-		 
-		.link:hover {
-		  stroke-opacity: .5;
-		}
-
-		 
-		</style>
 		
           <div id="evidence-map">
                 <div id="loading">

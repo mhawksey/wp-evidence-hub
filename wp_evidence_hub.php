@@ -229,71 +229,14 @@ if(!class_exists('Evidence_Hub'))
 		
 		public function my_remove_named_menus(){
 			global $menu;
-			
-			    foreach ( $menu as $i => $item ) {
-	                if ( 'pronamic_google_maps' == $item[2] ) {
-	                        unset( $menu[$i] );
-	                        return $item;
-	                }
+			foreach ( $menu as $i => $item ) {
+				if ( 'pronamic_google_maps' == $item[2] ) {
+						unset( $menu[$i] );
+						return $item;
+				}
 	        }
-	
 	        return false;
 		}
-		
-		public static function get_pronamic_google_map($loc_id){
-			$latLong = array();
-			$latLong[] = get_post_meta($loc_id, '_pronamic_google_maps_latitude', true );
-			$latLong[] = get_post_meta($loc_id, '_pronamic_google_maps_longitude', true );
-			$latLong = array_filter($latLong);
-			if (count($latLong) != 2){
-				return false;	
-			} else {
-				
-				$mapcode = pronamic_google_maps_mashup(array(
-												'post_type'   => 'location',
-												'p' => $loc_id
-											),
-											array(
-												'width'       => 260,
-												'height'      => 260,
-												'latitude'    => $latLong[0],
-												'longitude'   => $latLong[1],
-												'zoom'        => 14,
-												'fit_bounds'  => false,
-												'markers' 	  => $latLong,
-												'echo' 		  => false			
-											)
-										);
-				$mapcode .= "<div class='eh_edit_location'><a href='".admin_url( 'post.php?post='.$post_id.'&action=edit')."' target='_blank'>Edit this Location</a></div>";		
-				return $mapcode;
-			}
-		}
-		
-		public static function get_osm_map($loc_id){
-			$latLong = array();
-			$latLong[] = get_post_meta($loc_id, '_pronamic_google_maps_latitude', true );
-			$latLong[] = get_post_meta($loc_id, '_pronamic_google_maps_longitude', true );
-			$latLong = array_filter($latLong);
-			if (count($latLong) != 2){
-				return false;	
-			} else {
-				$mapcode = do_shortcode('[osm_map 
-										lat="'.$latLong[0].'" 
-										long="'.$latLong[1].'" 
-										zoom="15" 
-										width="260" 
-										height="260" 
-										marker="'.$latLong[0].','.$latLong[1].'" 
-										marker_width="22"
-										marker_height="20" 
-										theme="ol_orange" 
-										control="mouseposition,scaleline" 
-										marker_name="../../../images/icons/mm_20_red_shadow.png"]');
-				$mapcode .= "<div class='eh_edit_location'><a href='".admin_url( 'post.php?post='.$loc_id.'&action=edit')."' target='_blank'>Edit this Project/Org Location</a></div>";		
-				return $mapcode;
-			}
-		}
-
 		
 		public static function admin_notices() {
 			$messages = get_option('evidence_hub_messages', array());
@@ -371,33 +314,7 @@ if(!class_exists('Evidence_Hub'))
 				'show_admin_column'     => false,
 				'query_var'             => true,
 				'rewrite'               => array( 'slug' => strtolower($tax_single)),
-			);
-				
-		}
-		
-		
-		
-		// TODO: replace with custom SQL?
-		public static function get_evidence($post_ids) {
-			if (!is_array($post_ids)) $post_ids = array($post_ids);
-			$posts = array();
-			foreach ($post_ids as $post_id) {
-				$args = array('post_type' => 'evidence',
-							  'numberposts' => -1,
-							  'post_status' => 'publish',
-							  'meta_query' => array(
-									array(
-										'key' => 'evidence_hub_hypothesis_id',
-										'value' => $post_id,
-										'compare' => '='
-									)
-								));
-				
-				foreach (get_posts($args) as $post) {
-					$posts[$post->ID] = Evidence_Hub::add_meta($post);
-				}	
-			}
-			return $posts;
+			);		
 		}
 		
 		public static function add_meta($post) {
@@ -446,33 +363,12 @@ if(!class_exists('Evidence_Hub'))
 			return $posts_termed;
 		}
 		
-		public static function get_posts($post_type = 'post', $post_ids = false) {
-			
-			$args = array(
-				'numberposts' => -1, // get all
-				'post_type' => $post_type,
-				'post_status' => 'publish',
-			);
-			
-			if ($post_ids) {
-				if (!is_array($post_ids)) $post_ids = array($post_ids);
-				$args['include'] = $post_ids;
-			}
-			
-			$posts = array();
-			foreach (get_posts($args) as $post) {
-				$posts[$post->ID] = $post;
-			}
-			
-			return $posts;
-		}
 		public function get_sankey_data(){
 			$country_slug = $_POST[ 'country_slug' ];
 			$title = "World";
 			$nodes = array();
 			$links = array();
 			$markers = array();
-			$totals = array();
 			$nodesList = array();
 			
 			$args = array('post_type' => 'evidence', // my custom post type

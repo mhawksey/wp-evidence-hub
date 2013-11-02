@@ -354,8 +354,7 @@ if(!class_exists('Evidence_Template'))
 				if($project_name !== $actual_project_name){
 					echo json_encode( (object)array( 'notamatch' => 1 ) );
 					die();
-				} else {
-					//$mapcode = Evidence_Hub::get_pronamic_google_map($project_id);	
+				} else {	
 					echo json_encode( (object)array( 'valid' => 1,
 													 //'map' => $mapcode,
 													 'country' => ($loc = wp_get_object_terms($project_id, 'evidence_hub_country')) ? $loc[0]->slug : NULL,

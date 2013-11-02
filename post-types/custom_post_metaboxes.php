@@ -87,31 +87,6 @@
 								var marker = L.marker([%s]).addTo(map);</script>', ($value) ? '' : 'display:none', implode(",",$latLong), $zoom, implode(",",$latLong));  
 								  
                             ?>
-                    <?php } else if ($option['type'] == 'location') { ?>
-						<input
-							class="newtag form-input-tip"
-							type="text"
-                            autocomplete="off"
-							name="<?php echo $name; ?>_field"
-							id="<?php echo $name; ?>_field"
-							value="<?php echo get_the_title($value); ?>"
-                            placeholder="Start typing a location"
-						/><!-- 
-                        <input
-							type="hidden"
-							name="<?php echo $name; ?>"
-							id="<?php echo $name; ?>"
-							value="<?php echo $value; ?>"
-						/>
-                        <div id="menu-container" style="position:absolute; width: 256px;"></div>
-							<?php if ($value){
-									global $post;
-									$originalpost = $post;
-									//$maphtml = '<!-- '.$post->post_type.'--><div id="pronamicMapHolder">'.Evidence_Hub::get_pronamic_google_map($value).'</div><!-- '.$post->post_type.'-->';
-									$post = $originalpost; 
-								  }	
-                            ?>
-                            -->
 					<?php } else if ($option['type'] == 'select') { ?>
 								
 						<select
