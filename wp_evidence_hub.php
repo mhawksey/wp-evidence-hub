@@ -62,6 +62,8 @@ if(!class_exists('Evidence_Hub'))
 			require_once(sprintf("%s/shortcodes/evidence_meta.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/evidence_map.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/hypothesis_bars.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/hypothesis_archive.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/hypothesis_sankey.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/evidence_geomap.php", EVIDENCE_HUB_PATH));
 			
 			// Register custom post types - hypothesis

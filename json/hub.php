@@ -89,7 +89,7 @@ class JSON_API_Hub_Controller {
 		);
 	  }
 	
-	protected function get_reingold_tilford() {
+	public function get_reingold_tilford() {
 		$args = array('post_type' => 'hypothesis', // my custom post type
     				   'posts_per_page' => -1); // show all posts);
 		
@@ -145,8 +145,8 @@ class JSON_API_Hub_Controller {
 				$meta = array('name' => get_the_title(),
 							  'id' => get_the_ID(),
 							  'link' => get_permalink(),
-							  'excerpt' => get_the_excerpt(),
-							  'size' => strlen(get_the_content()) );
+							  'excerpt' => get_the_excerpt());
+							  //'size' => strlen(get_the_content()) );
 
 				foreach($postmeta as $key => $val){
 					$meta[$key] = get_post_meta( get_the_ID(), $val, true  );
@@ -155,15 +155,15 @@ class JSON_API_Hub_Controller {
 			}
 		}
 		
-		if ($name){
+		//if ($name){
 			return array(	
 					"name" => $name,
 					"size" => count($children),
 					"children" => $children
 				  );
-		} else {
+		/*} else {
 			return $children;
-		}
+		}*/
 	}
 }
 ?>

@@ -5,8 +5,6 @@ padding: 10px;
 -moz-border-radius: 5px;
 -webkit-border-radius: 5px;
 border-radius: 5px;
-position:relative;
-overflow:auto; 
 font-face: "PT Sans", sans-serif;
 }
 #evidence-balance h4, #evidence-meta h4 {
@@ -67,7 +65,7 @@ text-align:left;
 	box-shadow:none;	
 }
 #fullscreen-button { 
-	float: right;
+	text-align: right;
 }
 .leaflet-popup .popt{
 	display: table
@@ -118,4 +116,29 @@ text-align:left;
 	position:relative;
 	bottom: 50px;
 	left: 15px;	
+}
+.node rect {
+  /*cursor: move;*/
+  fill-opacity: .8;
+  shape-rendering: crispEdges;
+}
+ 
+.node text {
+  pointer-events: none;
+  text-shadow: 0 1px 0 #fff;
+  font-size:11px;
+  font-family: "Open Sans", Helvetica, Arial, "Nimbus Sans L", sans-serif;
+}
+.node text.hide {
+  display:none;
+}
+ 
+.link {
+  fill: none;
+  stroke: #000;
+  stroke-opacity: .2;
+}
+ 
+.link:hover {
+  stroke-opacity: .5;
 }
