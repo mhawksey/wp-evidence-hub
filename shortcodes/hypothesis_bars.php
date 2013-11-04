@@ -93,7 +93,7 @@ class Evidence_Hub_Shortcode_HypBar extends Evidence_Hub_Shortcode {
 							
 				}
 		}
-		print_r(json_encode($output, JSON_PRETTY_PRINT));
+		print_r(json_encode($output));
 	?>;
 	
 		hyp_w = document.getElementById("content").offsetWidth,

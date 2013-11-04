@@ -159,7 +159,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
         $graph = array('nodes' => $nodes, 'links' => $links); ?>
 		<?php if ($sankey == 1): // <-- start of sankey if single ?>
             <script>
-            var graph = <?php print_r(json_encode($graph, JSON_PRETTY_PRINT)); ?>;
+            var graph = <?php print_r(json_encode($graph)); ?>;
             var margin = {top: 1, right: 1, bottom: 1, left: 1},
                 width = document.getElementById("content").offsetWidth - margin.left - margin.right,
                 height = 400 - margin.top - margin.bottom;
