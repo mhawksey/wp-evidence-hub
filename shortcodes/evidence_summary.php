@@ -58,7 +58,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
                 <?php } else echo $title; ?>
             </<?php echo $title_tag; ?>>
          <div id="sankey-chart"></div>
-		<?
+		<?php
 		$args = array('post_type' => 'evidence', // my custom post type
     				   'posts_per_page' => -1,
 					   'post_status' => 'publish',
