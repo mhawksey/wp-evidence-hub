@@ -33,8 +33,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 define('EVIDENCE_HUB_VERSION', '0.3');
 define('EVIDENCE_HUB_PATH', dirname(__FILE__));
-define('EVIDENCE_HUB_URL', plugin_dir_url(__FILE__));
-define('EVIDENCE_HUB_REGISTER_FILE', __FILE__);
+// Handle symbolic links - code portability.
+define('EVIDENCE_HUB_URL', plugin_dir_url(preg_replace('@\/var\/www\/[^\/]+@', '', __FILE__)));
+define('EVIDENCE_HUB_REGISTER_FILE', preg_replace('@\/var\/www\/[^\/]+@', '', __FILE__));
 
 
 
