@@ -63,7 +63,7 @@
                             placeholder="Start typing a <?php echo $option['type'];?>"
 						/><?php if ($option['descr']){?>
                         <span class="description"><?php echo $option['descr'] ?></span>
-                        <? } ?>
+                        <?php } ?>
                         <input
 							type="hidden"
 							name="<?php echo $name; ?>"
