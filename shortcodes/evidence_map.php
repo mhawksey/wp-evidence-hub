@@ -226,7 +226,7 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
 			jQuery('#ui').hide();
 		}
 </script>
-		<?	
+		<?php
 		return ob_get_clean();
 	}
 }
