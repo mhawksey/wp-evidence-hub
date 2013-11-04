@@ -1,6 +1,10 @@
 <?php
+/**
+ *
+ */
 
 new Evidence_Hub_Shortcode_Evidence_Summary();
+// Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/shortcode.php'.
 class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 	var $shortcode = 'evidence_summary';
 	var $defaults = array(
@@ -45,6 +49,10 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 		$this->options['post_ids'] = array_unique($this->options['post_ids']);
 	}
 
+
+    /**
+     * @return string
+     */
 	function content() {
 		ob_start();
 		extract($this->options);
@@ -71,21 +79,42 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 									)
 								)); // show all posts);
 		$evidence = Evidence_Hub::add_terms(get_posts($args));
-		if (!empty($evidence) || !empty($no_evidence_message)) : 
-			$graph = array();
+
+		if (!empty($evidence) || !empty($no_evidence_message)) :
 			$nodes = array();
-			$links = array();
 			$base_link = get_permalink();
-			$table = array();
-			$nodesList = array();
 			
 			$hposts_title = get_the_title($post_id);
 			
 			$nodes[] = array("name" => $hposts_title, "url" => $base_link, "id" => $post_id, "type" => "hypothesis" );
-			// get polarity and sector terms 
+
+            echo '<div id="evidence-balance">'; //html
+
+            $links = $this->print_get_nodes_links($nodes);
+
+            $this->print_sankey_javascript($sankey, $nodes, $links);
+        ?>
+        <?php else: ?>
+                <p><?php echo $no_evidence_message; ?></p>
+        <?php endif; // end of if !empty($evidence) ?>
+		<?php echo '</div>'; //html end of evidence-balance ?>
+<?php return ob_get_clean();
+	} // end of function content
+
+
+    /**
+     * @param array [in/out]
+     * @return array Get array of links.
+     */
+    function print_get_nodes_links(&$nodes) {
+        $base_link = get_permalink();
+        $links = array();
+        $nodesList = array();
+
+        // get polarity and sector terms
 			$polarities = get_terms('evidence_hub_polarity');
 			$sectors = get_terms('evidence_hub_sector');
-            echo '<div id="evidence-balance">'; //html 
+
 			foreach ($polarities as $polarity){
 				$pposts = Evidence_Hub::filterOptions($evidence, 'polarity_slug', $polarity->slug);
 				echo '<div class="evidence-box '.$polarity->slug.'">'; //html 
@@ -118,22 +147,27 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 				echo '</ul>'; // html
 				echo '</div>'; //html end of div evidence-box
 			}
-			$graph = array('nodes' => $nodes, 'links' => $links); ?>
-			<?php if ($sankey == 1): // <-- start of sankey if single ?>
-                        <script> 
-                        var graph = <?php print_r(json_encode($graph, JSON_PRETTY_PRINT)); ?>;
-                        var margin = {top: 1, right: 1, bottom: 1, left: 1},
-                            width = document.getElementById("content").offsetWidth - margin.left - margin.right,
-                            height = 400 - margin.top - margin.bottom;
-                        </script>
-                        <link rel="stylesheet" type="text/css" href="<?php echo plugins_url( 'lib/map/css/styles.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
-                        <script src="<?php echo plugins_url( 'js/sankey.js' , EVIDENCE_HUB_REGISTER_FILE )?>"></script>
-                        <script src="<?php echo plugins_url( 'js/sankey-control.js' , EVIDENCE_HUB_REGISTER_FILE )?>"></script>
-            <?php endif; // end of sankey if single and no evidence ?>
-		<?php else : // end of if !empty($evidence)?>
-                <p><?php echo $no_evidence_message; ?></p>
-        <?php endif; ?>
-		<?php echo '</div>'; //html end of evidence-balance ?>
-<?php return ob_get_clean();
-	} // end of function content
-} // enf od class
+
+        return $links;
+    }
+
+
+    /**
+     * @return NULL
+     */
+    function print_sankey_javascript($sankey, $nodes, $links) {
+        $graph = array('nodes' => $nodes, 'links' => $links); ?>
+		<?php if ($sankey == 1): // <-- start of sankey if single ?>
+            <script>
+            var graph = <?php print_r(json_encode($graph, JSON_PRETTY_PRINT)); ?>;
+            var margin = {top: 1, right: 1, bottom: 1, left: 1},
+                width = document.getElementById("content").offsetWidth - margin.left - margin.right,
+                height = 400 - margin.top - margin.bottom;
+            </script>
+            <link rel="stylesheet" type="text/css" href="<?php echo plugins_url( 'lib/map/css/styles.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
+            <script src="<?php echo plugins_url( 'js/sankey.js' , EVIDENCE_HUB_REGISTER_FILE )?>"></script>
+            <script src="<?php echo plugins_url( 'js/sankey-control.js' , EVIDENCE_HUB_REGISTER_FILE )?>"></script>
+        <?php endif; // end of sankey if single and no evidence.
+    }
+
+} // end of class
