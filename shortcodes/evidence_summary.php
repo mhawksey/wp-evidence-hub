@@ -84,13 +84,11 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 			$nodes = array();
 			$base_link = get_permalink();
 			
-			$hposts_title = get_the_title($post_id);
-			
-			$nodes[] = array("name" => $hposts_title, "url" => $base_link, "id" => $post_id, "type" => "hypothesis" );
+
 
             echo '<div id="evidence-balance">'; //html
 
-            $links = $this->print_get_nodes_links($nodes);
+            $links = $this->print_get_nodes_links($evidence, $nodes);
 
             $this->print_sankey_javascript($sankey, $nodes, $links);
         ?>
@@ -106,10 +104,13 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
      * @param array [in/out]
      * @return array Get array of links.
      */
-    function print_get_nodes_links(&$nodes) {
+    function print_get_nodes_links($evidence, &$nodes) {
         $base_link = get_permalink();
         $links = array();
         $nodesList = array();
+		$hposts_title = get_the_title($post_id);
+			
+		$nodes[] = array("name" => $hposts_title, "url" => $base_link, "id" => $post_id, "type" => "hypothesis" );
 
         // get polarity and sector terms
 			$polarities = get_terms('evidence_hub_polarity');
