@@ -14,12 +14,13 @@
 				$user_option_count++;
 				$name = "evidence_hub_$name";
 				$style = "eh_$name";
-				
-				if ($option['save_as'] == 'term'){
-					$value = wp_get_object_terms($post->ID, $name); 
-				} else {
-					$value = get_post_meta( $post->ID, $name, true );
-					
+				$value = "";
+				if (isset($post)){
+					if ($option['save_as'] == 'term'){
+						$value = wp_get_object_terms($post->ID, $name); 
+					} else {
+						$value = get_post_meta( $post->ID, $name, true );
+					}
 				}
 			?>
 			

@@ -95,7 +95,7 @@ class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
 								  "name" => $post->title,
 								  "desc" => Evidence_Hub::generate_excerpt($post->ID),
 								  "url" => $post->url,
-								  "sector" => $post->sector_slug,
+								  "sector" => $post->sector_slug || NULL,
 								  );
 								  
 				$geoJSON[] = array("type" => "Feature",
