@@ -89,36 +89,36 @@ class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
 		$geoJSON = array();
 
 		$posts = json_decode(file_get_contents(site_url().'/'.get_option('json_api_base', 'api').'/hub/get_all_type/?type=evidence,project&count=-1'));
-
-		foreach ($posts->project as $post){
-			$property = array("type" => "project",
-							  "name" => $post->title,
-							  "desc" => Evidence_Hub::generate_excerpt($post->ID),
-							  "url" => $post->url,
-							  "sector" => $post->sector_slug,
-							  );
-							  
-			$geoJSON[] = array("type" => "Feature",
-							   "properties" => $property,
-							   "geometry" => $post->geometry);
-								
+		if (!empty($posts)){
+			foreach ($posts->project as $post){
+				$property = array("type" => "project",
+								  "name" => $post->title,
+								  "desc" => Evidence_Hub::generate_excerpt($post->ID),
+								  "url" => $post->url,
+								  "sector" => $post->sector_slug,
+								  );
+								  
+				$geoJSON[] = array("type" => "Feature",
+								   "properties" => $property,
+								   "geometry" => $post->geometry);
+									
+			}
+			foreach ($posts->evidence as $post){
+				$property = array("type" => "evidence",
+								  "name" => $post->title,
+								  "desc" => Evidence_Hub::generate_excerpt($post->ID),
+								  "url" => $post->url,
+								  "sector" => $post->sector_slug,
+								  "polarity" => $post->polarity_slug,
+								  "project" => (($post->project_id > 0) ? get_the_title($post->project_id) : "N/A"),
+								  "hypothesis_id" => $post->hypothesis_id,
+								  "hypothesis" => (($post->hypothesis_id > 0) ? get_the_title($post->hypothesis_id) : "Unassigned"));
+								  
+				$geoJSON[] = array("type" => "Feature",
+								   "properties" => $property,
+								   "geometry" => $post->geometry);						
+			}
 		}
-		foreach ($posts->evidence as $post){
-			$property = array("type" => "evidence",
-							  "name" => $post->title,
-							  "desc" => Evidence_Hub::generate_excerpt($post->ID),
-							  "url" => $post->url,
-							  "sector" => $post->sector_slug,
-							  "polarity" => $post->polarity_slug,
-							  "project" => (($post->project_id > 0) ? get_the_title($post->project_id) : "N/A"),
-							  "hypothesis_id" => $post->hypothesis_id,
-							  "hypothesis" => (($post->hypothesis_id > 0) ? get_the_title($post->hypothesis_id) : "Unassigned"));
-							  
-			$geoJSON[] = array("type" => "Feature",
-							   "properties" => $property,
-							   "geometry" => $post->geometry);						
-		}
-	
 		
 		?>
  
