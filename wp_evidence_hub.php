@@ -289,7 +289,7 @@ if(!class_exists('Evidence_Hub'))
 		}
 		
 		public function enqueue_front_scripts() {
-			wp_enqueue_script( 'd3js', plugins_url( 'lib/map/lib/d3.v3.min.js' , EVIDENCE_HUB_REGISTER_FILE ) );
+			wp_enqueue_script( 'd3js', plugins_url( 'lib/map/lib/d3.v3.min.js' , EVIDENCE_HUB_REGISTER_FILE, array( 'jquery' ) ) );
 			
 			wp_enqueue_style( 'evidence_hub_style', plugins_url( 'css/style.css' , EVIDENCE_HUB_REGISTER_FILE ) );
 		}
