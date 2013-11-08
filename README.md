@@ -8,7 +8,7 @@ Stable tag: 0.1
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html  
 
-*Plguin to capture and visualise evidence around a set of hypothesis.* 
+*Plugin to capture and visualise evidence around a set of hypotheses.*
 
 Description
 ----
