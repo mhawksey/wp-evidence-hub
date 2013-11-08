@@ -143,3 +143,18 @@ text-align:left;
 .link:hover {
   stroke-opacity: .5;
 }
+
+
+/*THEME-specific */
+#site-logo {
+  float: right;
+}
+
+.archive-header {
+  display: none;
+}
+
+blockquote {
+  color: #8B4513;
+}
+/*THEME-specific ends. */
