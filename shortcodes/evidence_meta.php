@@ -73,7 +73,7 @@ class Evidence_Hub_Shortcode_Evidence_Meta extends Evidence_Hub_Shortcode {
 			$type = trim($type);
 			$slug = $type."_slug";
 			//print_r("<!-- ".json_encode($post)." -->");
-			print_r("<!-- ".json_encode($fields)." -->");
+			//print_r("<!-- ".json_encode($fields)." -->");
 			if (!is_wp_error($slug_url = get_term_link($post->$slug,"evidence_hub_".$type)) || ($type=="citation" && $post->$type)){
 				if ($type=="citation"){
 					$slug_url = $post->$type;

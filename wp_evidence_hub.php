@@ -52,12 +52,6 @@ if(!class_exists('Evidence_Hub'))
 		{
 			add_action('init', array(&$this, 'init'));
 			
-			// Initialize Settings
-            require_once(sprintf("%s/settings/settings.php", EVIDENCE_HUB_PATH));
-            $Evidence_Hub_Settings = new Evidence_Hub_Settings();
-			require_once(sprintf("%s/settings/cache.php", EVIDENCE_HUB_PATH));
-			$Evidence_Hub_Settings_Cache = new Evidence_Hub_Settings_Cache();
-			
 			require_once(sprintf("%s/shortcodes/shortcode.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/evidence_summary.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/evidence_meta.php", EVIDENCE_HUB_PATH));
@@ -75,11 +69,14 @@ if(!class_exists('Evidence_Hub'))
 			require_once(sprintf("%s/post-types/evidence.php", EVIDENCE_HUB_PATH));
 			$Evidence_Template = new Evidence_Template();
 			
-			/*
+			/* location depreciated
 			// Register custom post types - location
 			require_once(sprintf("%s/post-types/location.php", EVIDENCE_HUB_PATH));
 			$Location_Template = new Location_Template();
 			*/
+			
+			require_once(sprintf("%s/post-types/policy.php", EVIDENCE_HUB_PATH));
+			$Policy_Template = new Policy_Template();
 			
 			// Register custom post types - project
 			require_once(sprintf("%s/post-types/project.php", EVIDENCE_HUB_PATH));
@@ -97,14 +94,18 @@ if(!class_exists('Evidence_Hub'))
 				require_once(sprintf("%s/lib/facetious/facetious.php", EVIDENCE_HUB_PATH));
 			}
 			
-
+			// Initialize Settings
+            require_once(sprintf("%s/settings/settings.php", EVIDENCE_HUB_PATH));
+            $Evidence_Hub_Settings = new Evidence_Hub_Settings();
+			require_once(sprintf("%s/settings/cache.php", EVIDENCE_HUB_PATH));
+			$Evidence_Hub_Settings_Cache = new Evidence_Hub_Settings_Cache();
 			
 			add_filter('json_api_controllers', array(&$this,'add_hub_controller'));
 			add_filter('json_api_hub_controller_path', array(&$this,'set_hub_controller_path'));
 			add_action('admin_notices', array(&$this, 'admin_notices'));
 		   
 		   	add_action('admin_enqueue_scripts', array(&$this, 'enqueue_autocomplete_scripts'));
-			add_action( 'wp_enqueue_scripts', array(&$this, 'enqueue_front_scripts') );
+			add_action('wp_enqueue_scripts', array(&$this, 'enqueue_front_scripts') );
 		   
 			add_filter('query_vars', array(&$this, 'evidence_hub_queryvars') );
 			add_action('pre_get_posts', array(&$this, 'evidence_hub_query'), 1);
@@ -285,13 +286,15 @@ if(!class_exists('Evidence_Hub'))
 			}
 			wp_enqueue_style( 'evidence-hub-autocomplete', plugins_url( 'css/admin.css' , EVIDENCE_HUB_REGISTER_FILE ) );
 			wp_enqueue_script( 'evidence-hub-autocomplete', plugins_url( 'js/admin.js' , EVIDENCE_HUB_REGISTER_FILE ), $scripts, '', true );
-
+			wp_register_script( 'd3js', plugins_url( 'lib/map/lib/d3.v3.min.js' , EVIDENCE_HUB_REGISTER_FILE), array( 'jquery' )  );
+			wp_enqueue_script( 'd3js' );
 		}
 		
 		public function enqueue_front_scripts() {
-			wp_enqueue_script( 'd3js', plugins_url( 'lib/map/lib/d3.v3.min.js' , EVIDENCE_HUB_REGISTER_FILE, array( 'jquery' ) ) );
-			
-			wp_enqueue_style( 'evidence_hub_style', plugins_url( 'css/style.css' , EVIDENCE_HUB_REGISTER_FILE ) );
+			wp_register_script( 'd3js', plugins_url( 'lib/map/lib/d3.v3.min.js' , EVIDENCE_HUB_REGISTER_FILE), array( 'jquery' )  );
+			wp_enqueue_script( 'd3js' );
+			wp_register_style( 'evidence_hub_style', plugins_url( 'css/style.css' , EVIDENCE_HUB_REGISTER_FILE ) );
+			wp_enqueue_style( 'evidence_hub_style');
 		}
 		
 		public static function get_taxonomy_args($tax_single, $tax_plural){

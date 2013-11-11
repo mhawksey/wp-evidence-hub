@@ -88,7 +88,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 
             echo '<div id="evidence-balance">'; //html
 
-            $links = $this->print_get_nodes_links($evidence, $nodes);
+            $links = $this->print_get_nodes_links($evidence, $nodes, $post_id);
 
             $this->print_sankey_javascript($sankey, $nodes, $links);
         ?>
@@ -104,7 +104,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
      * @param array [in/out]
      * @return array Get array of links.
      */
-    function print_get_nodes_links($evidence, &$nodes) {
+    function print_get_nodes_links($evidence, &$nodes, $post_id) {
         $base_link = get_permalink();
         $links = array();
         $nodesList = array();

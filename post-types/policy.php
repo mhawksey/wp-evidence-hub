@@ -1,15 +1,15 @@
 <?php
-if(!class_exists('Location_Template'))
+if(!class_exists('Policy_Template'))
 {
 	/**
 	 * A PostTypeTemplate class that provides 3 additional meta fields
 	 */
-	class Location_Template
+	class Policy_Template
 	{
-		const POST_TYPE	= "location";
-		const ARCHIVE_SLUG = "location"; // use pluralized string if you want an archive page
-		const SINGULAR = "Location";
-		const PLURAL = "Locations";
+		const POST_TYPE	= "policy";
+		const ARCHIVE_SLUG = "policy"; // use pluralized string if you want an archive page
+		const SINGULAR = "Policy";
+		const PLURAL = "Policies";
 		var $options = array();
 		
     	/**
@@ -88,7 +88,7 @@ if(!class_exists('Location_Template'))
 						'not_found_in_trash' => __(sprintf('No found in Trash%s', self::PLURAL)),
 					),
     				'public' => true,
-    				'description' => __("A location"),
+    				'description' => __("A policy"),
     				'supports' => array(
     					'title', 'editor', 'excerpt', 'author', 
     				),
@@ -98,7 +98,7 @@ if(!class_exists('Location_Template'))
 						'with_front' => false,
 					),
 					'menu_position' => 30,
-					'menu_icon' => EVIDENCE_HUB_URL.'/images/icons/location.png',
+					'menu_icon' => EVIDENCE_HUB_URL.'/images/icons/policy.png',
     			)
     		);
 		
@@ -128,28 +128,21 @@ if(!class_exists('Location_Template'))
     	{
             // verify if this is an auto save routine. 
             // If it is our form has not been submitted, so we dont want to do anything
-            if(defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
-            {
-                return;
-            }
-            
-    		if($_POST['post_type'] == self::POST_TYPE && current_user_can('edit_post', $post_id))
-    		{
-    			foreach($this->options as $name => $option)
-    			{
-    				// Update the post's meta field
-					$field_name = "evidence_hub_$name";
-					if ($option['save_as'] == 'term'){
-						wp_set_object_terms( $post_id, $_POST[$field_name], $field_name);
-					} else {
-    					update_post_meta($post_id, $field_name, $_POST[$field_name]);
-					}
-    			}
-    		}
-    		else
-    		{
-    			return;
-    		} // if($_POST['post_type'] == self::POST_TYPE && current_user_can('edit_post', $post_id))
+			if (get_post_type($post_id) != self::POST_TYPE) return;
+			if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+			if (!wp_verify_nonce($_POST['evidence_hub_nonce'], plugin_basename(__FILE__))) return;
+			if (!current_user_can('edit_post', $post_id)) return;
+
+			foreach($this->options as $name => $option)
+			{
+				// Update the post's meta field
+				$field_name = "evidence_hub_$name";
+				if ($option['save_as'] == 'term'){
+					wp_set_object_terms( $post_id, $_POST[$field_name], $field_name);
+				} else {
+					update_post_meta($post_id, $field_name, $_POST[$field_name]);
+				}
+			}
     	} // END public function save_post($post_id)
 
     	/**
@@ -198,6 +191,7 @@ if(!class_exists('Location_Template'))
 		 */		
 		public function add_inner_meta_boxes_side($post)
 		{		
+			wp_nonce_field(plugin_basename(__FILE__), 'evidence_hub_nonce');
 			$sub_options = Evidence_Hub::filterOptions($this->options, 'position', 'side');
 			include(sprintf("%s/custom_post_metaboxes.php", dirname(__FILE__)));			
 		} // END public function add_inner_meta_boxes($post)

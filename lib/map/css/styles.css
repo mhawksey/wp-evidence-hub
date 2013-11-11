@@ -90,17 +90,7 @@
 }
 /* General Styles */
 
-body {
-    font-family: "Georgia", "Times New Roman", serif;rgb(158, 158, 158);
-}
 
-h1 {
-    font-size: 38px;
-    line-height: 50px;
-    margin-bottom: 20px;
-    margin-top: 20px;
-    /*text-shadow: 1px 1px 1px #fff;*/
-}
 #container {
     margin: 0 auto;
     width: 100%;
