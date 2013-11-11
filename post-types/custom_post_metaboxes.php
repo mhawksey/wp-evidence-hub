@@ -15,6 +15,7 @@
 				$name = "evidence_hub_$name";
 				$style = "eh_$name";
 				$value = "";
+				$post_id = isset($post->ID) ? $post->ID : NULL;
 				if (isset($post)){
 					if ($option['save_as'] == 'term'){
 						$value = wp_get_object_terms($post->ID, $name); 
@@ -49,7 +50,7 @@
 							type="text"
 							name="<?php echo $name; ?>"
 							id="<?php echo $name.'_date'; ?>"
-							value="<?php if ($value) $value; ?>"
+							value="<?php echo $value; ?>"
 							placeholder="dd/mm/yyyy"
 							
 						/>
@@ -103,7 +104,7 @@
 									<?php if ($optionValue == $value) echo 'selected'; ?>><?php echo $text; ?></option>
                                     <?php }
                                  } else { 
-								 	 $loc_country = wp_get_object_terms(get_post_meta( $post->ID, 'evidence_hub_location_id', true ), 'evidence_hub_country');
+									 $loc_country = wp_get_object_terms(get_post_meta( $post_id, 'evidence_hub_location_id', true ), 'evidence_hub_country');
 									 foreach ($option['options'] as $select) { 
 										 if (!is_wp_error($value) && !empty($value) && !strcmp($select->slug, $value[0]->slug)) 
 											echo "<option value='" . $select->slug . "' selected>" . $select->name . "</option>\n";

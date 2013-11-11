@@ -95,7 +95,8 @@ class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
 								  "name" => $post->title,
 								  "desc" => Evidence_Hub::generate_excerpt($post->ID),
 								  "url" => $post->url,
-								  "sector" => $post->sector_slug || NULL,
+								  // Defensive programming - use isset().
+								  "sector" => isset($post->sector_slug) ? $post->sector_slug : NULL,
 								  );
 								  
 				$geoJSON[] = array("type" => "Feature",
@@ -108,7 +109,8 @@ class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
 								  "name" => $post->title,
 								  "desc" => Evidence_Hub::generate_excerpt($post->ID),
 								  "url" => $post->url,
-								  "sector" => $post->sector_slug,
+								  // Defensive programming - use isset().
+								  "sector" => isset($post->sector_slug) ? $post->sector_slug : NULL,
 								  "polarity" => $post->polarity_slug,
 								  "project" => (($post->project_id > 0) ? get_the_title($post->project_id) : "N/A"),
 								  "hypothesis_id" => $post->hypothesis_id,

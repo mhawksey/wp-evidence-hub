@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: WP Evidence Hub
-Plugin URI: https://github.com/fyaconiello/wp_plugin_template
-Description: A simple wordpress plugin template
+Plugin URI: https://github.com/mhawksey/wp-evidence-hub
+Description: Plugin to capture and visualise evidence around a set of hypotheses. OER Research Hub project. Based on "WP Plugin Template" by F.Yaconiello.
 Version: 0.1
 Author: Martin Hawksey
-Author URI: http://www.yaconiello.com
+Author URI: http://mashe.hawksey.info
 License: GPL2
 
 Based on Name: WP Plugin Template
