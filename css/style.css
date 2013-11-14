@@ -147,14 +147,14 @@ text-align:left;
 
 /*THEME-specific */
 #site-logo {
-  float: right;
+  float: right !important;
 }
 
 .archive-header {
-  display: none;
+  display: none !important;
 }
 
 blockquote {
-  color: #8B4513;
+  color: #8B4513 !important;
 }
 /*THEME-specific ends. */
