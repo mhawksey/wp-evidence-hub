@@ -81,6 +81,46 @@ class JSON_API_Hub_Controller {
 		return array_merge($this->posts_result($the_query), $output);
 	}
 	
+	public function get_geojson(){
+		$posts = $this->get_all_type(array('type' => 'evidence,project', 'posts_per_page' => '-1'));
+		$geoJSON = array();
+		if (!empty($posts)){
+			
+			foreach ($posts['project'] as $post){
+				$property = array("type" => "project",
+								  "name" => $post['title'],
+								  "desc" => Evidence_Hub::generate_excerpt($post['ID']),
+								  "url" => $post['url'],
+								  // Defensive programming - use isset().
+								  "sector" => isset($post['sector_slug']) ? $post['sector_slug'] : NULL,
+								  );
+								  
+				$geoJSON[] = array("type" => "Feature",
+								   "properties" => $property,
+								   "geometry" => $post['geometry']);
+									
+			}
+			foreach ($posts['evidence'] as $post){
+				$property = array("type" => "evidence",
+								  "name" => $post['title'],
+								  "desc" => Evidence_Hub::generate_excerpt($post['ID']),
+								  "url" => $post['url'],
+								  // Defensive programming - use isset().
+								  "sector" => isset($post['sector_slug']) ? $post['sector_slug'] : NULL,
+								  "polarity" => $post['polarity_slug'],
+								  "project" => (($post['project_id'] > 0) ? get_the_title($post['project_id']) : "N/A"),
+								  "hypothesis_id" => $post['hypothesis_id'],
+								  "hypothesis" => (($post['hypothesis_id'] > 0) ? get_the_title($post['hypothesis_id']) : "Unassigned"));
+								  
+				$geoJSON[] = array("type" => "Feature",
+								   "properties" => $property,
+								   "geometry" => $post['geometry']);						
+			}
+		}	
+
+		return array('geoJSON' => $geoJSON);
+	}
+	
 	protected function posts_result($query) {
 		return array(
 		  'count' => (int) $query->post_count,

@@ -50,7 +50,6 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
 			a.href = url;
 			return a.pathname.charAt(0) != '/' ? '/' + a.pathname : a.pathname;
 		}
-		var test = getPath('<?php echo EVIDENCE_HUB_URL; ?>');
 		/* ]]> */
 		<?php 
 		$handle = fopen(EVIDENCE_HUB_PATH.'/lib/map/data/world-country-names.csv', 'r'); 
@@ -74,35 +73,19 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
 		$year = array();
 		
 		$posts = Evidence_Hub::add_terms(get_posts($args));
-		$countries = get_terms('evidence_hub_country');
+		$countries = get_terms('evidence_hub_country', array('post_types' =>array('evidence')));
 		$polarities = get_terms('evidence_hub_polarity');
 		$args['post_type'] = 'hypothesis';
 		$hypotheses = get_posts($args);
-		$sectors = get_terms('evidence_hub_sector');
+
 		
 		$graph = array();
 		$nodes = array();
 		$links = array();
 		$totals = array();
-		/*
-		foreach ($countries as $country){
-			$cposts = Evidence_Hub::filterOptions($posts, 'country_slug' , $country->slug);
-			$totals[$country->slug] = array('type'=>'country', 'count' => count($cposts));
-			foreach($hypotheses as $hypothesis){
-				$hposts = Evidence_Hub::filterOptions($cposts, 'hypothesis_id', $hypothesis);
-				$hposts_title = get_the_title($hypothesis);
-				$totals[$country->slug][$hposts_title] = array('type'=>'hypothesis', 'count' => count($hposts));
-				foreach ($polarities as $polarity){
-					$pposts = Evidence_Hub::filterOptions($hposts, 'polarity_slug', $polarity->slug);
-					$totals[$country->slug][$hposts_title][$polarity->slug] = array('type'=>'polarity', 'count' => count($pposts));
-					foreach($sectors as $sector){
-						$sposts = Evidence_Hub::filterOptions($pposts, 'sector_slug', $sector->slug);
-						$totals[$country->slug][$hposts_title][$polarity->slug][$sector->slug] = array('type'=>'sector', 'count' => count($sposts));		
-					}
-				}
-			}			
-		}
-		*/
+		
+
+
 		$world = array("name"=>"World",
 					   "id" => 900,
 					   "positive" => 0,
@@ -128,8 +111,6 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
 		
 		?>
 		</script>
-        
-        <!-- <iframe id="evidence-map" src="<?php echo plugins_url( 'lib/map/index.php' , EVIDENCE_HUB_REGISTER_FILE )?>" style="width:100%; height:300px" webkitallowfullscreen mozallowfullscreen allowfullscreen scrolling="no"></iframe> -->
         <script src="<?php echo plugins_url( 'lib/map/lib/queue.v1.min.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
         <script src="<?php echo plugins_url( 'lib/map/lib/topojson.v1.min.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
         <script src="<?php echo plugins_url( 'lib/map/lib/colorbrewer.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>

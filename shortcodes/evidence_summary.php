@@ -128,6 +128,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 				if (count($pposts) > 0){ 
 					$links[] = array("source" => $hposts_title, "target" => $polarity->name, "value" => count($pposts));
 				}
+				
 				foreach($sectors as $sector){
 					$sposts = Evidence_Hub::filterOptions($pposts, 'sector_slug', $sector->slug);
 					if (empty($nodeList[$sector->name])){

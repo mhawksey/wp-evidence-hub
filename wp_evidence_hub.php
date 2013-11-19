@@ -75,12 +75,12 @@ if(!class_exists('Evidence_Hub'))
 			$Location_Template = new Location_Template();
 			*/
 			
-			require_once(sprintf("%s/post-types/policy.php", EVIDENCE_HUB_PATH));
-			$Policy_Template = new Policy_Template();
-			
 			// Register custom post types - project
 			require_once(sprintf("%s/post-types/project.php", EVIDENCE_HUB_PATH));
 			$Project_Template = new Project_Template();
+					
+			require_once(sprintf("%s/post-types/policy.php", EVIDENCE_HUB_PATH));
+			$Policy_Template = new Policy_Template();
 			
 			// Initialize Pronamics Google Maps distro
 			if (!class_exists('Pronamic_Google_Maps_Maps')){
@@ -124,6 +124,12 @@ if(!class_exists('Evidence_Hub'))
     	public function init()
     	{	
 			
+			add_rewrite_rule("^country/([^/]+)/policy/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=policy&evidence_hub_country=$matches[1]&sector=$matches[2]&paged=$matches[3]','top');
+			add_rewrite_rule("^country/([^/]+)/policy/sector/([^/]+)?",'index.php?post_type=policy&evidence_hub_country=$matches[1]&sector=$matches[2]','top');
+			
+			add_rewrite_rule("^country/([^/]+)/policy/page/([0-9]+)?",'index.php?post_type=policy&evidence_hub_country=$matches[1]&paged=$matches[2]','top');
+			add_rewrite_rule("^country/([^/]+)/policy([^/]+)?",'index.php?post_type=policy&evidence_hub_country=$matches[1]','top');
+			
 			add_rewrite_rule("^country/([^/]+)/evidece/polarity/([^/]+)/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&polarity=$matches[2]&sector=$matches[3]&paged=$matches[4]','top');
 			add_rewrite_rule("^country/([^/]+)/evidence/polarity/([^/]+)/sector/([^/]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&polarity=$matches[2]&sector=$matches[3]','top');
 			
@@ -143,8 +149,10 @@ if(!class_exists('Evidence_Hub'))
 			
 			add_rewrite_rule("^evidence/(polarity|sector)/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&$matches[1]=$matches[2]&paged=$matches[3]','top');
 			add_rewrite_rule("^evidence/(polarity|sector)/([^/]+)?",'index.php?post_type=evidence&$matches[1]=$matches[2]','top');
-	
 			
+			add_rewrite_rule("^policy/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=policy&sector=$matches[1]&paged=$matches[2]','top');
+			add_rewrite_rule("^policy/sector/([^/]+)?",'index.php?post_type=policy&sector=$matches[1]','top');
+	
 			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/evidence/polarity/([^/]+)/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&polarity=$matches[3]&sector=$matches[4]&paged=$matches[5]','top');
 			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/evidence/polarity/([^/]+)/sector/([^/]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&polarity=$matches[3]&sector=$matches[4]','top');
 			
@@ -356,9 +364,9 @@ if(!class_exists('Evidence_Hub'))
 				$taxonomies = get_object_taxonomies(get_post_type($post_id), 'objects');
 	
 				foreach ($taxonomies as $taxonomy_id => $taxonomy) {
-					
 					if (strpos($taxonomy_id, 'evidence_hub') !== 0) continue;
 					$value = wp_get_object_terms($post_id, $taxonomy_id);
+					
 					$taxonomy_id = substr($taxonomy_id, 13);
 					$taxonomy_slug = $taxonomy_id."_slug";
 					$post[$taxonomy_id] = $value[0]->name;
@@ -398,7 +406,7 @@ if(!class_exists('Evidence_Hub'))
 										   'orderby' => 'title',
 										   'order' => 'ASC',
 										   'fields' => 'ids'));
-			$sectors = get_terms('evidence_hub_sector');
+			$sectors = get_terms('evidence_hub_sector', array('post_types' =>array('evidence')));
 			if ($country_slug != "World"){
 				foreach ($posts as $post){
 					$markers[] = array("id" => $post['ID'],
@@ -427,7 +435,7 @@ if(!class_exists('Evidence_Hub'))
 					foreach($sectors as $sector){
 						$sposts = Evidence_Hub::filterOptions($pposts, 'sector_slug', $sector->slug);
 						if (empty($nodeList[$sector->name])){
-							$nodes[] = array("name" => $sector->name, "url" => $base_link."/sector/".$sector->slug, "id" => $sector->slug, "type" => "sector", "fill" => json_decode($sector->description)->fill);
+							$nodes[] = array("name" => $sector->name, "url" => $base_link."/evidence/sector/".$sector->slug, "id" => $sector->slug, "type" => "sector", "fill" => json_decode($sector->description)->fill);
 							$nodeList[$sector->name] = 1;
 						}
 						if (count($sposts) > 0) 
@@ -498,7 +506,7 @@ if(!class_exists('Evidence_Hub'))
 		public static function activate()
 		{
 			flush_rewrite_rules();
-			update_option( 'Pronamic_Google_maps', array( 'active' => array( 'location' => true, 'evidence' => true, 'project' => true  ) ) );
+			update_option( 'Pronamic_Google_maps', array( 'active' => array( 'location' => true, 'evidence' => true, 'project' => true, 'policy' => true  ) ) );
 			// Do nothing
 		} // END public static function activate
 	

@@ -42,6 +42,7 @@ if(!class_exists('Policy_Template'))
 				'cb' => '<input type="checkbox" />',
 				'title' => __( self::SINGULAR ),
 				'evidence_hub_country' => __( 'Country' ),
+				'evidence_hub_sector' => __( 'Sector' ),
 				'author' => __( 'Author' ),
 				'date' => __( 'Date' )
 			);
@@ -57,6 +58,18 @@ if(!class_exists('Policy_Template'))
 						echo __( 'Empty' );
 					else
 						printf( __( '%s' ), $location[0]->name  );
+					break;
+				case 'sector':
+					$sector = wp_get_object_terms( $post_id, $column);
+					if ( empty( $sector ) ){
+						echo __( 'Empty' );	
+					} else {
+						$out = array();
+						foreach ($sector as $s){
+							$out[] = $s->name;	
+						}
+						printf( __( '%s' ), implode(", ", $out ));
+					}
 					break;
 			default :
 				break;
@@ -89,6 +102,7 @@ if(!class_exists('Policy_Template'))
 					),
     				'public' => true,
     				'description' => __("A policy"),
+					'taxonomies' => array('post_tag'),
     				'supports' => array(
     					'title', 'editor', 'excerpt', 'author', 
     				),
@@ -101,10 +115,11 @@ if(!class_exists('Policy_Template'))
 					'menu_icon' => EVIDENCE_HUB_URL.'/images/icons/policy.png',
     			)
     		);
+			$args = Evidence_Hub::get_taxonomy_args("Sector","Sectors");
+			register_taxonomy( 'evidence_hub_sector', array(self::POST_TYPE, 'evidence'), $args );
 		
 			$args = Evidence_Hub::get_taxonomy_args("Country", "Countries");
-		
-			register_taxonomy( 'evidence_hub_country', array(self::POST_TYPE, 'evidence'), $args );
+			register_taxonomy( 'evidence_hub_country', array(self::POST_TYPE, 'evidence', 'project'), $args );
 			
 			$countries = get_terms( 'evidence_hub_country', array( 'hide_empty' => false ) );
 			
@@ -160,6 +175,24 @@ if(!class_exists('Policy_Template'))
 					'options' => get_terms('evidence_hub_country', 'hide_empty=0'),
 					),
 				));
+			$this->options = array_merge($this->options, array(
+				'sector' => array(
+					'type' => 'multi-select',
+					'save_as' => 'term',
+					'position' => 'side',
+					'quick_edit' => true,
+					'label' => 'Sector',
+					'options' => get_terms('evidence_hub_sector', 'hide_empty=0&orderby=id'),
+					)
+			 ));
+			 $this->options = array_merge($this->options, array(
+				'citation' => array(
+					'type' => 'text',
+					'save_as' => 'post_meta',
+					'position' => 'bottom',
+					'label' => 'Citation'
+					)
+			 ));
 				
 				
 
@@ -175,12 +208,22 @@ if(!class_exists('Policy_Template'))
     	{
 // Add this metabox to every selected post
     		add_meta_box( 
+    			sprintf('wp_evidence_hub_%s_section', self::POST_TYPE),
+    			sprintf('%s Information', ucwords(str_replace("_", " ", self::POST_TYPE))),
+    			array(&$this, 'add_inner_meta_boxes'),
+    			self::POST_TYPE,
+				'normal',
+				'high'
+    	    );
+			
+    		add_meta_box( 
     			sprintf('wp_evidence_hub_%s_side_section', self::POST_TYPE),
     			sprintf('%s Information', ucwords(str_replace("_", " ", self::POST_TYPE))),
     			array(&$this, 'add_inner_meta_boxes_side'),
     			self::POST_TYPE,
 				'side'
     	    );	
+			remove_meta_box('tagsdiv-evidence_hub_sector',self::POST_TYPE,'side');
 			remove_meta_box('tagsdiv-evidence_hub_country',self::POST_TYPE,'side');
 			
     					

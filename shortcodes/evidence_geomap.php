@@ -85,43 +85,7 @@ class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
 		
 		ob_start();
 		extract($this->options);
-		$errors = array();	
-		$geoJSON = array();
-
-		$posts = json_decode(file_get_contents(site_url().'/'.get_option('json_api_base', 'api').'/hub/get_all_type/?type=evidence,project&count=-1'));
-		if (!empty($posts)){
-			foreach ($posts->project as $post){
-				$property = array("type" => "project",
-								  "name" => $post->title,
-								  "desc" => Evidence_Hub::generate_excerpt($post->ID),
-								  "url" => $post->url,
-								  // Defensive programming - use isset().
-								  "sector" => isset($post->sector_slug) ? $post->sector_slug : NULL,
-								  );
-								  
-				$geoJSON[] = array("type" => "Feature",
-								   "properties" => $property,
-								   "geometry" => $post->geometry);
-									
-			}
-			foreach ($posts->evidence as $post){
-				$property = array("type" => "evidence",
-								  "name" => $post->title,
-								  "desc" => Evidence_Hub::generate_excerpt($post->ID),
-								  "url" => $post->url,
-								  // Defensive programming - use isset().
-								  "sector" => isset($post->sector_slug) ? $post->sector_slug : NULL,
-								  "polarity" => $post->polarity_slug,
-								  "project" => (($post->project_id > 0) ? get_the_title($post->project_id) : "N/A"),
-								  "hypothesis_id" => $post->hypothesis_id,
-								  "hypothesis" => (($post->hypothesis_id > 0) ? get_the_title($post->hypothesis_id) : "Unassigned"));
-								  
-				$geoJSON[] = array("type" => "Feature",
-								   "properties" => $property,
-								   "geometry" => $post->geometry);						
-			}
-		}
-		
+		$errors = array();		
 		?>
  
         <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
@@ -141,8 +105,9 @@ class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
          </div>
          <div id="fullscreen-button"><a href="#" id="evidence-map-fullscreen">Full Screen</a></div>
          <script type="application/javascript">
-		 /* <![CDATA[ */		
-			var hubPoints = <?php print_r(json_encode($geoJSON));?>;
+		 /* <![CDATA[ */	
+		 	var json = <?php print_r(file_get_contents(site_url().'/'.get_option('json_api_base', 'api').'/hub/get_geojson/')); ?>;	
+			var hubPoints = json['geoJSON'] || null;
 			var pluginurl = '<?php echo EVIDENCE_HUB_URL; ?>';
 			jQuery('#map').css('height', parseInt(jQuery('#evidence-map').width()*9/16));		
 		/* ]]> */

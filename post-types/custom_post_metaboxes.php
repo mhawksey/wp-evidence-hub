@@ -118,28 +118,42 @@
                         
 						</select>
 					<?php } else if ($option['type'] == 'multi-select') { ?>
-						<?php
+                        <?php 
 							$multivalues = $value;
 							if (!$multivalues || !is_array($multivalues)) $multivalues = array(null);
 						?>
 						<ul>
-							<?php foreach ($multivalues as $multivalue) {?>
+							<?php foreach ($multivalues as $multivalue) {
+								$itemSelected = ($option['save_as'] != 'term') ? $multivalue : $multivalue->slug; 
+								?>
 								<li>
 									<select name="<?php echo $name; ?>[]">
 										<option value=""></option>
 										<?php foreach ($option['options'] as $optionValue => $text) { ?>
+                                        <?php 
+										$itemValue = ($option['save_as'] != 'term') ? $optionValue : $text->slug; 
+										$itemName = ($option['save_as'] != 'term') ? $text : $text->name; 
+										?>
 											<option
-												value="<?php echo $optionValue; ?>"
-												<?php if ($optionValue == $multivalue) echo 'selected'; ?>
+												value="<?php echo($itemValue) ?>"
+												<?php if ($itemValue == $itemSelected) echo 'selected'; ?>
 											>
-												<?php echo $text; ?>
+												<?php echo $itemName; ?>
 											</option>
 										<?php } ?>
 									</select>
 								</li>
 							<?php } ?>
 						</ul>
-						<a class="add-another" href="#">add another</a>
+                        <a class="add-another" href="#">add another</a>
+                        <script>
+							jQuery('#evidence_hub_options .add-another').click(function() {
+								var list = jQuery(this).prev();
+								var item = jQuery(jQuery('li:first', list).clone()).appendTo(list);
+								jQuery('select', item).val('');
+								return false;
+							});
+						</script>
 					<?php } else if ($option['type'] == 'boolean') { ?>
 						<input
 							type="checkbox"

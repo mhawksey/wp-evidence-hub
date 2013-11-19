@@ -23,10 +23,14 @@
 .eh_input label { 
 	white-space: nowrap; 
 	display: table-cell; 
+	
 
 }
 #wp_evidence_hub_evidence_side_section .eh_input label{
 	vertical-align: baseline;
+}
+#wp_evidence_hub_policy_side_section  .eh_input label{
+	vertical-align: text-top;
 }
 .eh_input span { 
 	width: 100%; display: table-cell; 
