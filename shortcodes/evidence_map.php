@@ -126,7 +126,6 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
            <style>svg { height: 450px }</style>
         <![endif]-->
         <!-- main script -->
-        <script src="<?php echo plugins_url( 'js/sankey-main.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
         <script src="<?php echo plugins_url( 'lib/map/src/main.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
 
         

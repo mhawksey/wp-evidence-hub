@@ -113,8 +113,8 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 		$nodes[] = array("name" => $hposts_title, "url" => $base_link, "id" => $post_id, "type" => "hypothesis" );
 
         // get polarity and sector terms
-			$polarities = get_terms('evidence_hub_polarity');
-			$sectors = get_terms('evidence_hub_sector');
+			$polarities = get_terms('evidence_hub_polarity', 'hide_empty=0');
+			$sectors = get_terms('evidence_hub_sector', 'hide_empty=0');
 
 			foreach ($polarities as $polarity){
 				$pposts = Evidence_Hub::filterOptions($evidence, 'polarity_slug', $polarity->slug);
@@ -128,8 +128,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 				if (count($pposts) > 0){ 
 					$links[] = array("source" => $hposts_title, "target" => $polarity->name, "value" => count($pposts));
 				}
-				
-				foreach($sectors as $sector){
+				foreach($sectors as $sector){	
 					$sposts = Evidence_Hub::filterOptions($pposts, 'sector_slug', $sector->slug);
 					if (empty($nodeList[$sector->name])){
 						$nodes[] = array("name" => $sector->name, "url" => $base_link."/sector/".$sector->slug, "id" => $sector->slug, "type" => "sector", "fill" => json_decode($sector->description)->fill);

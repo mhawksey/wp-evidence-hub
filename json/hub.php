@@ -41,6 +41,9 @@ class JSON_API_Hub_Controller {
 		if ($json_api->query->count) {
 		  $query['posts_per_page'] = $json_api->query->count;
 		}
+		if ($json_api->query->paged) {
+			$query['paged'] = $json_api->query->paged;
+		}
 		if (isset($args['hypothesis_id']))
 			$query['p'] = $args['hypothesis_id']; 
 		unset($query['json']);
@@ -81,8 +84,18 @@ class JSON_API_Hub_Controller {
 		return array_merge($this->posts_result($the_query), $output);
 	}
 	
-	public function get_geojson(){
-		$posts = $this->get_all_type(array('type' => 'evidence,project', 'posts_per_page' => '-1'));
+	public function get_geojson($args=array()){
+		global $json_api;
+		if ($json_api->query->count) {
+		  $args['posts_per_page'] = $json_api->query->count;
+		}
+		if ($json_api->query->type) {
+			$args['type'] = $json_api->query->type;
+		}
+		if ($json_api->query->paged) {
+			$args['paged'] = $json_api->query->paged;
+		}
+		$posts = $this->get_all_type($args);
 		$geoJSON = array();
 		if (!empty($posts)){
 			
@@ -118,7 +131,10 @@ class JSON_API_Hub_Controller {
 			}
 		}	
 
-		return array('geoJSON' => $geoJSON);
+		return array('count' => $posts['count'],
+					 'count_total' => $posts['count_total'],
+					 'pages' => $posts['pages'],
+					 'geoJSON' => $geoJSON);
 	}
 	
 	protected function posts_result($query) {

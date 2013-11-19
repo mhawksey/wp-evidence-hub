@@ -49,7 +49,7 @@ var path = sankey.link();
 	 .append("svg:a")
 	  .attr("xlink:href", function(d) { 
 						var ev = (d.source.type == 'hypothesis') ? 'evidence' : '';
-						return d.source.url+ev+'/'+d.target.type+'/'+d.target.id; })
+						return (d.source.url+ev+'/'+d.target.type+'/'+d.target.id).replace(/\\/g,""); })
 	  .attr("class", "linkpath")
 	  .sort(function(a, b) { return b.dy - a.dy; });
 			  

@@ -399,14 +399,14 @@ if(!class_exists('Evidence_Hub'))
 			}
 			$posts = Evidence_Hub::add_terms(get_posts($args));
 			
-			$polarities = get_terms('evidence_hub_polarity');
+			$polarities = get_terms('evidence_hub_polarity', 'hide_empty=0');
 			$hypotheses = get_posts(array('post_type' => 'hypothesis', // my custom post type
 										   'posts_per_page' => -1,
 										   'post_status' => 'publish',
 										   'orderby' => 'title',
 										   'order' => 'ASC',
 										   'fields' => 'ids'));
-			$sectors = get_terms('evidence_hub_sector', array('post_types' =>array('evidence')));
+			$sectors = get_terms('evidence_hub_sector', 'hide_empty=0');
 			if ($country_slug != "World"){
 				foreach ($posts as $post){
 					$markers[] = array("id" => $post['ID'],
@@ -423,7 +423,8 @@ if(!class_exists('Evidence_Hub'))
 				$hposts = Evidence_Hub::filterOptions($posts, 'hypothesis_id', $hypothesis);
 				$hposts_title = get_the_title($hypothesis);
 				$base_link = ($country_slug != 'World') ? (site_url().'/country/'.$country_slug) : site_url();
-				$nodes[] = array("name" => $hposts_title, "url" => $base_link.'/hypothesis/'.$hypothesis.'/'.basename(get_permalink($hypothesis)), "id" => $hypothesis, "type" => "hypothesis" );
+				$hyp_link = $base_link . '/hypothesis/'.$hypothesis.'/'.basename(get_permalink($hypothesis));
+				$nodes[] = array("name" => $hposts_title, "url" => $hyp_link, "id" => $hypothesis, "type" => "hypothesis" );
 				foreach ($polarities as $polarity){
 					$pposts = Evidence_Hub::filterOptions($hposts, 'polarity_slug', $polarity->slug);
 					if (empty($nodeList[$polarity->name])){
@@ -439,7 +440,7 @@ if(!class_exists('Evidence_Hub'))
 							$nodeList[$sector->name] = 1;
 						}
 						if (count($sposts) > 0) 
-							$links[] = array("source" => $polarity->name, "target" => $sector->name, "value" => count($sposts));		
+							$links[] = array("source" => $polarity->name, "target" => $sector->name, "value" => count($sposts), "data" => array("url" => "xxx"));		
 					}
 				}
 			}	
