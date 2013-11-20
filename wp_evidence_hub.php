@@ -60,6 +60,7 @@ if(!class_exists('Evidence_Hub'))
 			require_once(sprintf("%s/shortcodes/hypothesis_archive.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/hypothesis_sankey.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/evidence_geomap.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/policy_geomap.php", EVIDENCE_HUB_PATH));
 			
 			// Register custom post types - hypothesis
 			require_once(sprintf("%s/post-types/hypothesis.php", EVIDENCE_HUB_PATH));
@@ -369,8 +370,14 @@ if(!class_exists('Evidence_Hub'))
 					
 					$taxonomy_id = substr($taxonomy_id, 13);
 					$taxonomy_slug = $taxonomy_id."_slug";
-					$post[$taxonomy_id] = $value[0]->name;
-					$post[$taxonomy_slug] = $value[0]->slug;
+					$name = array();
+					$slug = array();
+					foreach ($value as $v){
+						$name[] = $v->name;	
+						$slug[] = $v->slug;
+					}
+					$post[$taxonomy_id] = implode(", ",$name);
+					$post[$taxonomy_slug] = implode(", ",$slug);
 				}
 				$posts_termed[] = $post;
 			}

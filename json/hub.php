@@ -55,14 +55,14 @@ class JSON_API_Hub_Controller {
 		foreach ($posts as $post){
 				$p = get_post($post['ID']);
 				$geo = array();
-				if ($p->post_type === 'evidence' || $p->post_type === 'project'){
+				if ($p->post_type != 'hypothesis'){
 					if ($p->post_type === 'evidence'){
 						if (!$lat = get_post_meta($post['ID'], '_pronamic_google_maps_latitude', true ))
 							$lat = get_post_meta($post['project_id'], '_pronamic_google_maps_latitude', true );
 							
 						if (!$long = get_post_meta($post['ID'], '_pronamic_google_maps_longitude', true ))
 							$long = get_post_meta($post['project_id'], '_pronamic_google_maps_longitude', true );
-					} elseif ($p->post_type === 'project'){
+					} else {
 						$long = get_post_meta($post['ID'], '_pronamic_google_maps_longitude', true );
 						$lat = get_post_meta($post['ID'], '_pronamic_google_maps_latitude', true );	
 					}
@@ -97,37 +97,29 @@ class JSON_API_Hub_Controller {
 		}
 		$posts = $this->get_all_type($args);
 		$geoJSON = array();
-		if (!empty($posts)){
-			
-			foreach ($posts['project'] as $post){
-				$property = array("type" => "project",
-								  "name" => $post['title'],
-								  "desc" => Evidence_Hub::generate_excerpt($post['ID']),
-								  "url" => $post['url'],
-								  // Defensive programming - use isset().
-								  "sector" => isset($post['sector_slug']) ? $post['sector_slug'] : NULL,
-								  );
-								  
-				$geoJSON[] = array("type" => "Feature",
-								   "properties" => $property,
-								   "geometry" => $post['geometry']);
-									
-			}
-			foreach ($posts['evidence'] as $post){
-				$property = array("type" => "evidence",
-								  "name" => $post['title'],
-								  "desc" => Evidence_Hub::generate_excerpt($post['ID']),
-								  "url" => $post['url'],
-								  // Defensive programming - use isset().
-								  "sector" => isset($post['sector_slug']) ? $post['sector_slug'] : NULL,
-								  "polarity" => $post['polarity_slug'],
-								  "project" => (($post['project_id'] > 0) ? get_the_title($post['project_id']) : "N/A"),
-								  "hypothesis_id" => $post['hypothesis_id'],
-								  "hypothesis" => (($post['hypothesis_id'] > 0) ? get_the_title($post['hypothesis_id']) : "Unassigned"));
-								  
-				$geoJSON[] = array("type" => "Feature",
-								   "properties" => $property,
-								   "geometry" => $post['geometry']);						
+		if (!empty($posts) && !empty($args['type'])){
+			foreach (explode(",", $args['type']) as $type){ 
+				foreach ($posts[$type] as $post){
+					$property = array("type" => $type,
+									  "name" => $post['title'],
+									  "desc" => Evidence_Hub::generate_excerpt($post['ID']),
+									  "url" => $post['url'],
+									  // Defensive programming - use isset().
+									  "sector" => isset($post['sector_slug']) ? $post['sector_slug'] : NULL,
+									  );
+					if ($type=='evidence'){
+						$property = array_merge($property, array("polarity" => isset($post['polarity_slug']) ? $post['polarity_slug'] : NULL,
+									  "project" => (($post['project_id'] > 0) ? get_the_title($post['project_id']) : "N/A"),
+									  "hypothesis_id" => $post['hypothesis_id'],
+									  "hypothesis" => (($post['hypothesis_id'] > 0) ? get_the_title($post['hypothesis_id']) : "Unassigned")));
+					} elseif ($type=='policy'){
+						$property = array_merge($property, array("locale" => isset($post['locale_slug']) ? $post['locale_slug'] : NULL));	
+					}
+									  
+					$geoJSON[] = array("type" => "Feature",
+									   "properties" => $property,
+									   "geometry" => isset($post['geometry']) ? $post['geometry'] : NULL);						
+				}
 			}
 		}	
 

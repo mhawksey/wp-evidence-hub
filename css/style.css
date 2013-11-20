@@ -106,7 +106,7 @@ text-align:left;
 #evidence-map .eh_evidence_hub_hypothesis_id {
 	background: rgb(234, 236, 245);
 }
-#evidence-map .eh_evidence_hub_polarity{
+#evidence-map .eh_evidence_hub_polarity, #evidence-map .eh_evidence_hub_locale{
 	background: rgb(255, 233, 194);
 }
 #evidence-map .eh_evidence_hub_sector{

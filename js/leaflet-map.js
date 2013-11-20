@@ -17,10 +17,17 @@ var oms = new OverlappingMarkerSpiderfier(map);
 
 // helper function to return icons for different types 
 var customIcon = function (prop){
-					var s = [prop.type || null, prop.polarity || null, prop.sector || null];
-					s = s.filter(function(v) { return v !== null; });
-					return new LeafIcon({iconUrl: iconuri+'marker-'+s.join('-')+'.png',
-										 className: ((prop.hypothesis_id) ? 'hyp-'+prop.hypothesis_id+' ' : '')+s.join(' ')})};
+					if (prop.type == 'evidence' || prop.type == 'project'){
+						var m = [prop.type || null, prop.polarity || null, prop.sector || null];
+						var c = m;
+					} else {
+						var m = ['project'];
+						var c = [prop.locale || null, prop.sector.replace(", ", " ") || null];	
+					}
+					m = m.filter(function(v) { return v !== null; });
+					c = c.filter(function(v) { return v !== null; });
+					return new LeafIcon({iconUrl: iconuri+'marker-'+m.join('-')+'.png',
+										 className: ((prop.hypothesis_id) ? 'hyp-'+prop.hypothesis_id+' ' : '')+c.join(' ')})};
 // construct custom icon
 var LeafIcon = L.Icon.extend({
     options: {

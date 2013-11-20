@@ -43,6 +43,7 @@ if(!class_exists('Policy_Template'))
 				'title' => __( self::SINGULAR ),
 				'evidence_hub_country' => __( 'Country' ),
 				'evidence_hub_sector' => __( 'Sector' ),
+				'evidence_hub_locale' => __( 'Locale' ),
 				'author' => __( 'Author' ),
 				'date' => __( 'Date' )
 			);
@@ -67,6 +68,18 @@ if(!class_exists('Policy_Template'))
 						$out = array();
 						foreach ($sector as $s){
 							$out[] = $s->name;	
+						}
+						printf( __( '%s' ), implode(", ", $out ));
+					}
+					break;
+				case 'locale':
+					$locale = wp_get_object_terms( $post_id, $column);
+					if ( empty( $locale ) ){
+						echo __( 'Empty' );	
+					} else {
+						$out = array();
+						foreach ($locale as $l){
+							$out[] = $l->name;	
 						}
 						printf( __( '%s' ), implode(", ", $out ));
 					}
@@ -121,6 +134,9 @@ if(!class_exists('Policy_Template'))
 			$args = Evidence_Hub::get_taxonomy_args("Country", "Countries");
 			register_taxonomy( 'evidence_hub_country', array(self::POST_TYPE, 'evidence', 'project'), $args );
 			
+			$args = Evidence_Hub::get_taxonomy_args("Locale","Locales");
+			register_taxonomy( 'evidence_hub_locale', array(self::POST_TYPE), $args );
+			
 			$countries = get_terms( 'evidence_hub_country', array( 'hide_empty' => false ) );
 			
 			// if no terms then lets add our terms
@@ -174,7 +190,17 @@ if(!class_exists('Policy_Template'))
 					'label' => "Country",
 					'options' => get_terms('evidence_hub_country', 'hide_empty=0'),
 					),
-				));
+			));
+			$this->options = array_merge($this->options, array(
+				'locale' => array(
+					'type' => 'select',
+					'save_as' => 'term',
+					'position' => 'side',
+					'quick_edit' => true,
+					'label' => 'Locale',
+					'options' => get_terms('evidence_hub_locale', 'hide_empty=0&orderby=title'),
+					)
+			 ));
 			$this->options = array_merge($this->options, array(
 				'sector' => array(
 					'type' => 'multi-select',
@@ -225,7 +251,7 @@ if(!class_exists('Policy_Template'))
     	    );	
 			remove_meta_box('tagsdiv-evidence_hub_sector',self::POST_TYPE,'side');
 			remove_meta_box('tagsdiv-evidence_hub_country',self::POST_TYPE,'side');
-			
+			remove_meta_box('tagsdiv-evidence_hub_locale',self::POST_TYPE,'side');			
     					
     	} // END public function add_meta_boxes()
 
