@@ -14,8 +14,6 @@ abstract class Evidence_Hub_Shortcode {
 		add_shortcode($this->shortcode, array(&$this, 'shortcode'));
 		add_filter('the_content', array(&$this, 'pre_add_to_page'));
 
-		
-
 		add_action('save_post', array(&$this, 'save_post'));
 		add_action('trash_post', array(&$this, 'trash_post'));
 		
@@ -46,6 +44,40 @@ abstract class Evidence_Hub_Shortcode {
 	
 	function add_to_page($content) {
 		return $content;
+	}
+	
+	function meta_bar($post, $options){
+		$out = array();
+		foreach (explode(',', $options) as $type) {
+			$type = trim($type);
+			$slug = $type."_slug";
+			if (is_array($post[$slug]) && is_array($post[$type])){
+				foreach ($post[$slug] as $idx => $post_slug){
+					$out[] = $this->get_meta($post[$slug][$idx],$post[$type][$idx], $type, $post);
+				}
+			} else {
+				$out[] = $this->get_meta($post[$slug], $post[$type], $type, $post);
+			}
+			
+		}
+		$out = array_filter($out);
+		if(!empty($out)){ 
+			echo '<div id="evidence-meta">'.implode(" | ", $out).'</div>';
+       }	
+	}
+	
+	function get_meta($post_slug, $name, $type, $post){
+		if (!is_wp_error($slug_url = get_term_link($post_slug,"evidence_hub_".$type)) || ($type=="resource_link" || $type=="citation" || $type == "type")){
+			if ($type=="citation" || $type=="resource_link" || $type == "type"){
+				$slug_url = $post[$type];
+			}
+			if ($slug_url) return __(sprintf('<span class="meta_label">%s</span>: <a href="%s">%s</a>', ucwords(str_replace("_", " ",$type)),$slug_url , ucwords($name)));
+		}  else if ($type == 'hypothesis') {
+			return  __(sprintf('<span class="meta_label">%s</span>: <a href="%s">%s</a>', ucwords($type),get_permalink($post['hypothesis_id']) , get_the_title($post['hypothesis_id'])));
+		} else if ($type) {
+			return __(sprintf('<span class="meta_label">%s</span>: %s', ucwords(str_replace("_", " ",$type)),$name));
+		}
+		return NULL;
 	}
 	
 	function prep_options() {

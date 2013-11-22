@@ -55,6 +55,8 @@ if(!class_exists('Evidence_Hub'))
 			require_once(sprintf("%s/shortcodes/shortcode.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/evidence_summary.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/evidence_meta.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/project_meta.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/policy_meta.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/evidence_map.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/hypothesis_bars.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/hypothesis_archive.php", EVIDENCE_HUB_PATH));
@@ -297,6 +299,24 @@ if(!class_exists('Evidence_Hub'))
 			wp_enqueue_script( 'evidence-hub-autocomplete', plugins_url( 'js/admin.js' , EVIDENCE_HUB_REGISTER_FILE ), $scripts, '', true );
 			wp_register_script( 'd3js', plugins_url( 'lib/map/lib/d3.v3.min.js' , EVIDENCE_HUB_REGISTER_FILE), array( 'jquery' )  );
 			wp_enqueue_script( 'd3js' );
+			
+			wp_dequeue_script('pronamic_google_maps_admin');
+			wp_dequeue_style('pronamic_google_maps_admin');
+			
+			// Scripts
+			wp_register_script(
+				'pronamic_google_maps_admin',
+				plugins_url( 'lib/pronamic-google-maps/js/admin.js', EVIDENCE_HUB_REGISTER_FILE ),
+				array( 'jquery', 'google-jsapi' )
+			);
+	
+			// Styles
+			wp_register_style(
+				'pronamic_google_maps_admin',
+				plugins_url( 'lib/pronamic-google-maps/css/admin.css', EVIDENCE_HUB_REGISTER_FILE )
+			);
+			wp_enqueue_script('pronamic_google_maps_admin');
+			wp_enqueue_style('pronamic_google_maps_admin');
 		}
 		
 		public function enqueue_front_scripts() {
@@ -331,23 +351,35 @@ if(!class_exists('Evidence_Hub'))
 				'rewrite'               => array( 'slug' => strtolower($tax_single)),
 			);		
 		}
-		
-		public static function add_meta($post) {
-			foreach (get_post_custom($post->ID) as $key => $value) {
+
+		public static function add_meta($post_id, $post = false) {
+			if (!$post) {
+				$post = array();
+			} else {
+				$post_id = $post->ID;
+			}
+			$post['ID'] = $post_id;
+			foreach (get_post_custom($post_id) as $key => $value) {
 				if (strpos($key, 'evidence_hub') !== 0) continue;
 				$key = substr($key, 13);
-				$post->$key = @unserialize($value[0]) ? @unserialize($value[0]) : $value[0];
+				$post[$key] = @unserialize($value[0]) ? @unserialize($value[0]) : $value[0];
 			}
-			$taxonomies = get_object_taxonomies($post->post_type, 'objects');
+			$taxonomies = get_object_taxonomies(get_post_type($post_id), 'objects');
 
 			foreach ($taxonomies as $taxonomy_id => $taxonomy) {
-				
 				if (strpos($taxonomy_id, 'evidence_hub') !== 0) continue;
-				$value = wp_get_object_terms($post->ID, $taxonomy_id);
+				$value = wp_get_object_terms($post_id, $taxonomy_id);
+				
 				$taxonomy_id = substr($taxonomy_id, 13);
 				$taxonomy_slug = $taxonomy_id."_slug";
-				$post->$taxonomy_id = $value[0]->name;
-				$post->$taxonomy_slug = $value[0]->slug;
+				$name = array();
+				$slug = array();
+				foreach ($value as $v){
+					$name[] = $v->name;	
+					$slug[] = $v->slug;
+				}
+				$post[$taxonomy_id] = (count($name)<=1) ? implode("",$name) : $name;
+				$post[$taxonomy_slug] = (count($slug)<=1) ? implode("",$slug) : $slug;
 			}
 			return $post;
 		}
@@ -355,31 +387,7 @@ if(!class_exists('Evidence_Hub'))
 		public static function add_terms($posts) {
 			$posts_termed = array();
 			foreach ($posts as $post_id){
-				$post = array();
-				$post['ID'] = $post_id;
-				foreach (get_post_custom($post_id) as $key => $value) {
-					if (strpos($key, 'evidence_hub') !== 0) continue;
-					$key = substr($key, 13);
-					$post[$key] = @unserialize($value[0]) ? @unserialize($value[0]) : $value[0];
-				}
-				$taxonomies = get_object_taxonomies(get_post_type($post_id), 'objects');
-	
-				foreach ($taxonomies as $taxonomy_id => $taxonomy) {
-					if (strpos($taxonomy_id, 'evidence_hub') !== 0) continue;
-					$value = wp_get_object_terms($post_id, $taxonomy_id);
-					
-					$taxonomy_id = substr($taxonomy_id, 13);
-					$taxonomy_slug = $taxonomy_id."_slug";
-					$name = array();
-					$slug = array();
-					foreach ($value as $v){
-						$name[] = $v->name;	
-						$slug[] = $v->slug;
-					}
-					$post[$taxonomy_id] = implode(", ",$name);
-					$post[$taxonomy_slug] = implode(", ",$slug);
-				}
-				$posts_termed[] = $post;
+				$posts_termed[] = Evidence_Hub::add_meta($post_id);
 			}
 			return $posts_termed;
 		}

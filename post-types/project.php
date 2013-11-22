@@ -130,17 +130,19 @@ if(!class_exists('Project_Template'))
             // If it is our form has not been submitted, so we dont want to do anything
 			if (get_post_type($post_id) != self::POST_TYPE) return;
 			if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
-			if (!wp_verify_nonce($_POST['evidence_hub_nonce'], plugin_basename(__FILE__))) return;
+			if (isset($_POST['evidence_hub_nonce']) && !wp_verify_nonce($_POST['evidence_hub_nonce'], plugin_basename(__FILE__))) return;
 			if (!current_user_can('edit_post', $post_id)) return;
 
 			foreach($this->options as $name => $option)
 			{
 				// Update the post's meta field
 				$field_name = "evidence_hub_$name";
-				if ($option['save_as'] == 'term'){
-					wp_set_object_terms( $post_id, $_POST[$field_name], $field_name);
-				} else {
-					update_post_meta($post_id, $field_name, $_POST[$field_name]);
+				if (isset($_POST[$field_name])){
+					if ($option['save_as'] == 'term'){
+						wp_set_object_terms( $post_id, $_POST[$field_name], $field_name);
+					} else {
+						update_post_meta($post_id, $field_name, $_POST[$field_name]);
+					}
 				}
 			}
     	} // END public function save_post($post_id)
@@ -149,8 +151,7 @@ if(!class_exists('Project_Template'))
     	 * hook into WP's admin_init action hook
     	 */
     	public function admin_init()
-    	{			
-
+    	{	
 			$this->options = array_merge($this->options, array(
 				'country' => array(
 					'type' => 'select',
@@ -159,10 +160,15 @@ if(!class_exists('Project_Template'))
 					'label' => "Country",
 					'options' => get_terms('evidence_hub_country', 'hide_empty=0'),
 					),
-				));
-				
-				
-
+			));
+			$this->options = array_merge($this->options, array(
+				'resource_link' => array(
+					'type' => 'text',
+					'save_as' => 'post_meta',
+					'position' => 'bottom',
+					'label' => 'Link'
+					)
+			 ));
 			// Add metaboxes
     		add_action('add_meta_boxes', array(&$this, 'add_meta_boxes'));
     	} // END public function admin_init()
@@ -173,7 +179,15 @@ if(!class_exists('Project_Template'))
     	 */
     	public function add_meta_boxes()
     	{
-// Add this metabox to every selected post
+    		// Add this metabox to every selected post	
+    		add_meta_box( 
+    			sprintf('wp_evidence_hub_%s_section', self::POST_TYPE),
+    			sprintf('%s Information', ucwords(str_replace("_", " ", self::POST_TYPE))),
+    			array(&$this, 'add_inner_meta_boxes'),
+    			self::POST_TYPE,
+				'normal',
+				'high'
+    	    );
     		add_meta_box( 
     			sprintf('wp_evidence_hub_%s_side_section', self::POST_TYPE),
     			sprintf('%s Information', ucwords(str_replace("_", " ", self::POST_TYPE))),

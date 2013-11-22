@@ -124,7 +124,11 @@
 						?>
 						<ul>
 							<?php foreach ($multivalues as $multivalue) {
-								$itemSelected = ($option['save_as'] != 'term') ? $multivalue : $multivalue->slug; 
+								if ($multivalue){
+									$itemSelected = ($option['save_as'] != 'term') ? $multivalue : $multivalue->slug; 
+								} else {
+									$itemSelected = NULL;
+								}
 								?>
 								<li>
 									<select name="<?php echo $name; ?>[]">

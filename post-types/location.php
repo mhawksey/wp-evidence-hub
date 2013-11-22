@@ -128,28 +128,23 @@ if(!class_exists('Location_Template'))
     	{
             // verify if this is an auto save routine. 
             // If it is our form has not been submitted, so we dont want to do anything
-            if(defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
-            {
-                return;
-            }
-            
-    		if($_POST['post_type'] == self::POST_TYPE && current_user_can('edit_post', $post_id))
-    		{
-    			foreach($this->options as $name => $option)
-    			{
-    				// Update the post's meta field
-					$field_name = "evidence_hub_$name";
+			if (get_post_type($post_id) != self::POST_TYPE) return;
+			if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+			if (isset($_POST['evidence_hub_nonce']) && !wp_verify_nonce($_POST['evidence_hub_nonce'], plugin_basename(__FILE__))) return;
+			if (!current_user_can('edit_post', $post_id)) return;
+
+			foreach($this->options as $name => $option)
+			{
+				// Update the post's meta field
+				$field_name = "evidence_hub_$name";
+				if (isset($_POST[$field_name])){
 					if ($option['save_as'] == 'term'){
 						wp_set_object_terms( $post_id, $_POST[$field_name], $field_name);
 					} else {
-    					update_post_meta($post_id, $field_name, $_POST[$field_name]);
+						update_post_meta($post_id, $field_name, $_POST[$field_name]);
 					}
-    			}
-    		}
-    		else
-    		{
-    			return;
-    		} // if($_POST['post_type'] == self::POST_TYPE && current_user_can('edit_post', $post_id))
+				}
+			}
     	} // END public function save_post($post_id)
 
     	/**

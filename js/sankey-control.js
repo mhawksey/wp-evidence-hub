@@ -48,8 +48,8 @@ var path = sankey.link();
 	 .enter()
 	 .append("svg:a")
 	  .attr("xlink:href", function(d) { 
-						var ev = (d.source.type == 'hypothesis') ? 'evidence' : '';
-						return (d.source.url+ev+'/'+d.target.type+'/'+d.target.id).replace(/\\/g,""); })
+			  					var ev = (d.source.type == 'hypothesis') ? 'evidence' : '';
+								return d.source.url+ev+'/'+d.target.type+'/'+d.target.id; })
 	  .attr("class", "linkpath")
 	  .sort(function(a, b) { return b.dy - a.dy; });
 			  

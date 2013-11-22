@@ -128,17 +128,19 @@ if(!class_exists('Hypothesis_Template'))
             // If it is our form has not been submitted, so we dont want to do anything
 			if (get_post_type($post_id) != self::POST_TYPE) return;
 			if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
-			if (!wp_verify_nonce($_POST['evidence_hub_nonce'], plugin_basename(__FILE__))) return;
+			if (isset($_POST['evidence_hub_nonce']) && !wp_verify_nonce($_POST['evidence_hub_nonce'], plugin_basename(__FILE__))) return;
 			if (!current_user_can('edit_post', $post_id)) return;
 
 			foreach($this->options as $name => $option)
 			{
 				// Update the post's meta field
 				$field_name = "evidence_hub_$name";
-				if ($option['save_as'] == 'term'){
-					wp_set_object_terms( $post_id, $_POST[$field_name], $field_name);
-				} else {
-					update_post_meta($post_id, $field_name, $_POST[$field_name]);
+				if (isset($_POST[$field_name])){
+					if ($option['save_as'] == 'term'){
+						wp_set_object_terms( $post_id, $_POST[$field_name], $field_name);
+					} else {
+						update_post_meta($post_id, $field_name, $_POST[$field_name]);
+					}
 				}
 			}
     	} // END public function save_post($post_id)

@@ -50,31 +50,29 @@ class JSON_API_Hub_Controller {
 		unset($query['post_status']);
 		$query = array_merge($defaults, $query, $args);
 		$the_query = new WP_Query($query);
-		
-		$posts = Evidence_Hub::add_terms($the_query->posts);
-		foreach ($posts as $post){
-				$p = get_post($post['ID']);
+		foreach ($the_query->posts as $post_id){
+				$p = Evidence_Hub::add_meta($post_id);
 				$geo = array();
 				if ($p->post_type != 'hypothesis'){
 					if ($p->post_type === 'evidence'){
-						if (!$lat = get_post_meta($post['ID'], '_pronamic_google_maps_latitude', true ))
-							$lat = get_post_meta($post['project_id'], '_pronamic_google_maps_latitude', true );
+						if (!$lat = get_post_meta($post_id, '_pronamic_google_maps_latitude', true ))
+							$lat = get_post_meta($p['project_id'], '_pronamic_google_maps_latitude', true );
 							
-						if (!$long = get_post_meta($post['ID'], '_pronamic_google_maps_longitude', true ))
-							$long = get_post_meta($post['project_id'], '_pronamic_google_maps_longitude', true );
+						if (!$long = get_post_meta($post_id, '_pronamic_google_maps_longitude', true ))
+							$long = get_post_meta($p['project_id'], '_pronamic_google_maps_longitude', true );
 					} else {
-						$long = get_post_meta($post['ID'], '_pronamic_google_maps_longitude', true );
-						$lat = get_post_meta($post['ID'], '_pronamic_google_maps_latitude', true );	
+						$long = get_post_meta($post_id, '_pronamic_google_maps_longitude', true );
+						$lat = get_post_meta($post_id, '_pronamic_google_maps_latitude', true );	
 					}
 					$geo = array('geometry' => array("type" => "Point", "coordinates" => array((float)$long, (float)$lat)));	
 				}
 				if (isset($args['include_evidence'])){
-					$evidence = $this->get_all_type(array('type'=> 'evidence', 'posts_per_page' => -1, 'meta_query' => array(array('key' => 'evidence_hub_hypothesis_id', 'value' => $post['ID']+"", 'compare' => '=')),  'exclude_post_result' => 1));
+					$evidence = $this->get_all_type(array('type'=> 'evidence', 'posts_per_page' => -1, 'meta_query' => array(array('key' => 'evidence_hub_hypothesis_id', 'value' => $post_id+"", 'compare' => '=')),  'exclude_post_result' => 1));
 				}
-				$output[$p->post_type][] = array_merge($post,
-							array('title' => $p->post_title,
-								  'description' => apply_filters('the_content',$p->post_content),
-								  'url' => get_permalink($post['ID']),
+				$output[get_post_type($post_id)][] = array_merge($p,
+							array('title' => get_the_title($post_id),
+								  'description' => apply_filters('the_content',get_post_field('post_content', $post_id)),
+								  'url' => get_permalink($post_id),
 								  ), $geo, $evidence);
 		}
 		wp_reset_query();

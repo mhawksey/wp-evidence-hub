@@ -1,26 +1,26 @@
 <?php
 
-new Evidence_Hub_Shortcode_Evidence_Meta();
-class Evidence_Hub_Shortcode_Evidence_Meta extends Evidence_Hub_Shortcode {
-	var $shortcode = 'evidence_meta';
+new Evidence_Hub_Shortcode_Policy_Meta();
+class Evidence_Hub_Shortcode_Policy_Meta extends Evidence_Hub_Shortcode {
+	var $shortcode = 'policy_meta';
 	var $defaults = array(
 		'post_id' => false,
 		'post_ids' => false,
 		'title' => false,
 		'location' => 'header',
-		'header_terms' => 'type,polarity,sector,country,hypothesis',
-		'footer_terms' => 'citation',
-		'no_evidence_message' => "There is no meta data for this evidence",
+		'header_terms' => 'type,country,locale,sector',
+		'footer_terms' => '',
+		'no_evidence_message' => "There is no meta data for this policy",
 		'title_tag' => 'h4',
 	);
 
 	
 
-	static $post_types_with_evidence = array('evidence');
+	static $post_types_with_evidence = array('policy');
 	
 	function add_to_page($content) {
 		if (in_array(get_post_type(), self::$post_types_with_evidence)) {
-			$content = do_shortcode('[evidence_meta location="header"]').$content.do_shortcode('[evidence_meta location="footer"]');
+			$content = (($this->defaults['header_terms']) ? do_shortcode('[policy_meta location="header"]') : '').$content.(($this->defaults['footer_terms']) ? do_shortcode('[policy_meta location="footer"]') : '');
 		}
 		return $content;
 	}
