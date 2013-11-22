@@ -56,7 +56,8 @@ http://wordpress.org/plugins/facetious/
 @author    		Timo Grossenbacher  
 @copyright		CC BY-NC-SA 2.0 2013  
 @license		MIT License (http://www.opensource.org/licenses/mit-license.php)  
-http://labs.wnstnsmth.net/worldoil/   
+http://labs.wnstnsmth.net/worldoil/
+Source: https://github.com/wnstnsmth/worldoil 
 
 **Other libraries**   
 + d3JS (including sankey)
