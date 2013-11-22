@@ -22,7 +22,7 @@ var customIcon = function (prop){
 						var c = m;
 					} else {
 						var m = ['project'];
-						var c = [prop.locale || null, prop.sector.join(" ") || null];	
+						var c = [prop.locale || null, (typeof prop.sector === "string") ? prop.sector : prop.sector.join(" ") || null];	
 					}
 					m = m.filter(function(v) { return v !== null; });
 					c = c.filter(function(v) { return v !== null; });

@@ -51,14 +51,17 @@ abstract class Evidence_Hub_Shortcode {
 		foreach (explode(',', $options) as $type) {
 			$type = trim($type);
 			$slug = $type."_slug";
-			if (is_array($post[$slug]) && is_array($post[$type])){
-				foreach ($post[$slug] as $idx => $post_slug){
-					$out[] = $this->get_meta($post[$slug][$idx],$post[$type][$idx], $type, $post);
+			if (isset($post[$type]) && isset($post[$slug])){
+				if (is_array($post[$slug]) && is_array($post[$type])){
+					foreach ($post[$slug] as $idx => $post_slug){
+						$out[] = $this->get_meta($post, $type, $slug, $idx);
+					}
+				} else {
+					$out[] = $this->get_meta($post, $type, $slug);
 				}
 			} else {
-				$out[] = $this->get_meta($post[$slug], $post[$type], $type, $post);
+				$out[] = $this->get_meta($post, $type);
 			}
-			
 		}
 		$out = array_filter($out);
 		if(!empty($out)){ 
@@ -66,16 +69,28 @@ abstract class Evidence_Hub_Shortcode {
        }	
 	}
 	
-	function get_meta($post_slug, $name, $type, $post){
-		if (!is_wp_error($slug_url = get_term_link($post_slug,"evidence_hub_".$type)) || ($type=="resource_link" || $type=="citation" || $type == "type")){
-			if ($type=="citation" || $type=="resource_link" || $type == "type"){
-				$slug_url = $post[$type];
-			}
-			if ($slug_url) return __(sprintf('<span class="meta_label">%s</span>: <a href="%s">%s</a>', ucwords(str_replace("_", " ",$type)),$slug_url , ucwords($name)));
-		}  else if ($type == 'hypothesis') {
+	function get_meta($post, $type, $slug = false, $idx = false){
+		if ($idx){
+			$slug_url = get_term_link($post[$slug][$idx],"evidence_hub_".$type);
+			$name = $post[$type][$idx];
+		} elseif ($slug) {
+			$slug_url = get_term_link($post[$slug],"evidence_hub_".$type);
+			$name = $post[$type];
+		} elseif (isset($post[$type])) {
+			$name = $post[$type];
+		}
+		if (isset($slug_url) && !is_wp_error($slug_url)){
+			return __(sprintf('<span class="meta_label">%s</span>: <a href="%s">%s</a>', ucwords(str_replace("_", " ",$type)),$slug_url , ucwords($name)));
+		} elseif ($type == 'hypothesis') {
 			return  __(sprintf('<span class="meta_label">%s</span>: <a href="%s">%s</a>', ucwords($type),get_permalink($post['hypothesis_id']) , get_the_title($post['hypothesis_id'])));
-		} else if ($type) {
-			return __(sprintf('<span class="meta_label">%s</span>: %s', ucwords(str_replace("_", " ",$type)),$name));
+		} elseif(isset($post[$type]) && ($type=="citation" || $type=="resource_link" || $type == "type")) {
+			if ($type == "type"){
+				return __(sprintf('<span class="meta_label">%s</span>: <a href="%s">%s</a>', ucwords(str_replace("_", " ",$type)), get_post_type_archive_link($type), ucwords($post[$type])));
+			} else {
+				return __(sprintf('<span class="meta_label">%s</span>: <a href="%s">%s</a>', ucwords(str_replace("_", " ",$type)), $post[$type], $post[$type]));
+			}
+		} elseif (isset($post[$type])) {
+			return __(sprintf('<span class="meta_label">%s</span>: %s', ucwords(str_replace("_", " ",$type)),$post[$type]));
 		}
 		return NULL;
 	}

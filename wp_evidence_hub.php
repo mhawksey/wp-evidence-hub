@@ -305,18 +305,18 @@ if(!class_exists('Evidence_Hub'))
 			
 			// Scripts
 			wp_register_script(
-				'pronamic_google_maps_admin',
+				'pronamic_google_maps_adminb',
 				plugins_url( 'lib/pronamic-google-maps/js/admin.js', EVIDENCE_HUB_REGISTER_FILE ),
 				array( 'jquery', 'google-jsapi' )
 			);
 	
 			// Styles
 			wp_register_style(
-				'pronamic_google_maps_admin',
+				'pronamic_google_maps_adminb',
 				plugins_url( 'lib/pronamic-google-maps/css/admin.css', EVIDENCE_HUB_REGISTER_FILE )
 			);
-			wp_enqueue_script('pronamic_google_maps_admin');
-			wp_enqueue_style('pronamic_google_maps_admin');
+			wp_enqueue_script('pronamic_google_maps_adminb');
+			wp_enqueue_style('pronamic_google_maps_adminb');
 		}
 		
 		public function enqueue_front_scripts() {
