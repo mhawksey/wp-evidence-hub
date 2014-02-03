@@ -134,6 +134,15 @@ if(!class_exists('Evidence_Template'))
     				'supports' => array(
     					'title', 'editor', 'excerpt', 'author' 
     				),
+					'capabilities' => array(
+						'edit_post'          => 'evidence_edit_posts',
+						'read_post'          => 'evidence_read_post',
+						'delete_post'        => 'evidence_delete_posts',
+						'edit_posts'         => 'evidence_edit_posts',
+						'edit_others_posts'  => 'evidence_admin',
+						'publish_posts'      => 'evidence_admin',
+						'read_private_posts' => 'evidence_admin'
+					),
 					'has_archive' => true,
 					'rewrite' => array(
 						'slug' => self::ARCHIVE_SLUG,

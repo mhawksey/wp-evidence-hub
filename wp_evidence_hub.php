@@ -63,6 +63,7 @@ if(!class_exists('Evidence_Hub'))
 			require_once(sprintf("%s/shortcodes/hypothesis_sankey.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/evidence_geomap.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/policy_geomap.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/evidence_entry.php", EVIDENCE_HUB_PATH));
 			
 			// Register custom post types - hypothesis
 			require_once(sprintf("%s/post-types/hypothesis.php", EVIDENCE_HUB_PATH));
@@ -126,6 +127,33 @@ if(!class_exists('Evidence_Hub'))
     	 */
     	public function init()
     	{	
+			
+			// add role to let only admin modify hyp
+			$admin = get_role('administrator');
+    		$admin->add_cap('hypothesis_admin');
+			$admin->add_cap('evidence_edit_posts');
+			$admin->add_cap('evidence_delete_posts');
+			$admin->add_cap('evidence_read_post');
+			$admin->add_cap('evidence_admin');
+			
+			$editor = get_role('editor');
+			$editor->add_cap('evidence_edit_posts');
+			$editor->add_cap('evidence_delete_posts');
+			$editor->add_cap('evidence_read_post');
+			$editor->add_cap('evidence_admin');
+			
+			// add custom post edit capabilities to Contributor
+			global $wp_roles;
+			if ( ! isset( $wp_roles ) )
+				$wp_roles = new WP_Roles();
+		
+			$adm = $wp_roles->get_role('subscriber');
+			$wp_roles->add_role('evidence_contributor', 'Evidence Contributor', $adm->capabilities);
+			
+			$contributor = get_role('evidence_contributor');
+    		$contributor->add_cap('evidence_edit_posts');
+			$contributor->add_cap('evidence_delete_posts');
+			$contributor->add_cap('evidence_read_post');
 			
 			add_rewrite_rule("^country/([^/]+)/policy/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=policy&evidence_hub_country=$matches[1]&sector=$matches[2]&paged=$matches[3]','top');
 			add_rewrite_rule("^country/([^/]+)/policy/sector/([^/]+)?",'index.php?post_type=policy&evidence_hub_country=$matches[1]&sector=$matches[2]','top');
@@ -250,6 +278,7 @@ if(!class_exists('Evidence_Hub'))
 						return $item;
 				}
 	        }
+			
 	        return false;
 		}
 		
@@ -305,23 +334,26 @@ if(!class_exists('Evidence_Hub'))
 			
 			// Scripts
 			wp_register_script(
-				'pronamic_google_maps_adminb',
+				'pronamic_google_maps_admin',
 				plugins_url( 'lib/pronamic-google-maps/js/admin.js', EVIDENCE_HUB_REGISTER_FILE ),
 				array( 'jquery', 'google-jsapi' )
 			);
 	
 			// Styles
 			wp_register_style(
-				'pronamic_google_maps_adminb',
+				'pronamic_google_maps_admin',
 				plugins_url( 'lib/pronamic-google-maps/css/admin.css', EVIDENCE_HUB_REGISTER_FILE )
 			);
-			wp_enqueue_script('pronamic_google_maps_adminb');
-			wp_enqueue_style('pronamic_google_maps_adminb');
+			wp_enqueue_script('pronamic_google_maps_admin');
+			wp_enqueue_style('pronamic_google_maps_admin');
 		}
 		
 		public function enqueue_front_scripts() {
+			$scripts = array( 'jquery', 'jquery-ui-autocomplete', 'jquery-ui-core', 'jquery-ui-tabs');
 			wp_register_script( 'd3js', plugins_url( 'lib/map/lib/d3.v3.min.js' , EVIDENCE_HUB_REGISTER_FILE), array( 'jquery' )  );
 			wp_enqueue_script( 'd3js' );
+			wp_register_script( 'evidence_hub_script', plugins_url( 'js/script.js' , EVIDENCE_HUB_REGISTER_FILE), $scripts  );
+			wp_enqueue_script( 'evidence_hub_script' );
 			wp_register_style( 'evidence_hub_style', plugins_url( 'css/style.css' , EVIDENCE_HUB_REGISTER_FILE ) );
 			wp_enqueue_style( 'evidence_hub_style');
 		}

@@ -27,12 +27,12 @@ abstract class Evidence_Hub_Shortcode {
 	function shortcode($options) {
 		$this->options = shortcode_atts($this->defaults, $options);	
 		$this->prep_options();
-		
 		if (!$content = $this->get_cache()) {
 			$content = $this->content();
-			$this->cache($content);
+			if (!$this->defaults['no_cache']) {
+				$this->cache($content);
+			}
 		}
-		
 		return $content;
 	}
 	
@@ -70,6 +70,9 @@ abstract class Evidence_Hub_Shortcode {
 	}
 	
 	function get_meta($post, $type, $slug = false, $idx = false){
+		if (!isset($post[$type]) || $post[$type] == ""){
+			return;
+		}
 		if ($idx){
 			$slug_url = get_term_link($post[$slug][$idx],"evidence_hub_".$type);
 			$name = $post[$type][$idx];
@@ -83,13 +86,20 @@ abstract class Evidence_Hub_Shortcode {
 			return __(sprintf('<span class="meta_label">%s</span>: <a href="%s">%s</a>', ucwords(str_replace("_", " ",$type)),$slug_url , ucwords($name)));
 		} elseif ($type == 'hypothesis') {
 			return  __(sprintf('<span class="meta_label">%s</span>: <a href="%s">%s</a>', ucwords($type),get_permalink($post['hypothesis_id']) , get_the_title($post['hypothesis_id'])));
-		} elseif(isset($post[$type]) && ($type=="citation" || $type=="resource_link" || $type == "type")) {
+		} elseif(isset($post[$type]) && $type == "type" ) {
 			if ($type == "type"){
 				return __(sprintf('<span class="meta_label">%s</span>: <a href="%s">%s</a>', ucwords(str_replace("_", " ",$type)), get_post_type_archive_link($type), ucwords($post[$type])));
 			} else {
 				return __(sprintf('<span class="meta_label">%s</span>: <a href="%s">%s</a>', ucwords(str_replace("_", " ",$type)), $post[$type], $post[$type]));
 			}
-		} elseif (isset($post[$type])) {
+		} elseif(isset($post[$type]) && ($type=="citation" || $type=="resource_link")) {
+			if (filter_var($post[$type], FILTER_VALIDATE_URL) === FALSE) {
+				return __(sprintf('<span class="meta_label">%s</span>: %s', ucwords(str_replace("_", " ",$type)),$post[$type]));
+			} else {
+				return __(sprintf('<span class="meta_label">%s</span>: <a href="%s">%s</a>', ucwords(str_replace("_", " ",$type)),$post[$type],$post[$type]));
+			}
+		}
+		elseif (isset($post[$type])) {
 			return __(sprintf('<span class="meta_label">%s</span>: %s', ucwords(str_replace("_", " ",$type)),$post[$type]));
 		}
 		return NULL;

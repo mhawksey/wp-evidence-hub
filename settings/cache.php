@@ -23,7 +23,7 @@ class Evidence_Hub_Settings_Cache {
 			'evidence_hub',
 			"Caching",
 			"Caching",
-			'edit_posts',
+			'hypothesis_admin',
 			'evidence_hub_cache',
 			array(&$this, 'page')
 		);

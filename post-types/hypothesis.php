@@ -103,6 +103,15 @@ if(!class_exists('Hypothesis_Template'))
     				'supports' => array(
     					'title', 'editor', 'excerpt', 'author',
     				),
+					'capabilities' => array(
+						'edit_post'          => 'hypothesis_admin',
+						'read_post'          => 'hypothesis_admin',
+						'delete_post'        => 'hypothesis_admin',
+						'edit_posts'         => 'hypothesis_admin',
+						'edit_others_posts'  => 'hypothesis_admin',
+						'publish_posts'      => 'hypothesis_admin',
+						'read_private_posts' => 'hypothesis_admin'
+					),
 					'has_archive' => self::ARCHIVE_SLUG,
 					'rewrite' => array(
 						'slug' => self::ARCHIVE_SLUG.'/%post_id%',

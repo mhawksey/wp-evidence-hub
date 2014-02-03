@@ -1,4 +1,5 @@
 // JavaScript Document
+// JavaScript Document
 /*
 Modified from:
 
@@ -13,6 +14,7 @@ Author URI: http://www.rachelcarden.com
 var errorDNA = "The project does not exist. <a href='?post_type=project' target='_blank'>Add New Project if required</a>";
 
 jQuery.noConflict()(function(){
+	
 	jQuery.ui.autocomplete.prototype._resizeMenu = function () {
 	  var ul = this.menu.element;
 	  ul.outerWidth(this.element.outerWidth());
@@ -214,3 +216,35 @@ jQuery("#evidence_hub_hypothesis_id").change(function() {
 		$("#evidence_hub_polarity option[value]").removeAttr("style");
 	}
 });
+
+jQuery(document).ready(function( $ ) {
+    $('#add_data').click(function(){
+		getNonce();	
+		return false;
+	});
+	$( "#evidence_hub_tabs" ).tabs();
+});
+
+function getNonce(){
+	jQuery.ajax({
+		url: MyAjax.apiurl+'/?json=get_nonce&controller=posts&method=create_post',
+		type: 'GET',
+		dataType: 'json',
+		success: addContent
+	});
+}
+
+function addContent(data){
+	console.log(data);
+	jQuery('#nonce').val(data.nonce);
+    jQuery.ajax({
+           type: "POST",
+           url: MyAjax.apiurl+'/?json=create_post',
+           data: jQuery("#user_entry").serialize(), // serializes the form's elements.
+           success: function(data)
+           {
+               console.log(data); // show response from the php script.
+           }
+         });
+
+}

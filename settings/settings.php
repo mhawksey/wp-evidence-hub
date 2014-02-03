@@ -25,12 +25,13 @@ if(!class_exists('Evidence_Hub_Settings'))
 			add_menu_page(
 				"Evidence Hub",
 				"Evidence Hub",
-				'edit_posts',
+				'hypothesis_admin',
 				'evidence_hub',
 				array(&$this, 'plugin_settings_page'),
 				EVIDENCE_HUB_URL.'/images/icons/hub.png',
 				'29'
 			);
+			add_submenu_page('evidence_hub', 'JSON API', 'JSON API', 'hypothesis_admin', 'json-api', array( __JSON_API__, 'admin_options' ));
 			
 			$GLOBALS['menu'][28] = array('', 'read', 'separator-28', '', 'wp-menu-separator');
 
