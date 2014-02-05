@@ -31,24 +31,23 @@ class Evidence_Hub_Shortcode_HypBar extends Evidence_Hub_Shortcode {
 		
 		// get all the evidence and add terms
 		$posts = Evidence_Hub::add_terms(get_posts( array (	'post_type' => 'evidence', // my custom post type
-															'posts_per_page' => -1,
-															'post_status' => 'publish',
-															'fields' => 'ids'
-															))); // show all posts);
+									'posts_per_page' => -1,
+									'post_status' => 'publish',
+									'fields' => 'ids' ))); // show all posts);
 		// get all the hypothesis ids													
 		$hypotheses = get_posts( array(	'post_type' => 'hypothesis', // my custom post type
-										'posts_per_page' => -1,
-										'post_status' => 'publish',
-										'orderby' => 'title',
-										'order' => 'ASC',
-										'fields' => 'ids'));
+						'posts_per_page' => -1,
+						'post_status' => 'publish',
+						'orderby' => 'title',
+						'order' => 'ASC',
+						'fields' => 'ids'));
 		// for each hypothesis get pos/neg weighting
 		foreach($hypotheses as $hypothesis){
 			$hposts = Evidence_Hub::filterOptions($posts, 'hypothesis_id', $hypothesis);		
 			$output[] = array(	'name' => get_the_title($hypothesis),
-								'url' => get_permalink($hypothesis),
-								'barNeg' => count(Evidence_Hub::filterOptions($hposts, 'polarity_slug', 'neg')),
-								'barPos' => count(Evidence_Hub::filterOptions($hposts, 'polarity_slug', 'pos')));					
+						'url' => get_permalink($hypothesis),
+						'barNeg' => count(Evidence_Hub::filterOptions($hposts, 'polarity_slug', 'neg')),
+						'barPos' => count(Evidence_Hub::filterOptions($hposts, 'polarity_slug', 'pos')));					
 		} 
 		// dump html ?>
 		<script type="text/javascript">
