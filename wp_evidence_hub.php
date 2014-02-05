@@ -2,18 +2,12 @@
 /*
 Plugin Name: WP Evidence Hub
 Plugin URI: https://github.com/mhawksey/wp-evidence-hub
-Description: Plugin to capture and visualise evidence around a set of hypotheses. OER Research Hub project. Based on "WP Plugin Template" by F.Yaconiello.
-Version: 0.1
+Description: Plugin to capture and visualise evidence around a set of hypotheses.
+Version: 0.1.1
 Author: Martin Hawksey
 Author URI: http://mashe.hawksey.info
 License: GPL2
 
-Based on Name: WP Plugin Template
-Based on Plugin URI: https://github.com/fyaconiello/wp_plugin_template
-Based on Version: 1.0
-Based on Author: Francis Yaconiello
-Based on Author URI: http://www.yaconiello.com
-*/
 /*
 Copyright 2012  Francis Yaconiello  (email : francis@yaconiello.com)
 
@@ -31,245 +25,217 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-define('EVIDENCE_HUB_VERSION', '0.3');
+define('EVIDENCE_HUB_VERSION', '0.1.1');
 define('EVIDENCE_HUB_PATH', dirname(__FILE__));
 // Handle symbolic links - code portability.
 define('EVIDENCE_HUB_URL', plugin_dir_url(preg_replace('@\/var\/www\/[^\/]+@', '', __FILE__)));
 define('EVIDENCE_HUB_REGISTER_FILE', preg_replace('@\/var\/www\/[^\/]+@', '', __FILE__));
 
-
-
 if(!class_exists('Evidence_Hub'))
 {
 	class Evidence_Hub
 	{
-		static $post_types = array(); 
-		
+		static $post_types = array(); // used in shortcode caching 
 		/**
-		 * Construct the plugin object
-		 */
+		* Construct the plugin object.
+		*
+		* @since 0.1.1
+		*/
 		public function __construct()
 		{
 			add_action('init', array(&$this, 'init'));
 			
-			require_once(sprintf("%s/shortcodes/shortcode.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/evidence_summary.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/evidence_meta.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/project_meta.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/policy_meta.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/evidence_map.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/hypothesis_bars.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/hypothesis_archive.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/hypothesis_sankey.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/evidence_geomap.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/policy_geomap.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/evidence_entry.php", EVIDENCE_HUB_PATH));
+			// include shortcodes
+			require_once(sprintf("%s/shortcodes/class-shortcode.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/class-evidence_summary.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/class-evidence_meta.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/class-project_meta.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/class-policy_meta.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/class-evidence_map.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/class-hypothesis_bars.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/class-hypothesis_archive.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/class-hypothesis_sankey.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/class-evidence_geomap.php", EVIDENCE_HUB_PATH)); //TODO Tidy
+			require_once(sprintf("%s/shortcodes/policy_geomap.php", EVIDENCE_HUB_PATH)); //TODO Tidy
+			require_once(sprintf("%s/shortcodes/evidence_entry.php", EVIDENCE_HUB_PATH)); //TODO Tidy
 			
 			// Register custom post types - hypothesis
-			require_once(sprintf("%s/post-types/hypothesis.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/post-types/hypothesis.php", EVIDENCE_HUB_PATH)); //TODO Tidy
 			$Hypothesis_Template = new Hypothesis_Template();
 			
 			// Register custom post types - evidence
-			require_once(sprintf("%s/post-types/evidence.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/post-types/evidence.php", EVIDENCE_HUB_PATH)); //TODO Tidy
 			$Evidence_Template = new Evidence_Template();
 			
-			/* location depreciated
-			// Register custom post types - location
-			require_once(sprintf("%s/post-types/location.php", EVIDENCE_HUB_PATH));
-			$Location_Template = new Location_Template();
-			*/
-			
 			// Register custom post types - project
-			require_once(sprintf("%s/post-types/project.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/post-types/project.php", EVIDENCE_HUB_PATH)); //TODO Tidy
 			$Project_Template = new Project_Template();
 					
-			require_once(sprintf("%s/post-types/policy.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/post-types/policy.php", EVIDENCE_HUB_PATH)); //TODO Tidy
 			$Policy_Template = new Policy_Template();
 			
-			// Initialize Pronamics Google Maps distro
+			// Initialize Pronamics Google Maps library
 			if (!class_exists('Pronamic_Google_Maps_Maps')){
 			   require_once(sprintf("%s/lib/pronamic-google-maps/pronamic-google-maps.php", EVIDENCE_HUB_PATH));
 			}
-			// Initialize JSON API Distro
+			// Initialize JSON API library
 			if (!class_exists('JSON_API')){
 			   require_once(sprintf("%s/lib/json-api/json-api.php", EVIDENCE_HUB_PATH));
 			}
+			// add custom JSON API controllers
+			add_filter('json_api_controllers', array(&$this,'add_hub_controller'));
+			add_filter('json_api_hub_controller_path', array(&$this,'set_hub_controller_path'));
+			
+			// Initialize Facetious library
 			if (!class_exists('Facetious')){
 				require_once(sprintf("%s/lib/facetious/facetious.php", EVIDENCE_HUB_PATH));
 			}
 			
-			// Initialize Settings
-            require_once(sprintf("%s/settings/settings.php", EVIDENCE_HUB_PATH));
+			// Initialize Settings pages in wp-admin
+            require_once(sprintf("%s/settings/settings.php", EVIDENCE_HUB_PATH)); //TODO Tidy
             $Evidence_Hub_Settings = new Evidence_Hub_Settings();
-			require_once(sprintf("%s/settings/cache.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/settings/cache.php", EVIDENCE_HUB_PATH)); //TODO Tidy
 			$Evidence_Hub_Settings_Cache = new Evidence_Hub_Settings_Cache();
 			
-			add_filter('json_api_controllers', array(&$this,'add_hub_controller'));
-			add_filter('json_api_hub_controller_path', array(&$this,'set_hub_controller_path'));
-			add_action('admin_notices', array(&$this, 'admin_notices'));
-		   
-		   	add_action('admin_enqueue_scripts', array(&$this, 'enqueue_autocomplete_scripts'));
-			add_action('wp_enqueue_scripts', array(&$this, 'enqueue_front_scripts') );
-		   
+			// register custom query handling
 			add_filter('query_vars', array(&$this, 'evidence_hub_queryvars') );
 			add_action('pre_get_posts', array(&$this, 'evidence_hub_query'), 1);
 			
+			add_action('admin_notices', array(&$this, 'admin_notices'));
+		   	add_action('admin_enqueue_scripts', array(&$this, 'enqueue_autocomplete_scripts'));
+			add_action('wp_enqueue_scripts', array(&$this, 'enqueue_front_scripts') );
+
+			// removed library plugin menus
 			add_action( 'admin_menu', array(&$this,'my_remove_named_menus'),999 );
 			
+			// open ajax for sankey data
 			add_action('wp_ajax_get_sankey_data', array(&$this, 'get_sankey_data'));
 			add_action('wp_ajax_nopriv_get_sankey_data', array(&$this, 'get_sankey_data'));
+			
+			// debug function
+			add_action( 'wp_head', array(&$this, 'show_current_query') );
 
-		   //$this->include_files();
 		} // END public function __construct
 		
-		    	/**
-    	 * hook into WP's init action hook
-    	 */
-    	public function init()
-    	{	
-			
-			// add role to let only admin modify hyp
-			$admin = get_role('administrator');
-    		$admin->add_cap('hypothesis_admin');
-			$admin->add_cap('evidence_edit_posts');
-			$admin->add_cap('evidence_delete_posts');
-			$admin->add_cap('evidence_read_post');
-			$admin->add_cap('evidence_admin');
-			
-			$editor = get_role('editor');
-			$editor->add_cap('evidence_edit_posts');
-			$editor->add_cap('evidence_delete_posts');
-			$editor->add_cap('evidence_read_post');
-			$editor->add_cap('evidence_admin');
-			
-			// add custom post edit capabilities to Contributor
-			global $wp_roles;
-			if ( ! isset( $wp_roles ) )
-				$wp_roles = new WP_Roles();
-		
-			$adm = $wp_roles->get_role('subscriber');
-			$wp_roles->add_role('evidence_contributor', 'Evidence Contributor', $adm->capabilities);
-			
-			$contributor = get_role('evidence_contributor');
-    		$contributor->add_cap('evidence_edit_posts');
-			$contributor->add_cap('evidence_delete_posts');
-			$contributor->add_cap('evidence_read_post');
-			
-			add_rewrite_rule("^country/([^/]+)/policy/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=policy&evidence_hub_country=$matches[1]&sector=$matches[2]&paged=$matches[3]','top');
-			add_rewrite_rule("^country/([^/]+)/policy/sector/([^/]+)?",'index.php?post_type=policy&evidence_hub_country=$matches[1]&sector=$matches[2]','top');
-			
-			add_rewrite_rule("^country/([^/]+)/policy/page/([0-9]+)?",'index.php?post_type=policy&evidence_hub_country=$matches[1]&paged=$matches[2]','top');
-			add_rewrite_rule("^country/([^/]+)/policy([^/]+)?",'index.php?post_type=policy&evidence_hub_country=$matches[1]','top');
-			
-			add_rewrite_rule("^country/([^/]+)/evidece/polarity/([^/]+)/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&polarity=$matches[2]&sector=$matches[3]&paged=$matches[4]','top');
-			add_rewrite_rule("^country/([^/]+)/evidence/polarity/([^/]+)/sector/([^/]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&polarity=$matches[2]&sector=$matches[3]','top');
-			
-			add_rewrite_rule("^country/([^/]+)/hypothesis/([0-9]+)/[^/]+/polarity/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&hyp_id=$matches[2]&polarity=$matches[3]&paged=$matches[4]','top');
-			add_rewrite_rule("^country/([^/]+)/hypothesis/([0-9]+)/[^/]+/polarity/([^/]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&hyp_id=$matches[2]&polarity=$matches[3]','top');			
-			add_rewrite_rule("^country/([^/]+)/hypothesis/([0-9]+)/.*?",'index.php?post_type=hypothesis&p=$matches[2]','top');
-			
-			add_rewrite_rule("^country/([^/]+)/evidence/(polarity|sector)/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&$matches[2]=$matches[3]&paged=$matches[4]','top');
-			add_rewrite_rule("^country/([^/]+)/evidence/(polarity|sector)/([^/]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&$matches[2]=$matches[3]','top');
-			
-			add_rewrite_rule("^country/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&paged=$matches[3]','top');
-			add_rewrite_rule("^country/([^/]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]','top');
-					
-					
-			add_rewrite_rule("^evidence/polarity/([^/]+)/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&polarity=$matches[1]&sector=$matches[2]&paged=$matches[3]','top');
-			add_rewrite_rule("^evidence/polarity/([^/]+)/sector/([^/]+)?",'index.php?post_type=evidence&polarity=$matches[1]&sector=$matches[2]','top');
-			
-			add_rewrite_rule("^evidence/(polarity|sector)/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&$matches[1]=$matches[2]&paged=$matches[3]','top');
-			add_rewrite_rule("^evidence/(polarity|sector)/([^/]+)?",'index.php?post_type=evidence&$matches[1]=$matches[2]','top');
-			
-			add_rewrite_rule("^policy/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=policy&sector=$matches[1]&paged=$matches[2]','top');
-			add_rewrite_rule("^policy/sector/([^/]+)?",'index.php?post_type=policy&sector=$matches[1]','top');
-	
-			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/evidence/polarity/([^/]+)/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&polarity=$matches[3]&sector=$matches[4]&paged=$matches[5]','top');
-			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/evidence/polarity/([^/]+)/sector/([^/]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&polarity=$matches[3]&sector=$matches[4]','top');
-			
-			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/evidence/(polarity|sector)/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&$matches[3]=$matches[4]&paged=$matches[5]','top');
-			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/evidence/(polarity|sector)/([^/]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&$matches[3]=$matches[4]','top');
-			
-			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/evidence/page/([0-9]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&paged=$matches[2]','top');  
-			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/evidence/?",'index.php?post_type=evidence&hyp_id=$matches[1]','top');
-			  
-			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/page/([0-9]+)?",'index.php?post_type=hypothesis&p=$matches[1]&paged=$matches[2]','top');
-			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/?",'index.php?post_type=hypothesis&p=$matches[1]','top');
+		/**
+    	* Debug function to check wp_query. Add ?q to url to use.
+		*
+		* @since 0.1.1
+    	*/
+		public function show_current_query() {
+			global $wp_query;
+			if ( !isset( $_GET['q'] ) )
+				return;
+			echo '<textarea cols="50" rows="10">';
+			print_r( $wp_query );
+			echo '</textarea>';
 		}
 		
-		public function evidence_hub_queryvars( $qvars )
-		{
+		/**
+    	* Hook into WP's init action hook.
+		*
+		* @since 0.1.1
+    	*/
+    	public function init()
+    	{	
+			$caps = array('evidence_read_post', 'evidence_delete_posts', 'evidence_edit_posts');
+			
+			// define new role of Evidence Contributor to create but not publish/edit their evidence
+			global $wp_roles;
+			if ( ! isset( $wp_roles ) ){
+				$wp_roles = new WP_Roles();
+			}
+			$adm = $wp_roles->get_role('subscriber');
+			$wp_roles->add_role('evidence_contributor', 'Evidence Contributor', $adm->capabilities);
+			$contributor = get_role('evidence_contributor');
+			$this->add_evidence_capability($contributor, $caps);
+			
+			// add capability to authors to create publish their evidence
+			$this->add_evidence_capability(get_role('author'), $caps);
+			
+			// add capability to editors to create publish evidence
+			$caps[] = 'evidence_admin';
+			$this->add_evidence_capability(get_role('editor'), $caps);
+			
+			// add capability to admin account to let only them them modify/add hypotheses
+			$caps[] = 'hypothesis_admin';
+			$this->add_evidence_capability(get_role('administrator'), $caps);
+			
+			// add permalink rewrites
+			$this->do_rewrites();			
+		}
+		
+		/**
+    	* Add extra capabilities to WP roles.
+		*
+		* @since 0.1.1
+		* @param object $role WP Role object.
+		* @param array $caps string array of capabilitiy identifiers.
+    	*/
+		public function add_evidence_capability($role, $caps){
+			foreach($caps as $cap){
+				$role->add_cap($cap);
+			}
+		}
+		
+		/**
+    	* Register custom querystring variables.
+		*
+		* @since 0.1.1
+		* @param array $qvars WP qvars.
+		* @return array $qvars.
+    	*/
+		public function evidence_hub_queryvars( $qvars ){
 		  $qvars[] = 'hyp_id';
-		  $qvars[] = 'polarity';
-		  $qvars[] = 'sector';
 		  return $qvars;
 		}
 		
-		public function evidence_hub_query($query){
-			
-			if ( is_admin() || is_search() || isset($query->query_vars['facetious_post_type']))
-				return;
-			
-			if ( is_post_type_archive( 'hypothesis' ) && !isset( $query->query_vars['hyp_id']) ) {
-				$query->set( 'orderby', 'title' );
-				$query->set( 'order', 'ASC' );
-				$query->set( 'posts_per_page', -1 );
-				return;
-			} 
-			
-			if( isset( $query->query_vars['hyp_id'] ) || (is_post_type_archive( 'evidence' ) && $query->is_main_query())) {
+		/**
+    	* Handle custom querystring for hyp_id.
+		*
+		* @since 0.1.1
+		* @param array $query WP_query.
+		* @return array $query.
+    	*/
+		public function evidence_hub_query($query){	
+			if (isset( $query->query_vars['hyp_id']) ) {
 				$meta_query = array();
-				$tax_query = array('relation' => 'AND');
-				$querystr = $query->query_vars;
-				
-				$query->init();
-				if (isset( $querystr['hyp_id'] )){
-					$meta_query[] = array(
+				$meta_query[] = array(
 									'key' => 'evidence_hub_hypothesis_id',
-									'value' => $querystr['hyp_id'],
+									'value' => $query->query_vars['hyp_id'],
 									'compare' => '='
 									);
-									
-				}
-				if (isset( $querystr['polarity'] ))
-					$tax_query[] = array(
-									'taxonomy' => 'evidence_hub_polarity',
-									'field' => 'slug',
-									'terms' => $querystr['polarity'],
-									);
-				if (isset( $querystr['sector'] ))
-					$tax_query[] = array(
-									'taxonomy' => 'evidence_hub_sector',
-									'field' => 'slug',
-									'terms' => $querystr['sector'],
-									);
-									
-				if (isset( $querystr['evidence_hub_country'] ))
-					$tax_query[] = array(
-									'taxonomy' => 'evidence_hub_country',
-									'field' => 'slug',
-									'terms' => $querystr['evidence_hub_country'],
-									);									
-				
-				$query->set( 'post_type', $querystr['post_type']);	
 				$query->set( 'meta_query' ,$meta_query);
-				$query->set( 'tax_query' ,$tax_query);
-				$query->set( 'post_status', 'publish');
-				$query->parse_query();	
 				return;
-			}	
+			} 
 		}
 		
-		function add_hub_controller($controllers) {
+		/**
+    	* Register controllers for custom JSON_API end points.
+		*
+		* @since 0.1.1
+		* @param object $controllers JSON_API.
+		* @return object $controllers.
+    	*/
+		public function add_hub_controller($controllers) {
 		  $controllers[] = 'hub';
 		  return $controllers;
 		}
 		
-		
-		function set_hub_controller_path() {
+		/**
+    	* Register controllers define path custom JSON_API end points.
+		*
+		* @since 0.1.1
+    	*/
+		public function set_hub_controller_path() {
 		  return sprintf("%s/json/hub.php", EVIDENCE_HUB_PATH);
 		}
 		
+		/**
+    	* Remove Pronamic Google Map Library wp-admin menu option.
+		*
+		* @since 0.1.1
+    	*/
 		public function my_remove_named_menus(){
 			global $menu;
 			foreach ( $menu as $i => $item ) {
@@ -278,10 +244,14 @@ if(!class_exists('Evidence_Hub'))
 						return $item;
 				}
 	        }
-			
 	        return false;
 		}
 		
+		/**
+    	* Handle custom admin notices.
+		*
+		* @since 0.1.1
+    	*/
 		public static function admin_notices() {
 			$messages = get_option('evidence_hub_messages', array());
 			if (count($messages)) {
@@ -294,28 +264,47 @@ if(!class_exists('Evidence_Hub'))
 			}
 		}
 		
+		/**
+    	* Handle custom admin notices - push message for display.
+		*
+		* @since 0.1.1
+		* @param string $message.
+    	*/
 		public static function add_admin_notice($message) {
 			$messages = get_option('evidence_hub_messages', array());
 			$messages[] = $message;
 			update_option('evidence_hub_messages', $messages);
 		}
 		
+		/**
+    	* function to filter options array used in custom post types.
+		*
+		* @since 0.1.1
+		* @param array $arr options array.
+		* @param string $key.
+		* @param string $val.
+		* @return array $newArray
+    	*/
 		public static function filterOptions($arr, $key, $val){
 			$newArr = array();
 			foreach($arr as $name => $option) {
-				if (array_key_exists($key, $option) && $option[$key]==$val){
+				if (array_key_exists($key, $option) && $option[$key]===$val){
 					$newArr[$name] = $arr[$name];
 				}
 			}
 			return $newArr;
 		}
 		
+		/**
+    	* Load additional CSS/JS to wp_head in wp-admin.
+		*
+		* @since 0.1.1
+    	*/
 		public function enqueue_autocomplete_scripts() {
 			global $typenow;
 			global $wp_styles;
 			$scripts = array( 'jquery', 'post', 'jquery-ui-autocomplete');
   			if ($typenow=='evidence') {
-	  			//wp_enqueue_script( 'pronamic_google_maps_site');
 				wp_enqueue_style( 'leafletcss', 'http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css' );
 				wp_enqueue_style( 'leafletcss-ie8', "http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css", array( 'leafletcss' )  );
     			$wp_styles->add_data( 'leafletcss-ie8', 'conditional', 'IE 8' );
@@ -329,25 +318,20 @@ if(!class_exists('Evidence_Hub'))
 			wp_register_script( 'd3js', plugins_url( 'lib/map/lib/d3.v3.min.js' , EVIDENCE_HUB_REGISTER_FILE), array( 'jquery' )  );
 			wp_enqueue_script( 'd3js' );
 			
+			// dequeue Pronomic Google Maps Library scripts and requeue with modified location
 			wp_dequeue_script('pronamic_google_maps_admin');
 			wp_dequeue_style('pronamic_google_maps_admin');
-			
-			// Scripts
-			wp_register_script(
-				'pronamic_google_maps_admin',
-				plugins_url( 'lib/pronamic-google-maps/js/admin.js', EVIDENCE_HUB_REGISTER_FILE ),
-				array( 'jquery', 'google-jsapi' )
-			);
-	
-			// Styles
-			wp_register_style(
-				'pronamic_google_maps_admin',
-				plugins_url( 'lib/pronamic-google-maps/css/admin.css', EVIDENCE_HUB_REGISTER_FILE )
-			);
+			wp_register_script('pronamic_google_maps_admin', plugins_url( 'lib/pronamic-google-maps/js/admin.js', EVIDENCE_HUB_REGISTER_FILE ),	array( 'jquery', 'google-jsapi' ));
+			wp_register_style('pronamic_google_maps_admin',	plugins_url( 'lib/pronamic-google-maps/css/admin.css', EVIDENCE_HUB_REGISTER_FILE )	);
 			wp_enqueue_script('pronamic_google_maps_admin');
 			wp_enqueue_style('pronamic_google_maps_admin');
 		}
 		
+		/**
+    	* Load additional CSS/JS to wp_head in frontend.
+		*
+		* @since 0.1.1
+    	*/
 		public function enqueue_front_scripts() {
 			$scripts = array( 'jquery', 'jquery-ui-autocomplete', 'jquery-ui-core', 'jquery-ui-tabs');
 			wp_register_script( 'd3js', plugins_url( 'lib/map/lib/d3.v3.min.js' , EVIDENCE_HUB_REGISTER_FILE), array( 'jquery' )  );
@@ -358,6 +342,14 @@ if(!class_exists('Evidence_Hub'))
 			wp_enqueue_style( 'evidence_hub_style');
 		}
 		
+		/**
+    	* Creates an array for custom post type taxonomies.
+		*
+		* @since 0.1.1
+		* @param string $tax_single.
+		* @param string $tax_plural.
+		* @return array 
+    	*/
 		public static function get_taxonomy_args($tax_single, $tax_plural){
 			$labels = array(
 				'name'                => sprintf( _x( '%s', 'taxonomy general name', 'evidence_hub' ), $tax_plural ),
@@ -378,19 +370,24 @@ if(!class_exists('Evidence_Hub'))
 				'hierarchical'          => false,
 				'labels'                => $labels,
 				'show_ui'               => true,
-				'show_admin_column'     => false,
+				'show_admin_column'     => true,
 				'query_var'             => true,
 				'rewrite'               => array( 'slug' => strtolower($tax_single)),
 			);		
 		}
 
-		public static function add_meta($post_id, $post = false) {
-			if (!$post) {
-				$post = array();
-			} else {
-				$post_id = $post->ID;
-			}
+		/**
+    	* Adds evidence_hub prefixed taxonomy terms and custom fields to a post_id.
+		*
+		* @since 0.1.1
+		* @param string $post_id.
+		* @param string $tax_plural.
+		* @return array $post
+    	*/
+		public static function add_meta($post_id) {
+			$post = array();
 			$post['ID'] = $post_id;
+			// get and push post custom fields prefixed evidence_hub
 			foreach (get_post_custom($post_id) as $key => $value) {
 				if (strpos($key, 'evidence_hub') !== 0) continue;
 				$key = substr($key, 13);
@@ -398,6 +395,7 @@ if(!class_exists('Evidence_Hub'))
 			}
 			$taxonomies = get_object_taxonomies(get_post_type($post_id), 'objects');
 
+			// get and push post custom taxonomy prefixed evidence_hub
 			foreach ($taxonomies as $taxonomy_id => $taxonomy) {
 				if (strpos($taxonomy_id, 'evidence_hub') !== 0) continue;
 				$value = wp_get_object_terms($post_id, $taxonomy_id);
@@ -416,6 +414,13 @@ if(!class_exists('Evidence_Hub'))
 			return $post;
 		}
 		
+		/**
+    	* Adds evidence_hub prefixed taxonomy terms and custom fields array of post ids.
+		*
+		* @since 0.1.1
+		* @param array $posts passed in using WP get_posts($args = array('fields' => 'ids')).
+		* @return array $posts_termed 
+    	*/
 		public static function add_terms($posts) {
 			$posts_termed = array();
 			foreach ($posts as $post_id){
@@ -423,80 +428,14 @@ if(!class_exists('Evidence_Hub'))
 			}
 			return $posts_termed;
 		}
-		
-		public function get_sankey_data(){
-			$country_slug = $_POST[ 'country_slug' ];
-			$title = "World";
-			$nodes = array();
-			$links = array();
-			$markers = array();
-			$nodesList = array();
-			
-			$args = array('post_type' => 'evidence', // my custom post type
-			   'posts_per_page' => -1,
-			   'post_status' => 'publish',
-			   'fields' => 'ids'
-			   ); // show all posts);
-			if ($country_slug != "World"){
-				$args = array_merge($args, array('tax_query' => array(array('taxonomy' => 'evidence_hub_country',
-											'field' => 'slug',
-											'terms' => $country_slug,))));
-				$term = get_term_by('slug', $country_slug, 'evidence_hub_country'); 
-				$title = $term->name;
-			}
-			$posts = Evidence_Hub::add_terms(get_posts($args));
-			
-			$polarities = get_terms('evidence_hub_polarity', 'hide_empty=0');
-			$hypotheses = get_posts(array('post_type' => 'hypothesis', // my custom post type
-										   'posts_per_page' => -1,
-										   'post_status' => 'publish',
-										   'orderby' => 'title',
-										   'order' => 'ASC',
-										   'fields' => 'ids'));
-			$sectors = get_terms('evidence_hub_sector', 'hide_empty=0');
-			if ($country_slug != "World"){
-				foreach ($posts as $post){
-					$markers[] = array("id" => $post['ID'],
-									   "name" => get_the_title($post['ID']),
-									   "url" => get_permalink($post['ID']),
-									   "lat" => get_post_meta($post['ID'], '_pronamic_google_maps_latitude', true ),
-									   "lng" => get_post_meta($post['ID'], '_pronamic_google_maps_longitude', true ),
-									   "sector" => $post['sector_slug'],
-									   "polarity" =>  $post['polarity_slug']);
-				}
-			}
-			
-			foreach($hypotheses as $hypothesis){
-				$hposts = Evidence_Hub::filterOptions($posts, 'hypothesis_id', $hypothesis);
-				$hposts_title = get_the_title($hypothesis);
-				$base_link = ($country_slug != 'World') ? (site_url().'/country/'.$country_slug) : site_url();
-				$hyp_link = $base_link . '/hypothesis/'.$hypothesis.'/'.basename(get_permalink($hypothesis));
-				$nodes[] = array("name" => $hposts_title, "url" => $hyp_link, "id" => $hypothesis, "type" => "hypothesis" );
-				foreach ($polarities as $polarity){
-					$pposts = Evidence_Hub::filterOptions($hposts, 'polarity_slug', $polarity->slug);
-					if (empty($nodeList[$polarity->name])){
-						$nodes[] = array("name" => $polarity->name, "url" => $base_link."/evidence/polarity/".$polarity->slug, "id" => $polarity->slug, "type" => "polarity", "fill" => json_decode($polarity->description)->fill);
-						$nodeList[$polarity->name] = 1;
-					}
-					if (count($pposts) > 0) 
-						$links[] = array("source" => $hposts_title, "target" => $polarity->name, "value" => count($pposts));
-					foreach($sectors as $sector){
-						$sposts = Evidence_Hub::filterOptions($pposts, 'sector_slug', $sector->slug);
-						if (empty($nodeList[$sector->name])){
-							$nodes[] = array("name" => $sector->name, "url" => $base_link."/evidence/sector/".$sector->slug, "id" => $sector->slug, "type" => "sector", "fill" => json_decode($sector->description)->fill);
-							$nodeList[$sector->name] = 1;
-						}
-						if (count($sposts) > 0) 
-							$links[] = array("source" => $polarity->name, "target" => $sector->name, "value" => count($sposts), "data" => array("url" => "xxx"));		
-					}
-				}
-			}	
-			$graph = array('nodes' => $nodes, 'links' => $links, 'title' => $title, 'markers' => $markers);
-			print_r(json_encode($graph));
-			die();
-		}
-		
-	
+
+		/**
+    	* Generates a post excerpt (used in json/hub.php).
+		*
+		* @since 0.1.1
+		* @param int $post_id.
+		* @return string filtered post content 
+    	*/
 		public function generate_excerpt($post_id = false) {
 			if ($post_id) $post = is_numeric($post_id) ? get_post($post_id) : $post_id;
 			else $post = $GLOBALS['post'];
@@ -524,59 +463,81 @@ if(!class_exists('Evidence_Hub'))
 		
 			return apply_filters('wp_trim_excerpt', $content, $raw_content);
 		}
+
+		/**
+    	* Does WP permalink rewrites.
+		*
+		* @since 0.1.1
+    	*/
+		public static function do_rewrites(){
+			add_rewrite_rule("^country/([^/]+)/policy/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=policy&evidence_hub_country=$matches[1]&evidence_hub_sector=$matches[2]&paged=$matches[3]','top');
+			add_rewrite_rule("^country/([^/]+)/policy/sector/([^/]+)?",'index.php?post_type=policy&evidence_hub_country=$matches[1]&evidence_hub_sector=$matches[2]','top');
+			
+			add_rewrite_rule("^country/([^/]+)/policy/page/([0-9]+)?",'index.php?post_type=policy&evidence_hub_country=$matches[1]&paged=$matches[2]','top');
+			add_rewrite_rule("^country/([^/]+)/policy([^/]+)?",'index.php?post_type=policy&evidence_hub_country=$matches[1]','top');
+			
+			add_rewrite_rule("^country/([^/]+)/evidece/polarity/([^/]+)/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&evidence_hub_polarity=$matches[2]&evidence_hub_sector=$matches[3]&paged=$matches[4]','top');
+			add_rewrite_rule("^country/([^/]+)/evidence/polarity/([^/]+)/sector/([^/]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&evidence_hub_polarity=$matches[2]&evidence_hub_sector=$matches[3]','top');
+			
+			add_rewrite_rule("^country/([^/]+)/hypothesis/([0-9]+)/[^/]+/polarity/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&hyp_id=$matches[2]&evidence_hub_polarity=$matches[3]&paged=$matches[4]','top');
+			add_rewrite_rule("^country/([^/]+)/hypothesis/([0-9]+)/[^/]+/polarity/([^/]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&hyp_id=$matches[2]&evidence_hub_polarity=$matches[3]','top');			
+			add_rewrite_rule("^country/([^/]+)/hypothesis/([0-9]+)/.*?",'index.php?post_type=hypothesis&p=$matches[2]','top');
+			
+			add_rewrite_rule("^country/([^/]+)/evidence/(polarity|sector)/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&evidence_hub_$matches[2]=$matches[3]&paged=$matches[4]','top');
+			add_rewrite_rule("^country/([^/]+)/evidence/(polarity|sector)/([^/]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&evidence_hub_$matches[2]=$matches[3]','top');
+			
+			add_rewrite_rule("^country/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&paged=$matches[3]','top');
+			add_rewrite_rule("^country/([^/]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]','top');
+					
+			add_rewrite_rule("^evidence/polarity/([^/]+)/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&evidence_hub_polarity=$matches[1]&evidence_hub_sector=$matches[2]&paged=$matches[3]','top');
+			add_rewrite_rule("^evidence/polarity/([^/]+)/sector/([^/]+)?",'index.php?post_type=evidence&evidence_hub_polarity=$matches[1]&evidence_hub_sector=$matches[2]','top');
+			
+			add_rewrite_rule("^evidence/(polarity|sector)/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&evidence_hub_$matches[1]=$matches[2]&paged=$matches[3]','top');
+			add_rewrite_rule("^evidence/(polarity|sector)/([^/]+)?",'index.php?post_type=evidence&evidence_hub_$matches[1]=$matches[2]','top');
+			
+			add_rewrite_rule("^policy/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=policy&evidence_hub_sector=$matches[1]&paged=$matches[2]','top');
+			add_rewrite_rule("^policy/sector/([^/]+)?",'index.php?post_type=policy&evidence_hub_sector=$matches[1]','top');
 	
-		
-		public static function get_select_quick_edit($options, $column_name){
-			?><fieldset class="inline-edit-col-right">
-                  <div class="inline-edit-group">
-                     <label>
-                     <select
-							name="<?php echo $column_name; ?>"
-							id="<?php echo $column_name; ?>"
-						>
-							<option value=""></option>
-                        <span class="title"><?php echo $option['label'];?></span>
-                        <?php foreach ($option['options'] as $select) { 
-							echo "<option value='" . $select->slug . "'>" . $select->name . "</option>\n";
-						}
-						?>
-                     </label>
-                  </div>
-               </fieldset><?php
+			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/evidence/polarity/([^/]+)/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&evidence_hub_polarity=$matches[3]&evidence_hub_sector=$matches[4]&paged=$matches[5]','top');
+			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/evidence/polarity/([^/]+)/sector/([^/]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&evidence_hub_polarity=$matches[3]&evidence_hub_sector=$matches[4]','top');
+			
+			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/evidence/(polarity|sector)/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&evidence_hub_$matches[3]=$matches[4]&paged=$matches[5]','top');
+			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/evidence/(polarity|sector)/([^/]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&evidence_hub_$matches[3]=$matches[4]','top');
+			
+			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/evidence/page/([0-9]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&paged=$matches[2]','top');  
+			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/evidence/?",'index.php?post_type=evidence&hyp_id=$matches[1]','top');
+			  
+			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/page/([0-9]+)?",'index.php?post_type=hypothesis&p=$matches[1]&paged=$matches[2]','top');
+			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/?",'index.php?post_type=hypothesis&p=$matches[1]','top');
 		}
 		
-
-		
-		
 		/**
-		 * Activate the plugin
-		 */
-		public static function activate()
-		{
+		* Activate the plugin
+		*
+		* @since 0.1.1
+		*/
+		public static function activate(){
 			flush_rewrite_rules();
 			update_option( 'Pronamic_Google_maps', array( 'active' => array( 'location' => true, 'evidence' => true, 'project' => true, 'policy' => true  ) ) );
 			// Do nothing
 		} // END public static function activate
 	
 		/**
-		 * Deactivate the plugin
-		 */		
-		public static function deactivate()
-		{
+		* Deactivate the plugin
+		*
+		* @since 0.1.1
+		*/		
+		public static function deactivate(){
 			// Do nothing
 		} // END public static function deactivate
 	} // END class Evidence_Hub
 } // END if(!class_exists('Evidence_Hub'))
 
-if(class_exists('Evidence_Hub'))
-{
+if(class_exists('Evidence_Hub')){
 	// Installation and uninstallation hooks
 	register_activation_hook(EVIDENCE_HUB_REGISTER_FILE, array('Evidence_Hub', 'activate'));
 	register_deactivation_hook(EVIDENCE_HUB_REGISTER_FILE, array('Evidence_Hub', 'deactivate'));
 
 	// instantiate the plugin class
-	$wp_plugin_template = new Evidence_Hub();
-	
-    
+	$wp_plugin_template = new Evidence_Hub();	
 }
-?>

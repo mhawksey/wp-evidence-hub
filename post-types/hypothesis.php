@@ -20,8 +20,8 @@ if(!class_exists('Hypothesis_Template'))
     		// register actions
     		add_action('init', array(&$this, 'init'));
     		add_action('admin_init', array(&$this, 'admin_init'));
-			add_action('manage_edit-'.self::POST_TYPE.'_columns', array(&$this, 'columns'));
-			add_action('manage_'.self::POST_TYPE.'_posts_custom_column', array(&$this, 'column'),10 ,2);
+			//add_action('manage_edit-'.self::POST_TYPE.'_columns', array(&$this, 'columns'));
+			//add_action('manage_'.self::POST_TYPE.'_posts_custom_column', array(&$this, 'column'),10 ,2);
 			add_filter('post_type_link', array(&$this, 'custom_post_type_link'), 1, 3);
 		
 			

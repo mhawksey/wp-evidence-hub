@@ -3,7 +3,7 @@
 new Evidence_Hub_Shortcode_Evidence_Entry();
 class Evidence_Hub_Shortcode_Evidence_Entry extends Evidence_Hub_Shortcode {
 	var $shortcode = 'evidence_entry';
-	var $defaults = array('no_cache' => 'false');
+	var $options = array('do_cache' => 'false');
 
 	function content() {
 		ob_start();

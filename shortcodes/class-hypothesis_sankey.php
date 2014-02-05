@@ -1,16 +1,35 @@
 <?php
-
+/**
+ * Construct a sankey shortcode
+ *
+ * There is an option to use the shortcode with different country slugs 
+ * e.g [hypothesis_sankey slug="us"] for USA 
+ * Based on shortcode class construction used in Conferencer http://wordpress.org/plugins/conferencer/.
+ *
+ * @since 0.1.1
+ *
+ * @package WP Evidence Hub
+ * @subpackage Evidence_Hub_Shortcode
+ */
+ 
 new Evidence_Hub_Shortcode_Hypothesis_Sankey();
+// Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_Hypothesis_Sankey extends Evidence_Hub_Shortcode {
 	var $shortcode = 'hypothesis_sankey';
 	var $defaults = array('slug' => 'World');
 
 	static $post_types_with_sessions = NULL;
-
+	
+	/**
+	* Generate post content.
+	* Gets all the hypothesis and renders in a single page.
+	*
+	* @since 0.1.1
+	* @return string.
+	*/
 	function content() {
 		ob_start();
-		extract($this->options);
-				?>
+		extract($this->options); ?>
 		<script src="<?php echo plugins_url( 'js/sankey.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
         <script src="<?php echo plugins_url( 'js/sankey-main.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
         <div id="sankey-display"></div>
@@ -22,6 +41,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Sankey extends Evidence_Hub_Shortcode {
 			}
 			var MyAjax = {
 				pluginurl: getPath('<?php echo EVIDENCE_HUB_URL; ?>'),
+				apiurl: '<?php echo site_url().'/'.get_option('json_api_base', 'api');?>/',
 				ajaxurl: getPath('<?php echo admin_url();?>admin-ajax.php')
 			};
 			var graph = {};
@@ -37,7 +57,6 @@ class Evidence_Hub_Shortcode_Hypothesis_Sankey extends Evidence_Hub_Shortcode {
 			
 			renderSankey('<?php echo $slug ?>');
 		</script>
-        
         <?php
 		return ob_get_clean();
 	}

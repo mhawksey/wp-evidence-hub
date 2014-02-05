@@ -1,6 +1,6 @@
 // JavaScript Document
 function renderSankey(slug,includeMarkers){
-	d3.json(MyAjax.ajaxurl, function(graph) { 
+	d3.json(MyAjax.apiurl+'hub/get_sankey_data/?country_slug='+slug, function(graph) { 
 		if (includeMarkers) displayMarkers(graph.markers);
 			
 		var margin = SANKEY_MARGIN,
@@ -124,6 +124,5 @@ function renderSankey(slug,includeMarkers){
 
 					
 	})
-    .header("Content-type", "application/x-www-form-urlencoded")
-    .post("action=get_sankey_data&country_slug="+slug);
+    .header("Content-type", "application/x-www-form-urlencoded");
 }	

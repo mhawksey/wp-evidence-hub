@@ -82,6 +82,79 @@ class JSON_API_Hub_Controller {
 		return array_merge($this->posts_result($the_query), $output);
 	}
 	
+	public function get_sankey_data(){
+		global $json_api;
+		$country_slug = isset($json_api->query->country_slug) ? $json_api->query->country_slug : "World";
+		$title = "World";
+		$nodes = array();
+		$links = array();
+		$markers = array();
+		$nodesList = array();
+		
+		$args = array('post_type' => 'evidence', // my custom post type
+		   'posts_per_page' => -1,
+		   'post_status' => 'publish',
+		   'fields' => 'ids'
+		   ); // show all posts);
+		   
+		if ($country_slug != "World"){
+			$args = array_merge($args, array('tax_query' => array(array('taxonomy' => 'evidence_hub_country',
+										'field' => 'slug',
+										'terms' => $country_slug,))));
+			$term = get_term_by('slug', $country_slug, 'evidence_hub_country'); 
+			$title = $term->name;
+		}
+		
+		$posts = Evidence_Hub::add_terms(get_posts($args));
+		
+		$polarities = get_terms('evidence_hub_polarity', 'hide_empty=0');
+		$hypotheses = get_posts(array('post_type' => 'hypothesis', // my custom post type
+									   'posts_per_page' => -1,
+									   'post_status' => 'publish',
+									   'orderby' => 'title',
+									   'order' => 'ASC',
+									   'fields' => 'ids'));
+		$sectors = get_terms('evidence_hub_sector', 'hide_empty=0');
+		if ($country_slug != "World"){
+			foreach ($posts as $post){
+				$markers[] = array("id" => $post['ID'],
+								   "name" => get_the_title($post['ID']),
+								   "url" => get_permalink($post['ID']),
+								   "lat" => get_post_meta($post['ID'], '_pronamic_google_maps_latitude', true ),
+								   "lng" => get_post_meta($post['ID'], '_pronamic_google_maps_longitude', true ),
+								   "sector" => $post['sector_slug'],
+								   "polarity" =>  $post['polarity_slug']);
+			}
+		}
+		
+		foreach($hypotheses as $hypothesis){
+			$hposts = Evidence_Hub::filterOptions($posts, 'hypothesis_id', $hypothesis);
+			$hposts_title = get_the_title($hypothesis);
+			$base_link = ($country_slug != 'World') ? (site_url().'/country/'.$country_slug) : site_url();
+			$hyp_link = $base_link . '/hypothesis/'.$hypothesis.'/'.basename(get_permalink($hypothesis));
+			$nodes[] = array("name" => $hposts_title, "url" => $hyp_link, "id" => $hypothesis, "type" => "hypothesis" );
+			foreach ($polarities as $polarity){
+				$pposts = Evidence_Hub::filterOptions($hposts, 'polarity_slug', $polarity->slug);
+				if (empty($nodeList[$polarity->name])){
+					$nodes[] = array("name" => $polarity->name, "url" => $base_link."/evidence/polarity/".$polarity->slug, "id" => $polarity->slug, "type" => "polarity", "fill" => json_decode($polarity->description)->fill);
+					$nodeList[$polarity->name] = 1;
+				}
+				if (count($pposts) > 0) 
+					$links[] = array("source" => $hposts_title, "target" => $polarity->name, "value" => count($pposts));
+				foreach($sectors as $sector){
+					$sposts = Evidence_Hub::filterOptions($pposts, 'sector_slug', $sector->slug);
+					if (empty($nodeList[$sector->name])){
+						$nodes[] = array("name" => $sector->name, "url" => $base_link."/evidence/sector/".$sector->slug, "id" => $sector->slug, "type" => "sector", "fill" => json_decode($sector->description)->fill);
+						$nodeList[$sector->name] = 1;
+					}
+					if (count($sposts) > 0) 
+						$links[] = array("source" => $polarity->name, "target" => $sector->name, "value" => count($sposts), "data" => array("url" => "xxx"));		
+				}
+			}
+		}	
+		return array('nodes' => $nodes, 'links' => $links, 'title' => $title, 'markers' => $markers);
+	}
+	
 	public function get_geojson($args=array()){
 		global $json_api;
 		if ($json_api->query->count) {
@@ -106,7 +179,7 @@ class JSON_API_Hub_Controller {
 									  "sector" => isset($post['sector_slug']) ? $post['sector_slug'] : NULL,
 									  );
 					if ($type=='evidence'){
-						$property = array_merge($property, array("polarity" => isset($post['polarity_slug']) ? $post['polarity_slug'] : NULL,
+						$property = array_merge($property, array("polarity" => isset($post['polarity_slug']) ? $post['polarity_slug'] : "N/A",
 									  "project" => (($post['project_id'] > 0) ? get_the_title($post['project_id']) : "N/A"),
 									  "hypothesis_id" => $post['hypothesis_id'],
 									  "hypothesis" => (($post['hypothesis_id'] > 0) ? get_the_title($post['hypothesis_id']) : "Unassigned")));

@@ -1,11 +1,19 @@
 <?php
-
+/**
+ * Construct a detailed map of evidence using LeafletJS
+ *
+ * Based on shortcode class construction used in Conferencer http://wordpress.org/plugins/conferencer/.
+ *
+ * @since 0.1.1
+ *
+ * @package WP Evidence Hub
+ * @subpackage Evidence_Hub_Shortcode
+ */
 new Evidence_Hub_Shortcode_Evidence_GeoMap();
+// Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
 	var $shortcode = 'evidence_geomap';
 	var $defaults = array(
-		'post_id' => false,
-		'post_ids' => false,
 		'title' => false,
 		'no_evidence_message' => "There is no evidence map yet to display",
 		'link_post' => true,
@@ -13,41 +21,33 @@ class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
 		'title_tag' => 'h3',
 	);
 
+	static $post_types_with_shortcode = array();
 	
-
-	static $post_types_with_evidence = array();
-	
-	
-	function prep_options() {
-		// Turn csv into array
-		if (!is_array($this->options['post_ids'])) $this->options['post_ids'] = array();
-		if (!empty($this->options['post_ids'])) $this->options['post_ids'] = explode(',', $this->options['post_ids']);
-
-		// add post_id to post_ids and get rid of it
-		if ($this->options['post_id']) $this->options['post_ids'] = array_merge($this->options['post_ids'], explode(',', $this->options['post_id']));
-		unset($this->options['post_id']);
-		
-		// fallback to current post if nothing specified
-		if (empty($this->options['post_ids']) && $GLOBALS['post']->ID) $this->options['post_ids'] = array($GLOBALS['post']->ID);
-		
-		// unique list
-		$this->options['post_ids'] = array_unique($this->options['post_ids']);
-	}
-
+	/**
+	* Generate post content.
+	*
+	* @since 0.1.1
+	* @return string.
+	*/
 	function content() {
+		ob_start();
+		extract($this->options);
+		$errors = array();	
 		$sub_options = array();
 		$hypothesis_options = array();
-		$hypothesis_query = new WP_Query(array(
-			'post_type' => 'hypothesis',
-			'posts_per_page' => -1, // show all
-			'orderby' => 'title',
-			'order' => 'ASC',
-		));
-		
-		foreach ($hypothesis_query->posts as $hypothesis) {
-			$hypothesis_options[$hypothesis->ID] = get_the_title($hypothesis->ID);
+		// get all the hypothesis ids													
+		$hypotheses = get_posts( array(	'post_type' => 'hypothesis', // my custom post type
+										'posts_per_page' => -1,
+										'post_status' => 'publish',
+										'orderby' => 'title',
+										'order' => 'ASC',
+										'fields' => 'ids'));
+		foreach($hypotheses as $hypothesis){
+			$hypothesis_options[$hypothesis] = get_the_title($hypothesis);
 		}
 		
+		// build dropdown filters for map 
+		// type
 		$sub_options = array_merge($sub_options, array(
 			'type' => array(
 				'type' => 'select',
@@ -57,6 +57,7 @@ class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
 								   'project' => 'Project'),
 				),
 		));
+		// hypothesis
 		$sub_options = array_merge($sub_options, array(
 			'hypothesis_id' => array(
 				'type' => 'select',
@@ -65,6 +66,7 @@ class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
 				'options' => $hypothesis_options,
 				),
 		));
+		// polarity
 		$sub_options = array_merge($sub_options, array(
 			'polarity' => array(
 				'type' => 'select',
@@ -73,7 +75,8 @@ class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
 				'options' => get_terms('evidence_hub_polarity', 'hide_empty=0&orderby=id'),
 				),
 		));
-		 $sub_options = array_merge($sub_options, array(
+		// sector
+		$sub_options = array_merge($sub_options, array(
 			'sector' => array(
 				'type' => 'select',
 				'save_as' => 'term',
@@ -81,13 +84,8 @@ class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
 				'options' => get_terms('evidence_hub_sector', 'hide_empty=0&orderby=id'),
 				)
 		 ));
-
-		
-		ob_start();
-		extract($this->options);
-		$errors = array();		
+		//html dump
 		?>
- 
         <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
          <!--[if lte IE 8]>
              <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" />
@@ -140,8 +138,7 @@ class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
 			map.invalidateSize();
 		}
 		</script>
-		<?php 
-		
+		<?php 		
 		return ob_get_clean();
 	}
 }

@@ -1,95 +1,95 @@
 <?php
-
+/**
+ * Fancy Evidence Map with Bars and Sankey Shortcode
+ *
+ * Based on shortcode class construction used in Conferencer http://wordpress.org/plugins/conferencer/.
+ *
+ * @since 0.1.1
+ *
+ * @package WP Evidence Hub
+ * @subpackage Evidence_Hub_Shortcode
+ */
+ 
 new Evidence_Hub_Shortcode_Evidence_Map();
+// Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
 	var $shortcode = 'evidence_map';
 	var $defaults = array(
-		'post_id' => false,
-		'post_ids' => false,
 		'title' => false,
 		'no_evidence_message' => "There is no evidence map yet to display",
 		'link_post' => true,
 		'link_sessions' => true,
 		'title_tag' => 'h3',
 	);
-
 	
+	static $post_types_with_shortcode = array();
 
-	static $post_types_with_evidence = array();
-	
-	
-	function prep_options() {
-		// Turn csv into array
-		if (!is_array($this->options['post_ids'])) $this->options['post_ids'] = array();
-		if (!empty($this->options['post_ids'])) $this->options['post_ids'] = explode(',', $this->options['post_ids']);
-
-		// add post_id to post_ids and get rid of it
-		if ($this->options['post_id']) $this->options['post_ids'] = array_merge($this->options['post_ids'], explode(',', $this->options['post_id']));
-		unset($this->options['post_id']);
-		
-		// fallback to current post if nothing specified
-		if (empty($this->options['post_ids']) && $GLOBALS['post']->ID) $this->options['post_ids'] = array($GLOBALS['post']->ID);
-		
-		// unique list
-		$this->options['post_ids'] = array_unique($this->options['post_ids']);
-	}
-
+	/**
+	* Generate post content. 
+	*
+	* @since 0.1.1
+	* @return string.
+	*/
 	function content() {
 		ob_start();
 		extract($this->options);
-		$errors = array();	
-		?>
-        <script type="application/javascript">
-				/* <![CDATA[ */
-		var MyAjax = {
-			pluginurl: getPath('<?php echo EVIDENCE_HUB_URL; ?>'),
-			ajaxurl: getPath('<?php echo admin_url();?>admin-ajax.php')
-		};
-		function getPath(url) {
-			var a = document.createElement('a');
-			a.href = url;
-			return a.pathname.charAt(0) != '/' ? '/' + a.pathname : a.pathname;
-		}
-		/* ]]> */
-		<?php 
-		$handle = fopen(EVIDENCE_HUB_PATH.'/lib/map/data/world-country-names.csv', 'r'); 
-		$country_ids = array();
-		if ($handle) 
-		{ 
-			set_time_limit(0); 		
-			//loop through one row at a time 
-			while (($rows = fgetcsv($handle, 256, ';')) !== FALSE) 
-			{ 
-				$country_ids[$rows[2]] = $rows[0];
-			} 
-			fclose($handle); 
-		} 
-	
-		$args = array('post_type' => 'evidence', // my custom post type
-    				   'posts_per_page' => -1,
-					   'post_status' => 'publish',
-					   'fields' => 'ids'); // show all posts);
+		$errors = array();
+		
+		/**
+		* A lot of this is a fudge to get the data in the right shape for Timo Grossenbacher/Global Oil Presentation.
+		* The overall aim is to get a year bin (the actual year is currently ignored) with an array containing: country name,
+		* slug, id (country id used in world-110m.json TOPOJson), and evidence counts for +ve/-ve extract shown below. Once we 
+		* have this Timo's script (with some modification) does the rest.   
+		* var data = {
+		* 		  "2013": [
+		* 			{
+		* 			  "name": "Australia",
+		* 			  "slug": "au",
+		* 			  "id": "36",
+		* 			  "positive": 0,
+		* 			  "negative": 1
+		* 			},
+		* 			{
+		* 			  "name": "Belgium",
+		* 			  "slug": "be",
+		* 			  "id": "56",
+		* 			  "positive": 0,
+		* 			  "negative": 0
+		* 			},
+		*			...
+		* 		  ]
+		* 		} 
+		*
+		*/
 		
 		$year = array();
-		
-		$posts = Evidence_Hub::add_terms(get_posts($args));
-		$countries = get_terms('evidence_hub_country', array('post_types' =>array('evidence')));
-		$polarities = get_terms('evidence_hub_polarity');
-		$args['post_type'] = 'hypothesis';
-		$hypotheses = get_posts($args);
-
-		
 		$graph = array();
 		$nodes = array();
 		$links = array();
 		$totals = array();
 		
-
-
+		// Build a country slug => id lookup by reading csv used in visualisation
+		$country_ids = $this->get_country_ids();
+		
 		$world = array("name"=>"World",
-					   "id" => 900,
-					   "positive" => 0,
-					   "negative" => 0);
+			   "id" => 900,
+			   "positive" => 0,
+			   "negative" => 0);
+		
+		// build query to fetch all evidence ids
+		$args = array('post_type' => 'evidence', // my custom post type
+    				   'posts_per_page' => -1,
+					   'post_status' => 'publish',
+					   'fields' => 'ids'); // show all posts);
+		// add terms and custom fields to posts
+		$posts = Evidence_Hub::add_terms(get_posts($args));
+		
+		// fetch country taxonomy
+		$countries = get_terms('evidence_hub_country', array('post_types' =>array('evidence')));
+		// fetch polarity taxonomy
+		$polarities = get_terms('evidence_hub_polarity');
+
+		// for each country get total pos/neg evidence 
 		foreach ($countries as $country){
 			$cposts = Evidence_Hub::filterOptions($posts, 'country_slug' , $country->slug);
 			$totals = array();
@@ -102,14 +102,28 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
 							"id" => $country_ids[$country->slug],
 							"positive" => $totals['pos'],
 							"negative" => $totals['neg']);
+			// keep running total of pos/neg
 			$world['positive'] = $world['positive'] + $totals['pos'];
 			$world['negative'] = $world['negative'] + $totals['neg'];		
 		}
 		$year[] = $world;
 		$data = array("2013" => $year);
-		print_r("var data = ".json_encode($data).";")
-		
+		// finally echo all the HTML/JS required
 		?>
+        <script type="application/javascript">
+				/* <![CDATA[ */
+		var MyAjax = {
+			pluginurl: getPath('<?php echo EVIDENCE_HUB_URL; ?>'),
+			apiurl: '<?php echo site_url().'/'.get_option('json_api_base', 'api');?>/',
+			ajaxurl: getPath('<?php echo admin_url();?>admin-ajax.php')
+		};
+		function getPath(url) {
+			var a = document.createElement('a');
+			a.href = url;
+			return a.pathname.charAt(0) != '/' ? '/' + a.pathname : a.pathname;
+		}
+		var data = <?php echo json_encode($data);?>;
+		/* ]]> */
 		</script>
         <script src="<?php echo plugins_url( 'lib/map/lib/queue.v1.min.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
         <script src="<?php echo plugins_url( 'lib/map/lib/topojson.v1.min.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
@@ -127,8 +141,6 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
         <![endif]-->
         <!-- main script -->
         <script src="<?php echo plugins_url( 'lib/map/src/main.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
-
-        
         <!--[if lt IE 9]>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
@@ -205,8 +217,29 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
 			jQuery('#evidence-map').css('height','');
 			jQuery('#ui').hide();
 		}
-</script>
+		</script>
 		<?php
 		return ob_get_clean();
+	}
+	
+	/**
+	* Build a country slug => id lookup.
+	*
+	* @since 0.1.1
+	* @return array 
+	*/
+	private function get_country_ids(){
+		$country_ids = array();
+		$handle = fopen(EVIDENCE_HUB_PATH.'/lib/map/data/world-country-names.csv', 'r'); 
+		if ($handle) { 
+			set_time_limit(0); 		
+			//loop through one row at a time 
+			while (($rows = fgetcsv($handle, 256, ';')) !== FALSE) 
+			{ 
+				$country_ids[$rows[2]] = $rows[0];
+			} 
+			fclose($handle); 
+		}
+		return $country_ids; 	
 	}
 }

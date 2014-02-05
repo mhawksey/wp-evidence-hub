@@ -15,7 +15,7 @@ class Evidence_Hub_Shortcode_Policy_GeoMap extends Evidence_Hub_Shortcode {
 
 	
 
-	static $post_types_with_evidence = array();
+	static $post_types_with_shortcode = array();
 	
 	
 	function prep_options() {

@@ -188,6 +188,35 @@ width:100%;
 padding: 6px;
 padding: 0.428571429rem;
 }
+#vis {
+font-family: "Open Sans", Helvetica, Arial, "Nimbus Sans L", sans-serif;
+}
+#vis .label {
+font-style:italic;
+font-size:90%;
+}
+#vis .malebar, #vis .femalebar {
+opacity: 0.6;
+}
+#vis .malebar {
+fill: rgb(255, 146, 6);
+}
+#vis .femalebar {
+fill: rgb(85, 85, 85);
+}
+#vis .highlight rect.malebar, #vis .highlight rect.femalebar {
+opacity: 0.8;
+}
+#vis text.malebar, #vis text.femalebar {
+display: block;
+}
+#vis .highlight text {
+display: block;
+fill: #000;
+}
+#vis .highlight text.shared{ 
+font-weight:bold;
+}
 /*THEME-specific ends. */
 
 

@@ -41,34 +41,28 @@ if(!class_exists('Evidence_Template'))
     	} // END public function init()
 		
 		
-		public function columns($columns) {
-			$columns = array(
-				'cb' => '<input type="checkbox" />',
-				'title' => __( self::SINGULAR ),
-				'evidence_hub_polarity' => __( 'Polarity' ),
-				'evidence_hub_hypothesis_id' => __( 'Hypothesis' ),
-				'evidence_hub_country' => __( 'Country' ),
-				'evidence_hub_sector' => __( 'Sector' ),
-				'author' => __( 'Author' ),
-				'date' => __( 'Date' )
-			);
 
-			return $columns;
-		}
-		
-		public function add_to_bulk_quick_edit_custom_box( $column_name, $post_type ) {
-			print_r($column_name);
-			$type = str_replace('evidence_hub_', '', $column_name);
-			switch ($type) {
-				case 'sector':
-					Evidence_Hub::get_select_quick_edit($this->options->$type, $column_name);
-					break;
-				default:
-					break;
-			}			
+		public function columns($columns) {
+			return array_slice($columns, 0, 3, true) +
+    				array('evidence_hub_hypothesis_id' => __( 'Hypothesis' )) +
+   					array_slice($columns, 3, count($columns) - 1, true) ;
 		}
 		
 		public function column($column, $post_id) {
+			global $post;
+			switch (str_replace('evidence_hub_', '', $column)) {
+			case 'hypothesis_id':
+				$case_id = get_post_meta( $post_id, $column, true );
+				$case_title = get_the_title($case_id);
+				if ( empty( $case_title ) )
+					echo __( 'Empty' );
+				else
+					printf( __( '<a href="?post_type=evidence&hyp_id=%s">%s</a>' ), $case_id, ucwords($case_title) );
+				break;
+			default :
+				break;
+			}
+			/*
 			global $post;
 			switch (str_replace('evidence_hub_', '', $column)) {
 			case 'polarity':
@@ -102,6 +96,7 @@ if(!class_exists('Evidence_Template'))
 			default :
 				break;
 			}
+			*/
 		}
 		
 		

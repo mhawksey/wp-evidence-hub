@@ -1,15 +1,34 @@
 <?php
-
+/**
+ * Shortcode to display list of hypotheses
+ *
+ * Based on shortcode class construction used in Conferencer http://wordpress.org/plugins/conferencer/.
+ *
+ * @since 0.1.1
+ *
+ * @package WP Evidence Hub
+ * @subpackage Evidence_Hub_Shortcode
+ */
+ 
 new Evidence_Hub_Shortcode_Hypothesis_Archive();
+// Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_Hypothesis_Archive extends Evidence_Hub_Shortcode {
 	var $shortcode = 'hypothesis_archive';
 	var $defaults = array();
 
 	static $post_types_with_sessions = NULL;
-
+	
+	/**
+	* Generate post content.
+	* Gets all the hypothesis and renders in a single page 
+	*
+	* @since 0.1.1
+	* @return string.
+	*/
 	function content() {
 		ob_start();
 		extract($this->options);
+		// build a query
 		$args=array(
 		  'post_type' => 'hypothesis',
 		  'post_status' => 'publish',
@@ -19,6 +38,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Archive extends Evidence_Hub_Shortcode {
 		);
 		$my_query = null;
 		$my_query = new WP_Query($args);
+		// do the_loop
 		if( $my_query->have_posts() ) {
 		  while ($my_query->have_posts()) : $my_query->the_post();
 		  	global $more; $more = 0; 
