@@ -2,11 +2,17 @@
 /**
  * Fancy Evidence Map with Bars and Sankey Shortcode
  *
+ * Shortcode: [evidence_map]
+ * Options: title - boolean|string
+ *			no_evidence_message - message used on error
+ *			title_tag - tag to wrap title in
+ *			do_cache - boolean to disable cache option default: true
+ *
  * Based on shortcode class construction used in Conferencer http://wordpress.org/plugins/conferencer/.
  *
  * @since 0.1.1
  *
- * @package WP Evidence Hub
+ * @package Evidence_Hub
  * @subpackage Evidence_Hub_Shortcode
  */
  
@@ -17,8 +23,6 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
 	var $defaults = array(
 		'title' => false,
 		'no_evidence_message' => "There is no evidence map yet to display",
-		'link_post' => true,
-		'link_sessions' => true,
 		'title_tag' => 'h3',
 	);
 	

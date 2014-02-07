@@ -6,14 +6,15 @@
  *
  * @since 0.1.1
  *
- * @package WP Evidence Hub
+ * @package Evidence_Hub
  * @subpackage Evidence_Hub_Shortcode
  */
  
 abstract class Evidence_Hub_Shortcode {
 	var $shortcode = 'evidence_hub_shortcode';
-	var $defaults = array('do_cache' => 'true');
+	var $defaults = array('do_cache' => true);
 	var $options = array();
+	
 	/**
 	* Construct the plugin object.
 	*

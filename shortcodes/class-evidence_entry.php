@@ -1,22 +1,42 @@
 <?php
-
+/**
+ * Construct a frontend data entry form
+ *
+ * Shortcode: [evidence_entry]
+ * Options: do_cache - boolean to disable cache option default: *false*
+ *
+ * Based on shortcode class construction used in Conferencer http://wordpress.org/plugins/conferencer/.
+ *
+ * @since 0.1.1
+ *
+ * @package Evidence_Hub
+ * @subpackage Evidence_Hub_Shortcode
+ */
 new Evidence_Hub_Shortcode_Evidence_Entry();
+// Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_Evidence_Entry extends Evidence_Hub_Shortcode {
 	var $shortcode = 'evidence_entry';
-	var $options = array('do_cache' => 'false');
-
+	var $options = array('do_cache' => false);
+	
+	/**
+	* Construct the plugin object.
+	*
+	* @since 0.1.1
+	*/
 	function content() {
 		ob_start();
 		extract($this->options);
 		
+		// display login form if not signed in
 		if (!is_user_logged_in()) {
-			?>
-            <div id="login">
-                <div class="login_form">
-                    <?php wp_login_form(); ?>
-                </div>
+		?>
+        <div id="login">
+            <div class="login_form">
+                <?php wp_login_form(); ?>
             </div>
-            <?php
+        </div>
+		<?php
+		// if user can submit posts render form
 		} elseif (current_user_can('evidence_edit_posts')) {
 			$json = file_get_contents(site_url().'/'.get_option('json_api_base', 'api').'/get_nonce/?controller=posts&method=create_post');
 			?>
@@ -97,7 +117,7 @@ class Evidence_Hub_Shortcode_Evidence_Entry extends Evidence_Hub_Shortcode {
                 <button type="submit" id="add_data">Submit</button>
                 
             <?php
-			
+			print_r(Evidence_Hub::$post_type_fields);
 		}
 		?>
         <?php 

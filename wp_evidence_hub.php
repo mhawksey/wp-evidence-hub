@@ -33,46 +33,40 @@ define('EVIDENCE_HUB_REGISTER_FILE', preg_replace('@\/var\/www\/[^\/]+@', '', __
 
 if(!class_exists('Evidence_Hub'))
 {
-	class Evidence_Hub
-	{
-		static $post_types = array(); // used in shortcode caching 
+	class Evidence_Hub {
+		static $post_types = array(); // used in shortcode caching
+		static $post_type_fields = array(); // used to collect field types for frontend data entry 
 		/**
 		* Construct the plugin object.
 		*
 		* @since 0.1.1
 		*/
-		public function __construct()
-		{
+		public function __construct() {
 			add_action('init', array(&$this, 'init'));
+			
+			// Register custom post types - hypothesis
+			require_once(sprintf("%s/post-types/class-hypothesis.php", EVIDENCE_HUB_PATH));
+			// Register custom post types - evidence
+			require_once(sprintf("%s/post-types/class-evidence.php", EVIDENCE_HUB_PATH));		
+			// Register custom post types - project
+			require_once(sprintf("%s/post-types/class-project.php", EVIDENCE_HUB_PATH));
+			// Register custom post types - policy
+			require_once(sprintf("%s/post-types/class-policy.php", EVIDENCE_HUB_PATH));
 			
 			// include shortcodes
 			require_once(sprintf("%s/shortcodes/class-shortcode.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/class-evidence_summary.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/class-evidence_meta.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/class-project_meta.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/class-policy_meta.php", EVIDENCE_HUB_PATH));
+			
+			require_once(sprintf("%s/shortcodes/class-evidence_entry.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/class-evidence_geomap.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-evidence_map.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/class-hypothesis_bars.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/class-evidence_meta.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/class-evidence_summary.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-hypothesis_archive.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/class-hypothesis_bars.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-hypothesis_sankey.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/class-evidence_geomap.php", EVIDENCE_HUB_PATH)); //TODO Tidy
-			require_once(sprintf("%s/shortcodes/policy_geomap.php", EVIDENCE_HUB_PATH)); //TODO Tidy
-			require_once(sprintf("%s/shortcodes/evidence_entry.php", EVIDENCE_HUB_PATH)); //TODO Tidy
-			
-			// Register custom post types - hypothesis
-			require_once(sprintf("%s/post-types/hypothesis.php", EVIDENCE_HUB_PATH)); //TODO Tidy
-			$Hypothesis_Template = new Hypothesis_Template();
-			
-			// Register custom post types - evidence
-			require_once(sprintf("%s/post-types/evidence.php", EVIDENCE_HUB_PATH)); //TODO Tidy
-			$Evidence_Template = new Evidence_Template();
-			
-			// Register custom post types - project
-			require_once(sprintf("%s/post-types/project.php", EVIDENCE_HUB_PATH)); //TODO Tidy
-			$Project_Template = new Project_Template();
-					
-			require_once(sprintf("%s/post-types/policy.php", EVIDENCE_HUB_PATH)); //TODO Tidy
-			$Policy_Template = new Policy_Template();
+			require_once(sprintf("%s/shortcodes/class-policy_geomap.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/class-policy_meta.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/class-project_meta.php", EVIDENCE_HUB_PATH));
 			
 			// Initialize Pronamics Google Maps library
 			if (!class_exists('Pronamic_Google_Maps_Maps')){
@@ -108,9 +102,9 @@ if(!class_exists('Evidence_Hub'))
 			// removed library plugin menus
 			add_action( 'admin_menu', array(&$this,'my_remove_named_menus'),999 );
 			
-			// open ajax for sankey data
-			add_action('wp_ajax_get_sankey_data', array(&$this, 'get_sankey_data'));
-			add_action('wp_ajax_nopriv_get_sankey_data', array(&$this, 'get_sankey_data'));
+			// open ajax for project autom complete
+			add_action('wp_ajax_evidence_hub_project_callback', array(&$this, 'ajax_evidence_hub_project_callback') );
+			add_action('wp_ajax_evidence_hub_if_project_exists_by_value', array(&$this, 'ajax_evidence_hub_if_project_exists_by_value') );
 			
 			// debug function
 			add_action( 'wp_head', array(&$this, 'show_current_query') );
@@ -136,8 +130,7 @@ if(!class_exists('Evidence_Hub'))
 		*
 		* @since 0.1.1
     	*/
-    	public function init()
-    	{	
+    	public function init() {	
 			$caps = array('evidence_read_post', 'evidence_delete_posts', 'evidence_edit_posts');
 			
 			// define new role of Evidence Contributor to create but not publish/edit their evidence
@@ -162,7 +155,42 @@ if(!class_exists('Evidence_Hub'))
 			$this->add_evidence_capability(get_role('administrator'), $caps);
 			
 			// add permalink rewrites
-			$this->do_rewrites();			
+			$this->do_rewrites();
+			
+			// install contry codes/terms
+			$countries = get_terms( 'evidence_hub_country', array( 'hide_empty' => false ) );
+			// if no terms then lets add our terms
+			if( empty( $countries ) ){
+				$countries = $this->set_countries();
+				foreach( $countries as $country_code => $country_name ){
+					if( !term_exists( $country_name, 'evidence_hub_country' ) ){
+						wp_insert_term( $country_name, 'evidence_hub_country', array( 'slug' => $country_code ) );
+					}
+				}
+			}
+			
+			// register custom post type taxonomies
+			// register post type taxonomies for hypothesis
+			$args = $this->get_taxonomy_args("RAG Status","RAG Status");
+			register_taxonomy( 'evidence_hub_rag', 'hypothesis', $args );
+			
+			// register post type taxonomies for sector
+			$args = $this->get_taxonomy_args("Sector","Sectors");
+			register_taxonomy( 'evidence_hub_sector', array('evidence','policy'), $args );
+			
+			// register post type taxonomies for polarity
+			$args = $this->get_taxonomy_args("Polarity","Polarity");
+			register_taxonomy( 'evidence_hub_polarity', 'evidence', $args );
+			
+			// register post type taxonomies for country
+			$args = Evidence_Hub::get_taxonomy_args("Country", "Countries");
+			register_taxonomy( 'evidence_hub_country', array('evidence', 'project', 'policy'), $args );
+			
+			// register post type taxonomies for locale
+			$args = Evidence_Hub::get_taxonomy_args("Locale","Locales");
+			register_taxonomy( 'evidence_hub_locale', 'policy', $args );
+			
+			Pronamic_Google_Maps_Site::bootstrap();		
 		}
 		
 		/**
@@ -172,7 +200,7 @@ if(!class_exists('Evidence_Hub'))
 		* @param object $role WP Role object.
 		* @param array $caps string array of capabilitiy identifiers.
     	*/
-		public function add_evidence_capability($role, $caps){
+		public function add_evidence_capability($role, $caps) {
 			foreach($caps as $cap){
 				$role->add_cap($cap);
 			}
@@ -185,7 +213,7 @@ if(!class_exists('Evidence_Hub'))
 		* @param array $qvars WP qvars.
 		* @return array $qvars.
     	*/
-		public function evidence_hub_queryvars( $qvars ){
+		public function evidence_hub_queryvars( $qvars ) {
 		  $qvars[] = 'hyp_id';
 		  return $qvars;
 		}
@@ -197,7 +225,7 @@ if(!class_exists('Evidence_Hub'))
 		* @param array $query WP_query.
 		* @return array $query.
     	*/
-		public function evidence_hub_query($query){	
+		public function evidence_hub_query($query) {	
 			if (isset( $query->query_vars['hyp_id']) ) {
 				$meta_query = array();
 				$meta_query[] = array(
@@ -236,7 +264,7 @@ if(!class_exists('Evidence_Hub'))
 		*
 		* @since 0.1.1
     	*/
-		public function my_remove_named_menus(){
+		public function my_remove_named_menus() {
 			global $menu;
 			foreach ( $menu as $i => $item ) {
 				if ( 'pronamic_google_maps' == $item[2] ) {
@@ -285,7 +313,7 @@ if(!class_exists('Evidence_Hub'))
 		* @param string $val.
 		* @return array $newArray
     	*/
-		public static function filterOptions($arr, $key, $val){
+		public static function filterOptions($arr, $key, $val) {
 			$newArr = array();
 			foreach($arr as $name => $option) {
 				if (array_key_exists($key, $option) && $option[$key]===$val){
@@ -428,6 +456,65 @@ if(!class_exists('Evidence_Hub'))
 			}
 			return $posts_termed;
 		}
+		
+		/**
+    	* Adds ajaxable project name auto-complete.
+		*
+		* @since 0.1.1
+		* @return object 
+    	*/
+		public function ajax_evidence_hub_project_callback() {
+			global $wpdb;
+			
+			// if search term exists
+			if ( $search_term = ( isset( $_POST[ 'evidence_hub_project_search_term' ] ) && ! empty( $_POST[ 'evidence_hub_project_search_term' ] ) ) ? $_POST[ 'evidence_hub_project_search_term' ] : NULL ) {
+				if ( ( $projects = $wpdb->get_results( "SELECT posts.ID, posts.post_title, postmeta.meta_value  FROM $wpdb->posts posts INNER JOIN $wpdb->postmeta postmeta ON postmeta.post_id = posts.ID AND postmeta.meta_key ='_pronamic_google_maps_address' WHERE ( (posts.post_title LIKE '%$search_term%' OR postmeta.meta_value LIKE '%$search_term%') AND posts.post_type = 'project' AND post_status = 'publish' ) ORDER BY posts.post_title" ) )
+				&& is_array( $projects ) ) {
+					$results = array();
+					// loop through each user to make sure they are allowed
+					foreach ( $projects  as $project ) {								
+							$results[] = array(
+								'project_id'	=> $project->ID,
+								'label'			=> $project->post_title,
+								'address'		=> $project->meta_value, 
+								);
+					}
+					// "return" the results
+					//wp_reset_postmeta();
+					echo json_encode( $results );
+				}
+			}
+			die();
+		}
+		
+		/**
+    	* Adds ajaxable project details.
+		*
+		* @since 0.1.1
+		* @return object 
+    	*/
+		public function ajax_evidence_hub_if_project_exists_by_value() {
+			if ( $project_id = ( isset( $_POST[ 'autocomplete_eh_project_id' ] ) && ! empty( $_POST[ 'autocomplete_eh_project_id' ] ) ) ? $_POST[ 'autocomplete_eh_project_id' ] : NULL ) {
+				$project_name = $_POST[ 'autocomplete_eh_project_value' ];
+			
+				$actual_project_name = get_the_title($project_id);
+				
+				if($project_name !== $actual_project_name){
+					echo json_encode( (object)array( 'notamatch' => 1 ) );
+					die();
+				} else {	
+					echo json_encode( (object)array( 'valid' => 1,
+													 //'map' => $mapcode,
+													 'country' => ($loc = wp_get_object_terms($project_id, 'evidence_hub_country')) ? $loc[0]->slug : NULL,
+													 'lat' => get_post_meta($project_id, '_pronamic_google_maps_latitude', true ),
+													 'lng' => get_post_meta($project_id, '_pronamic_google_maps_longitude', true ),
+													 'zoom' => get_post_meta($project_id, '_pronamic_google_maps_zoom', true )));
+					die();
+				}
+			} 
+			echo json_encode( (object)array( 'noid' => 1 ) );
+			die();
+		}
 
 		/**
     	* Generates a post excerpt (used in json/hub.php).
@@ -463,13 +550,31 @@ if(!class_exists('Evidence_Hub'))
 		
 			return apply_filters('wp_trim_excerpt', $content, $raw_content);
 		}
+		
+		/**
+    	* Set country terms.
+		*
+		* @since 0.1.1
+    	*/
+		public function set_countries() {
+			$jsonIterator = new RecursiveIteratorIterator(
+					 new RecursiveArrayIterator(json_decode(file_get_contents(EVIDENCE_HUB_PATH."/lib/countries.json"), TRUE)),
+					 RecursiveIteratorIterator::SELF_FIRST);
+			$countries = array();
+			foreach ($jsonIterator as $key => $val) {
+				if(!is_array($val)) {
+					$countries[$key] = $val;
+				} 
+			}
+			return $countries;
+		}
 
 		/**
     	* Does WP permalink rewrites.
 		*
 		* @since 0.1.1
     	*/
-		public static function do_rewrites(){
+		private function do_rewrites(){
 			add_rewrite_rule("^country/([^/]+)/policy/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=policy&evidence_hub_country=$matches[1]&evidence_hub_sector=$matches[2]&paged=$matches[3]','top');
 			add_rewrite_rule("^country/([^/]+)/policy/sector/([^/]+)?",'index.php?post_type=policy&evidence_hub_country=$matches[1]&evidence_hub_sector=$matches[2]','top');
 			

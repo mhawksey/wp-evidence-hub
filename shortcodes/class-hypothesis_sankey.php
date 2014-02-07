@@ -3,12 +3,15 @@
  * Construct a sankey shortcode
  *
  * There is an option to use the shortcode with different country slugs 
- * e.g [hypothesis_sankey slug="us"] for USA 
+ * Shortcode: [hypothesis_sankey]
+ * Options: slug - string (2 character code to display snakey for particular country e.g [hypothesis_sankey slug="us"] for USA 
+ *			do_cache - boolean to disable cache option default: true
+ * 
  * Based on shortcode class construction used in Conferencer http://wordpress.org/plugins/conferencer/.
  *
  * @since 0.1.1
  *
- * @package WP Evidence Hub
+ * @package Evidence_Hub
  * @subpackage Evidence_Hub_Shortcode
  */
  

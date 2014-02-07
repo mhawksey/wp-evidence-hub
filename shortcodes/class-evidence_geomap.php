@@ -1,12 +1,15 @@
 <?php
 /**
  * Construct a detailed map of evidence using LeafletJS
+ * 
+ * Shortcode: [evidence_geomap]
+ * Options: do_cache - boolean to disable cache option default: true
  *
  * Based on shortcode class construction used in Conferencer http://wordpress.org/plugins/conferencer/.
  *
  * @since 0.1.1
  *
- * @package WP Evidence Hub
+ * @package Evidence_Hub
  * @subpackage Evidence_Hub_Shortcode
  */
 new Evidence_Hub_Shortcode_Evidence_GeoMap();
@@ -16,8 +19,6 @@ class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
 	var $defaults = array(
 		'title' => false,
 		'no_evidence_message' => "There is no evidence map yet to display",
-		'link_post' => true,
-		'link_sessions' => true,
 		'title_tag' => 'h3',
 	);
 
@@ -35,6 +36,7 @@ class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
 		$errors = array();	
 		$sub_options = array();
 		$hypothesis_options = array();
+		
 		// get all the hypothesis ids													
 		$hypotheses = get_posts( array(	'post_type' => 'hypothesis', // my custom post type
 										'posts_per_page' => -1,
@@ -84,7 +86,7 @@ class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
 				'options' => get_terms('evidence_hub_sector', 'hide_empty=0&orderby=id'),
 				)
 		 ));
-		//html dump
+		//html dump>>
 		?>
         <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css" />
          <!--[if lte IE 8]>
@@ -138,7 +140,8 @@ class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
 			map.invalidateSize();
 		}
 		</script>
-		<?php 		
+		<?php
+		// <<html dump	
 		return ob_get_clean();
 	}
 }

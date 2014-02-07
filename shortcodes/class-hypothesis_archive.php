@@ -2,11 +2,14 @@
 /**
  * Shortcode to display list of hypotheses
  *
+ * Shortcode: [hypothesis_archive]
+ * Options: do_cache - boolean to disable cache option default: true
+ *
  * Based on shortcode class construction used in Conferencer http://wordpress.org/plugins/conferencer/.
  *
  * @since 0.1.1
  *
- * @package WP Evidence Hub
+ * @package Evidence_Hub
  * @subpackage Evidence_Hub_Shortcode
  */
  

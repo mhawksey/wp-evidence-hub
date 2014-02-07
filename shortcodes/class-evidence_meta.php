@@ -3,11 +3,20 @@
  * Evidence Meta Bars Shortcode class used to construct shortcodes
  *
  * Generates metadata bars for evidence
+ * Shortcode: [evidence_meta]
+ * Options: title - boolean|string
+ *			location - header|footer|false
+ *			header_terms - comma seperated list of fields to display
+ *			footer_terms -  comma seperated list of fields to display
+ *			no_evidence_message - message used on error
+ *			title_tag - tag to wrap title in
+ *			do_cache - boolean to disable cache option default: true
+ *
  * Based on shortcode class construction used in Conferencer http://wordpress.org/plugins/conferencer/.
  *
  * @since 0.1.1
  *
- * @package WP Evidence Hub
+ * @package Evidence_Hub
  * @subpackage Evidence_Hub_Shortcode
  */
  
@@ -16,9 +25,8 @@ new Evidence_Hub_Shortcode_Evidence_Meta();
 class Evidence_Hub_Shortcode_Evidence_Meta extends Evidence_Hub_Shortcode {
 	var $shortcode = 'evidence_meta';
 	var $defaults = array(
-		'post_id' => false,
 		'title' => false,
-		'location' => 'header',
+		'location' => false,
 		'header_terms' => 'type,hypothesis_id,polarity,sector,country',
 		'footer_terms' => 'citation',
 		'no_evidence_message' => "There is no meta data for this evidence",

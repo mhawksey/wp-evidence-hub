@@ -3,11 +3,18 @@
  * Evidence Summary Shortcode class used to construct shortcodes
  *
  * Generates single hypothesis summary view of evidence
+ * Shortcode: [evidence_summary]
+ * Options: title - boolean|string
+ * 			display_sankey - boolean true to display sankey 
+ *			no_evidence_message - message used on error
+ *			title_tag - tag to wrap title in
+ *			do_cache - boolean to disable cache option default: true
+ *
  * Based on shortcode class construction used in Conferencer http://wordpress.org/plugins/conferencer/.
  *
  * @since 0.1.1
  *
- * @package WP Evidence Hub
+ * @package Evidence_Hub
  * @subpackage Evidence_Hub_Shortcode
  */
 
@@ -17,10 +24,8 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 	var $shortcode = 'evidence_summary';
 	var $defaults = array(
 		'title' => false,
-		'sankey' => true,
+		'display_sankey' => true,
 		'no_evidence_message' => "There is no evidence yet for this hypothesis",
-		'link_post' => true,
-		'link_sessions' => true,
 		'title_tag' => 'h3',
 	);
 
@@ -36,7 +41,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 			if (is_single()) {
 				$content = preg_replace('/(<span id=\"more-[0-9]*\"><\/span>)/', '$1'.do_shortcode('[evidence_summary]').'<h3>Hypothesis Details</h3>', $content, 1); 
 			} else {
-				$content .= do_shortcode('[evidence_summary sankey=0]');
+				$content .= do_shortcode('[evidence_summary display_sankey=0]');
 			}
 		}
 		return $content;
@@ -62,7 +67,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
                 <?php } else echo $title; ?>
             </<?php echo $title_tag; ?>>
 		<?php
-		if ($sankey){
+		if ($display_sankey){
 			echo '<div id="sankey-chart"></div>';
 		}
 		// prep query to fetch all evidence post ids associated to hypothesis 
@@ -90,7 +95,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
             $links = $this->print_get_nodes_links($evidence, $nodes, $post_id);
 			$graph = array('nodes' => $nodes, 'links' => $links);
 			 // out evidence sankey
-            if ($sankey) : 
+            if ($display_sankey) : 
 				$this->print_sankey_javascript($graph);
 			endif;
         else: 
