@@ -43,7 +43,8 @@ if(!class_exists('Evidence_Hub'))
 		*/
 		public function __construct() {
 			add_action('init', array(&$this, 'init'));
-			
+			// Register custom post types - hypothesis
+			require_once(sprintf("%s/post-types/class-custom_post_type.php", EVIDENCE_HUB_PATH));
 			// Register custom post types - hypothesis
 			require_once(sprintf("%s/post-types/class-hypothesis.php", EVIDENCE_HUB_PATH));
 			// Register custom post types - evidence

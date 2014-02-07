@@ -6,10 +6,10 @@ if(!class_exists('Location_Template'))
 	 */
 	class Location_Template
 	{
-		const POST_TYPE	= "location";
-		const ARCHIVE_SLUG = "location"; // use pluralized string if you want an archive page
-		const SINGULAR = "Location";
-		const PLURAL = "Locations";
+		public $post_type	= "location";
+		public $archive_slug = "location"; // use pluralized string if you want an archive page
+		public $singular = "Location";
+		$this->plural = "Locations";
 		var $options = array();
 		
     	/**
@@ -20,10 +20,10 @@ if(!class_exists('Location_Template'))
     		// register actions
     		add_action('init', array(&$this, 'init'));
     		add_action('admin_init', array(&$this, 'admin_init'));
-			add_action('manage_edit-'.self::POST_TYPE.'_columns', array(&$this, 'columns'));
-			add_action('manage_'.self::POST_TYPE.'_posts_custom_column', array(&$this, 'column'),10 ,2);
+			add_action('manage_edit-'.$this->post_type.'_columns', array(&$this, 'columns'));
+			add_action('manage_'.$this->post_type.'_posts_custom_column', array(&$this, 'column'),10 ,2);
 			
-			Evidence_Hub::$post_types[] = self::POST_TYPE;
+			Evidence_Hub::$post_types[] = $this->post_type;
 			
     	} // END public function __construct()
 
@@ -40,7 +40,7 @@ if(!class_exists('Location_Template'))
 		public function columns($columns) {
 			$columns = array(
 				'cb' => '<input type="checkbox" />',
-				'title' => __( self::SINGULAR ),
+				'title' => __( $this->singular ),
 				'evidence_hub_country' => __( 'Country' ),
 				'author' => __( 'Author' ),
 				'date' => __( 'Date' )
@@ -69,23 +69,23 @@ if(!class_exists('Location_Template'))
     	 */
     	public function create_post_type()
     	{
-    		register_post_type(self::POST_TYPE,
+    		register_post_type($this->post_type,
     			array(
     				'labels' => array(
-    					'name' => __(sprintf('%ss', ucwords(str_replace("_", " ", self::POST_TYPE)))),
-    					'singular_name' => __(ucwords(str_replace("_", " ", self::POST_TYPE)))
+    					'name' => __(sprintf('%ss', ucwords(str_replace("_", " ", $this->post_type)))),
+    					'singular_name' => __(ucwords(str_replace("_", " ", $this->post_type)))
     				),
 					'labels' => array(
-						'name' => __(sprintf('%s', self::PLURAL)),
-						'singular_name' => __(sprintf('%s', self::SINGULAR)),
-						'add_new' => __(sprintf('Add New %s', self::SINGULAR)),
-						'add_new_item' => __(sprintf('Add New %s', self::SINGULAR)),
-						'edit_item' => __(sprintf('Edit %s', self::SINGULAR)),
-						'new_item' => __(sprintf('New %s', self::SINGULAR)),
-						'view_item' => __(sprintf('View %s', self::SINGULAR)),
-						'search_items' => __(sprintf('Search %s', self::PLURAL)),
-						'not_found' => __(sprintf('No %s found', self::PLURAL)),
-						'not_found_in_trash' => __(sprintf('No found in Trash%s', self::PLURAL)),
+						'name' => __(sprintf('%s', $this->plural)),
+						'singular_name' => __(sprintf('%s', $this->singular)),
+						'add_new' => __(sprintf('Add New %s', $this->singular)),
+						'add_new_item' => __(sprintf('Add New %s', $this->singular)),
+						'edit_item' => __(sprintf('Edit %s', $this->singular)),
+						'new_item' => __(sprintf('New %s', $this->singular)),
+						'view_item' => __(sprintf('View %s', $this->singular)),
+						'search_items' => __(sprintf('Search %s', $this->plural)),
+						'not_found' => __(sprintf('No %s found', $this->plural)),
+						'not_found_in_trash' => __(sprintf('No found in Trash%s', $this->plural)),
 					),
     				'public' => true,
     				'description' => __("A location"),
@@ -94,7 +94,7 @@ if(!class_exists('Location_Template'))
     				),
 					'has_archive' => true,
 					'rewrite' => array(
-						'slug' => self::ARCHIVE_SLUG,
+						'slug' => $this->archive_slug,
 						'with_front' => false,
 					),
 					'menu_position' => 30,
@@ -104,7 +104,7 @@ if(!class_exists('Location_Template'))
 		
 			$args = Evidence_Hub::get_taxonomy_args("Country", "Countries");
 		
-			register_taxonomy( 'evidence_hub_country', array(self::POST_TYPE, 'evidence'), $args );
+			register_taxonomy( 'evidence_hub_country', array($this->post_type, 'evidence'), $args );
 			
 			$countries = get_terms( 'evidence_hub_country', array( 'hide_empty' => false ) );
 			
@@ -128,7 +128,7 @@ if(!class_exists('Location_Template'))
     	{
             // verify if this is an auto save routine. 
             // If it is our form has not been submitted, so we dont want to do anything
-			if (get_post_type($post_id) != self::POST_TYPE) return;
+			if (get_post_type($post_id) != $this->post_type) return;
 			if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
 			if (isset($_POST['evidence_hub_nonce']) && !wp_verify_nonce($_POST['evidence_hub_nonce'], plugin_basename(__FILE__))) return;
 			if (!current_user_can('edit_post', $post_id)) return;
@@ -177,13 +177,13 @@ if(!class_exists('Location_Template'))
     	{
 // Add this metabox to every selected post
     		add_meta_box( 
-    			sprintf('wp_evidence_hub_%s_side_section', self::POST_TYPE),
-    			sprintf('%s Information', ucwords(str_replace("_", " ", self::POST_TYPE))),
+    			sprintf('wp_evidence_hub_%s_side_section', $this->post_type),
+    			sprintf('%s Information', ucwords(str_replace("_", " ", $this->post_type))),
     			array(&$this, 'add_inner_meta_boxes_side'),
-    			self::POST_TYPE,
+    			$this->post_type,
 				'side'
     	    );	
-			remove_meta_box('tagsdiv-evidence_hub_country',self::POST_TYPE,'side');
+			remove_meta_box('tagsdiv-evidence_hub_country',$this->post_type,'side');
 			
     					
     	} // END public function add_meta_boxes()

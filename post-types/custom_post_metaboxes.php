@@ -171,7 +171,7 @@
 		<?php } ?>
     <?php if ($maphtml) echo $maphtml; ?>
 	<?php  if (!$user_option_count) { ?>
-		<p>There aren't any Evidence Hub options for <?php echo self::PLURAL; ?>.</p>
+		<p>There aren't any Evidence Hub options for <?php echo $this->plural; ?>.</p>
 	<?php } ?>
     
 </fieldset>

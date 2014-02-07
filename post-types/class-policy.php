@@ -5,40 +5,16 @@
  * @since 0.1.1
  *
  * @package Evidence_Hub
+ * @subpackage Evidence_Hub_CustomPostType
  */
-class Policy_Template {
-	const POST_TYPE	= "policy";
-	const ARCHIVE_SLUG = "policy"; // use pluralized string if you want an archive page
-	const SINGULAR = "Policy";
-	const PLURAL = "Policies";
+new Policy_Template();
+class Policy_Template extends Evidence_Hub_CustomPostType {
+	public $post_type	= "policy";
+	public $archive_slug = "policy"; // use pluralized string if you want an archive page
+	public $singular = "Policy";
+	public $plural = "Policies";
 	var $options = array();
-	
-	/**
-	* The Constructor
-	*
-	* @since 0.1.1
-	*/
-	public function __construct() {
-		// register actions
-		add_action('init', array(&$this, 'init'));
-		add_action('init', array(&$this, 'set_options'));
-		add_action('admin_init', array(&$this, 'admin_init'));
 		
-		Evidence_Hub::$post_types[] = self::POST_TYPE;
-		
-	} // END public function __construct()
-
-	/**
-	* hook into WP's init action hook.
-	*
-	* @since 0.1.1
-	*/
-	public function init() {
-		// Initialize Post Type
-		$this->create_post_type();
-		add_action('save_post', array(&$this, 'save_post'));
-	} // END public function init()
-	
 	/**
 	* Register custom post type.
 	*
@@ -46,23 +22,23 @@ class Policy_Template {
 	*/
 	public function create_post_type()
 	{
-		register_post_type(self::POST_TYPE,
+		register_post_type($this->post_type,
 			array(
 				'labels' => array(
-					'name' => __(sprintf('%ss', ucwords(str_replace("_", " ", self::POST_TYPE)))),
-					'singular_name' => __(ucwords(str_replace("_", " ", self::POST_TYPE)))
+					'name' => __(sprintf('%ss', ucwords(str_replace("_", " ", $this->post_type)))),
+					'singular_name' => __(ucwords(str_replace("_", " ", $this->post_type)))
 				),
 				'labels' => array(
-					'name' => __(sprintf('%s', self::PLURAL)),
-					'singular_name' => __(sprintf('%s', self::SINGULAR)),
-					'add_new' => __(sprintf('Add New %s', self::SINGULAR)),
-					'add_new_item' => __(sprintf('Add New %s', self::SINGULAR)),
-					'edit_item' => __(sprintf('Edit %s', self::SINGULAR)),
-					'new_item' => __(sprintf('New %s', self::SINGULAR)),
-					'view_item' => __(sprintf('View %s', self::SINGULAR)),
-					'search_items' => __(sprintf('Search %s', self::PLURAL)),
-					'not_found' => __(sprintf('No %s found', self::PLURAL)),
-					'not_found_in_trash' => __(sprintf('No found in Trash%s', self::PLURAL)),
+					'name' => __(sprintf('%s', $this->plural)),
+					'singular_name' => __(sprintf('%s', $this->singular)),
+					'add_new' => __(sprintf('Add New %s', $this->singular)),
+					'add_new_item' => __(sprintf('Add New %s', $this->singular)),
+					'edit_item' => __(sprintf('Edit %s', $this->singular)),
+					'new_item' => __(sprintf('New %s', $this->singular)),
+					'view_item' => __(sprintf('View %s', $this->singular)),
+					'search_items' => __(sprintf('Search %s', $this->plural)),
+					'not_found' => __(sprintf('No %s found', $this->plural)),
+					'not_found_in_trash' => __(sprintf('No found in Trash%s', $this->plural)),
 				),
 				'public' => true,
 				'description' => __("A policy"),
@@ -81,7 +57,7 @@ class Policy_Template {
 				),
 				'has_archive' => true,
 				'rewrite' => array(
-					'slug' => self::ARCHIVE_SLUG,
+					'slug' => $this->archive_slug,
 					'with_front' => false,
 				),
 				'menu_position' => 30,
@@ -133,46 +109,8 @@ class Policy_Template {
 				'label' => 'Citation'
 				)
 		 ));
-		Evidence_Hub::$post_type_fields[self::POST_TYPE] = $this->options;
-	}
-	
-	/**
-	* Save the metaboxes for this custom post type.
-	*
-	* @since 0.1.1
-	*/
-	public function save_post($post_id)	{
-		// verify if this is an auto save routine. 
-		// If it is our form has not been submitted, so we dont want to do anything
-		if (get_post_type($post_id) != self::POST_TYPE) return;
-		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
-		if (isset($_POST['evidence_hub_nonce']) && !wp_verify_nonce($_POST['evidence_hub_nonce'], plugin_basename(__FILE__))) return;
-		if (!current_user_can('edit_post', $post_id)) return;
-
-		foreach($this->options as $name => $option)
-		{
-			// Update the post's meta field
-			$field_name = "evidence_hub_$name";
-			if (isset($_POST[$field_name])){
-				if ($option['save_as'] == 'term'){
-					wp_set_object_terms( $post_id, $_POST[$field_name], $field_name);
-				} else {
-					update_post_meta($post_id, $field_name, $_POST[$field_name]);
-				}
-			}
-		}
-	} // END public function save_post($post_id)
-
-	/**
-	* Add action to add metaboxes and add Google Map location finder.
-	*
-	* @since 0.1.1
-	*/
-	public function admin_init() {			
-		// Add metaboxes
-		add_action('add_meta_boxes', array(&$this, 'add_meta_boxes'));
-	} // END public function admin_init()
-		
+		Evidence_Hub::$post_type_fields[$this->post_type] = $this->options;
+	}	
 
 	/**
 	* Register custom fields box in wp-admin.
@@ -182,49 +120,25 @@ class Policy_Template {
 	public function add_meta_boxes() {
 		// Add this metabox to every selected post
 		add_meta_box( 
-			sprintf('wp_evidence_hub_%s_section', self::POST_TYPE),
-			sprintf('%s Information', ucwords(str_replace("_", " ", self::POST_TYPE))),
+			sprintf('wp_evidence_hub_%s_section', $this->post_type),
+			sprintf('%s Information', ucwords(str_replace("_", " ", $this->post_type))),
 			array(&$this, 'add_inner_meta_boxes'),
-			self::POST_TYPE,
+			$this->post_type,
 			'normal',
 			'high'
 		);
 		
 		add_meta_box( 
-			sprintf('wp_evidence_hub_%s_side_section', self::POST_TYPE),
-			sprintf('%s Information', ucwords(str_replace("_", " ", self::POST_TYPE))),
+			sprintf('wp_evidence_hub_%s_side_section', $this->post_type),
+			sprintf('%s Information', ucwords(str_replace("_", " ", $this->post_type))),
 			array(&$this, 'add_inner_meta_boxes_side'),
-			self::POST_TYPE,
+			$this->post_type,
 			'side'
 		);	
 		
-		remove_meta_box('tagsdiv-evidence_hub_sector',self::POST_TYPE,'side');
-		remove_meta_box('tagsdiv-evidence_hub_country',self::POST_TYPE,'side');
-		remove_meta_box('tagsdiv-evidence_hub_locale',self::POST_TYPE,'side');			
+		remove_meta_box('tagsdiv-evidence_hub_sector',$this->post_type,'side');
+		remove_meta_box('tagsdiv-evidence_hub_country',$this->post_type,'side');
+		remove_meta_box('tagsdiv-evidence_hub_locale',$this->post_type,'side');			
 					
 	} // END public function add_meta_boxes()
-
-	/**
-	* Render side custom fields in wp-admin.
-	*
-	* @since 0.1.1
-	*/		
-	public function add_inner_meta_boxes_side($post)
-	{		
-		wp_nonce_field(plugin_basename(__FILE__), 'evidence_hub_nonce');
-		$sub_options = Evidence_Hub::filterOptions($this->options, 'position', 'side');
-		include(sprintf("%s/custom_post_metaboxes.php", dirname(__FILE__)));			
-	} // END public function add_inner_meta_boxes($post)
-	
-	/**
-	* Render bottom custom fields in wp-admin.
-	*
-	* @since 0.1.1
-	*/	
-	public function add_inner_meta_boxes($post)	{		
-		// Render the job order metabox
-		$sub_options = Evidence_Hub::filterOptions($this->options, 'position', 'bottom');
-		include(sprintf("%s/custom_post_metaboxes.php", dirname(__FILE__)));			
-	} // END public function add_inner_meta_boxes($post)	
 } // END class Post_Type_Template
-new Policy_Template();
