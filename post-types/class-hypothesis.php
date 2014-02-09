@@ -59,7 +59,7 @@ class Hypothesis_Template extends Evidence_Hub_CustomPostType {
 					'with_front' => false,
 				),
 				'menu_position' => 30,
-				'menu_icon' => EVIDENCE_HUB_URL.'/images/icons/hyp.png',
+				'menu_icon' => EVIDENCE_HUB_URL.'images/icons/hyp.png',
 			)
 		);
 	}
