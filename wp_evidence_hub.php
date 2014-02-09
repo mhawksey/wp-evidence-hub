@@ -332,7 +332,7 @@ if(!class_exists('Evidence_Hub'))
 		public function enqueue_autocomplete_scripts() {
 			global $typenow;
 			global $wp_styles;
-			$scripts = array( 'jquery', 'post', 'jquery-ui-autocomplete');
+			$scripts = array( 'jquery', 'jquery-ui-autocomplete', 'jquery-ui-datepicker');
   			if ($typenow=='evidence') {
 				wp_enqueue_style( 'leafletcss', 'http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css' );
 				wp_enqueue_style( 'leafletcss-ie8', "http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css", array( 'leafletcss' )  );
@@ -342,8 +342,8 @@ if(!class_exists('Evidence_Hub'))
 			if ($typenow=='location') {
 				$scripts[] = 'pronamic_google_maps_admin';
 			}
-			wp_enqueue_style( 'evidence-hub-autocomplete', plugins_url( 'css/admin.css' , EVIDENCE_HUB_REGISTER_FILE ) );
-			wp_enqueue_script( 'evidence-hub-autocomplete', plugins_url( 'js/admin.js' , EVIDENCE_HUB_REGISTER_FILE ), $scripts, '', true );
+			wp_enqueue_style( 'evidence-hub-autocomplete', plugins_url( 'css/style.css' , EVIDENCE_HUB_REGISTER_FILE ) );
+			wp_enqueue_script( 'evidence-hub-autocomplete', plugins_url( 'js/script.js' , EVIDENCE_HUB_REGISTER_FILE ), $scripts, '', true );
 			wp_register_script( 'd3js', plugins_url( 'lib/map/lib/d3.v3.min.js' , EVIDENCE_HUB_REGISTER_FILE), array( 'jquery' )  );
 			wp_enqueue_script( 'd3js' );
 			
