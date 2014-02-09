@@ -130,15 +130,19 @@ class Evidence_Hub_CustomPostType {
 	* function to register custom slug hypothesis/%hypothesis_slug%/%post_id%/.
 	*
 	* @since 0.1.1
+	* @return string
 	*/
 	public function custom_post_type_link($post_link, $post = 0, $leavename = false) {			
 		// no action
+		return $post_link;
 	}
 	
 	/**
 	* Add hypothesis column to wp-admin.
 	*
 	* @since 0.1.1
+	* @params array
+	* @return array
 	*/
 	public function columns($columns) {
 		return $columns;
@@ -148,6 +152,7 @@ class Evidence_Hub_CustomPostType {
 	* Sets text and link for custom columns.
 	*
 	* @since 0.1.1
+	* @return NULL
 	*/	
 	public function column($column, $post_id) {
 		

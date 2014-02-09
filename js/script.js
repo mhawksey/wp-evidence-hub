@@ -205,15 +205,13 @@ function autocomplete_eh_change_project(id, label){
 jQuery("#evidence_hub_hypothesis_id").change(function() {
 	var $ = jQuery;
     if ($("#evidence_hub_hypothesis_id option:selected").text().indexOf("–") === -1 ){
-		console.log("add");
-		$("#evidence_hub_polarity option[value]").css('display','none');
-		$("#evidence_hub_polarity").selectedIndex = 0;
-    	$("#evidence_hub_polarity option:empty").text('Neutral').removeAttr("style");
-		
+		$("input#evidence_hub_polarity").each(function(){
+			console.log($(this));
+			$(this).prop('checked', false);
+			$(this).attr("disabled", true);
+		})
 	} else {
-		console.log("remove");
-		$("#evidence_hub_polarity option:contains(Neutral)").text('');
-		$("#evidence_hub_polarity option[value]").removeAttr("style");
+		$("input#evidence_hub_polarity").removeAttr("disabled");
 	}
 });
 
@@ -223,6 +221,7 @@ jQuery(document).ready(function( $ ) {
 		return false;
 	});
 	$( "#evidence_hub_tabs" ).tabs();
+	$('#evidence_hub_options .date').datepicker({dateFormat : 'dd/mm/yy'});
 });
 
 function getNonce(){

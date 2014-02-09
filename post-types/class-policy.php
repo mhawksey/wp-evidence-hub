@@ -83,7 +83,7 @@ class Policy_Template extends Evidence_Hub_CustomPostType {
 		));
 		$this->options = array_merge($this->options, array(
 			'locale' => array(
-				'type' => 'select',
+				'type' => 'multi-checkbox',
 				'save_as' => 'term',
 				'position' => 'side',
 				'quick_edit' => true,
@@ -93,12 +93,12 @@ class Policy_Template extends Evidence_Hub_CustomPostType {
 		 ));
 		$this->options = array_merge($this->options, array(
 			'sector' => array(
-				'type' => 'checkbox',
+				'type' => 'multi-checkbox',
 				'save_as' => 'term',
 				'position' => 'side',
 				'quick_edit' => true,
 				'label' => 'Sector',
-				'options' => get_terms('evidence_hub_sector', 'hide_empty=0&orderby=id'),
+				'options' => get_terms('evidence_hub_sector', 'hide_empty=0&orderby=title'),
 				)
 		 ));
 		 $this->options = array_merge($this->options, array(

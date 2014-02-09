@@ -96,7 +96,7 @@ class Evidence_Template extends Evidence_Hub_CustomPostType {
 		));
 		$this->options = array_merge($this->options, array(
 			'polarity' => array(
-				'type' => 'select',
+				'type' => 'multi-checkbox',
 				'save_as' => 'term',
 				'position' => 'side',
 				'label' => "Polarity",
