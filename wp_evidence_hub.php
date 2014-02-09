@@ -42,6 +42,11 @@ if(!class_exists('Evidence_Hub'))
 		* @since 0.1.1
 		*/
 		public function __construct() {
+			if (!class_exists('Symbolic_Press')){
+				include "lib/class-symbolic-press.php";
+				new Symbolic_Press(__FILE__);
+			}
+			
 			add_action('init', array(&$this, 'init'));
 			// Register custom post types - hypothesis
 			require_once(sprintf("%s/post-types/class-custom_post_type.php", EVIDENCE_HUB_PATH));
@@ -350,8 +355,8 @@ if(!class_exists('Evidence_Hub'))
 			// dequeue Pronomic Google Maps Library scripts and requeue with modified location
 			wp_dequeue_script('pronamic_google_maps_admin');
 			wp_dequeue_style('pronamic_google_maps_admin');
-			wp_register_script('pronamic_google_maps_admin', EVIDENCE_HUB_URL.'lib/pronamic-google-maps/js/admin.js',	array( 'jquery', 'google-jsapi' ));
-			wp_register_style('pronamic_google_maps_admin',	EVIDENCE_HUB_URL.'lib/pronamic-google-maps/css/admin.css');
+			wp_register_script('pronamic_google_maps_admin', plugins_url( 'lib/pronamic-google-maps/js/admin.js', EVIDENCE_HUB_REGISTER_FILE ),	array( 'jquery', 'google-jsapi' ));
+			wp_register_style('pronamic_google_maps_admin',	plugins_url( 'lib/pronamic-google-maps/css/admin.css', EVIDENCE_HUB_REGISTER_FILE )	);
 			wp_enqueue_script('pronamic_google_maps_admin');
 			wp_enqueue_style('pronamic_google_maps_admin');
 		}
