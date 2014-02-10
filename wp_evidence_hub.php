@@ -41,12 +41,7 @@ if(!class_exists('Evidence_Hub'))
 		*
 		* @since 0.1.1
 		*/
-		public function __construct() {
-			if (!class_exists('Symbolic_Press')){
-				require_once(sprintf("%s/lib/class-symbolic-press.php", EVIDENCE_HUB_PATH));
-				new Symbolic_Press(__FILE__);
-			}
-			
+		public function __construct() {			
 			add_action('init', array(&$this, 'init'));
 			// Register custom post types - hypothesis
 			require_once(sprintf("%s/post-types/class-custom_post_type.php", EVIDENCE_HUB_PATH));
