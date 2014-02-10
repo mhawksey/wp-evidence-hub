@@ -43,7 +43,7 @@ if(!class_exists('Evidence_Hub'))
 		*/
 		public function __construct() {
 			if (!class_exists('Symbolic_Press')){
-				include "lib/class-symbolic-press.php";
+				require_once(sprintf("%s/lib/class-symbolic-press.php", EVIDENCE_HUB_PATH));
 				new Symbolic_Press(__FILE__);
 			}
 			
