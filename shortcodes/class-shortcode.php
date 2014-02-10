@@ -45,7 +45,7 @@ abstract class Evidence_Hub_Shortcode {
 		$this->prep_options();
 		if (!$content = $this->get_cache()) {
 			$content = $this->content();
-			if (!$this->options['do_cache']) {
+			if (!isset($this->options['do_cache'])) {
 				$this->cache($content);
 			}
 		}
@@ -167,6 +167,9 @@ abstract class Evidence_Hub_Shortcode {
 				if ($value == 'true') $this->options[$key] = true;
 				if ($value == 'false') $this->options[$key] = false;
 			}
+		}
+		if (!isset($this->options['post_id']) && isset($GLOBALS['post'])) {
+			$this->options['post_id'] = $GLOBALS['post']->ID;
 		}
 	}
 	abstract function content();
