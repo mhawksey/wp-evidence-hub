@@ -355,8 +355,8 @@ if(!class_exists('Evidence_Hub'))
 			// dequeue Pronomic Google Maps Library scripts and requeue with modified location
 			wp_dequeue_script('pronamic_google_maps_admin');
 			wp_dequeue_style('pronamic_google_maps_admin');
-			wp_register_script('pronamic_google_maps_admin', plugins_url( '/lib/pronamic-google-maps/js/admin.js', EVIDENCE_HUB_REGISTER_FILE ),	array( 'jquery', 'google-jsapi' ));
-			wp_register_style('pronamic_google_maps_admin',	plugins_url( '/lib/pronamic-google-maps/css/admin.css', EVIDENCE_HUB_REGISTER_FILE )	);
+			wp_register_script('pronamic_google_maps_admin', plugins_url( '/lib/pronamic-google-maps/js/admin.js', EVIDENCE_HUB_PATH ),	array( 'jquery', 'google-jsapi' ));
+			wp_register_style('pronamic_google_maps_admin',	plugins_url( '/lib/pronamic-google-maps/css/admin.css', EVIDENCE_HUB_PATH )	);
 			wp_enqueue_script('pronamic_google_maps_admin');
 			wp_enqueue_style('pronamic_google_maps_admin');
 		}
