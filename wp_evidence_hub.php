@@ -102,7 +102,7 @@ if(!class_exists('Evidence_Hub'))
 			add_action('pre_get_posts', array(&$this, 'evidence_hub_query'), 1);
 			
 			add_action('admin_notices', array(&$this, 'admin_notices'));
-		   	add_action('admin_enqueue_scripts', array(&$this, 'enqueue_autocomplete_scripts'));
+		   	add_action('admin_enqueue_scripts', array(&$this, 'enqueue_autocomplete_scripts'),999);
 			add_action('wp_enqueue_scripts', array(&$this, 'enqueue_front_scripts') );
 
 			// removed library plugin menus
@@ -337,7 +337,7 @@ if(!class_exists('Evidence_Hub'))
 		public function enqueue_autocomplete_scripts() {
 			global $typenow;
 			global $wp_styles;
-			$scripts = array( 'jquery', 'jquery-ui-autocomplete', 'jquery-ui-datepicker');
+			$scripts = array( 'jquery', 'jquery-ui-autocomplete', 'jquery-ui-datepicker','jquery-ui-tabs');
   			if ($typenow=='evidence') {
 				wp_enqueue_style( 'leafletcss', 'http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css' );
 				wp_enqueue_style( 'leafletcss-ie8', "http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css", array( 'leafletcss' )  );
@@ -355,10 +355,14 @@ if(!class_exists('Evidence_Hub'))
 			// dequeue Pronomic Google Maps Library scripts and requeue with modified location
 			wp_dequeue_script('pronamic_google_maps_admin');
 			wp_dequeue_style('pronamic_google_maps_admin');
-			wp_register_script('pronamic_google_maps_admin', plugins_url( '/lib/pronamic-google-maps/js/admin.js', EVIDENCE_HUB_PATH ),	array( 'jquery', 'google-jsapi' ));
-			wp_register_style('pronamic_google_maps_admin',	plugins_url( '/lib/pronamic-google-maps/css/admin.css', EVIDENCE_HUB_PATH )	);
-			wp_enqueue_script('pronamic_google_maps_admin');
-			wp_enqueue_style('pronamic_google_maps_admin');
+			wp_register_script('pronamic_google_maps_admin_eh', EVIDENCE_HUB_URL.'/lib/pronamic-google-maps/js/admin.js',	array( 'jquery', 'google-jsapi' ));
+			wp_register_style('pronamic_google_maps_admin_eh', EVIDENCE_HUB_URL.'/lib/pronamic-google-maps/css/admin.css'	);
+			// Add the localization for giving the settings.
+			wp_localize_script( 'pronamic_google_maps_admin_eh', 'pronamic_google_maps_settings', array(
+			'visualRefresh' => get_option( 'pronamic_google_maps_visual_refresh' )
+		) );
+			wp_enqueue_script('pronamic_google_maps_admin_eh');
+			wp_enqueue_style('pronamic_google_maps_admin_eh');
 		}
 		
 		/**
