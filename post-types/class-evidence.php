@@ -44,17 +44,17 @@ class Evidence_Template extends Evidence_Hub_CustomPostType {
 				'description' => __("A piece of evidence to support a hypothesis"),
 				'taxonomies' => array('post_tag'),
 				'supports' => array(
-					'title', 'editor', 'excerpt', 'author' 
+					'title', 'editor', 'excerpt', 'author', 'comments' 
 				),
 				'capabilities' => array(
-					'edit_post'          => 'evidence_edit_posts',
-					'read_post'          => 'evidence_read_post',
-					'delete_post'        => 'evidence_delete_posts',
-					'edit_posts'         => 'evidence_edit_posts',
+					'edit_post'          => 'edit_evidence',
+					'read_post'          => 'read_evidence',
+					'delete_post'        => 'delete_evidence',
 					'edit_others_posts'  => 'evidence_admin',
 					'publish_posts'      => 'evidence_admin',
-					'read_private_posts' => 'evidence_admin'
+					'read_private_posts' => 'evidence_admin',
 				),
+				'map_meta_cap' => true,
 				'has_archive' => true,
 				'rewrite' => array(
 					'slug' => $this->archive_slug,
@@ -88,6 +88,7 @@ class Evidence_Template extends Evidence_Hub_CustomPostType {
 		$this->options = array_merge($this->options, array(
 			'hypothesis_id' => array(
 				'type' => 'select',
+				'required' => true,
 				'save_as' => 'post_meta',
 				'position' => 'side',
 				'label' => "Hypothesis",
@@ -96,7 +97,8 @@ class Evidence_Template extends Evidence_Hub_CustomPostType {
 		));
 		$this->options = array_merge($this->options, array(
 			'polarity' => array(
-				'type' => 'multi-checkbox',
+				'type' => 'single-checkbox',
+				'required' => true,
 				'save_as' => 'term',
 				'position' => 'side',
 				'label' => "Polarity",
@@ -162,21 +164,41 @@ class Evidence_Template extends Evidence_Hub_CustomPostType {
 			sprintf('%s Information', ucwords(str_replace("_", " ", $this->post_type))),
 			array(&$this, 'add_inner_meta_boxes'),
 			$this->post_type,
-			'normal',
-			'high'
+			'top',          // The part of the page where the edit screen section should be shown.
+            'high'
 		);
 		add_meta_box( 
 			sprintf('wp_evidence_hub_%s_side_section', $this->post_type),
 			sprintf('%s Information', ucwords(str_replace("_", " ", $this->post_type))),
 			array(&$this, 'add_inner_meta_boxes_side'),
 			$this->post_type,
-			'side'
+			'side',
+			'high'
 		);
+
 		// remove standard Tags boxes
 		remove_meta_box('tagsdiv-evidence_hub_country',$this->post_type,'side');
 		remove_meta_box('tagsdiv-evidence_hub_sector',$this->post_type,'side');
 		remove_meta_box('tagsdiv-evidence_hub_polarity',$this->post_type,'side');
+		Pronamic_Google_Maps_MetaBox::register($this->post_type, 'normal', 'high');
+		
 	} // END public function add_meta_boxes()
+	
+	# Now move advanced meta boxes after the title:
+	public function foo_move_deck() {
+		
+		# Get the globals:
+		global $post, $wp_meta_boxes;
+	
+		# Output the "advanced" meta boxes:
+		do_meta_boxes(get_current_screen(), 'top', $post);
+		
+		# Remove the initial "advanced" meta boxes:
+		unset($wp_meta_boxes['post']['advanced']);
+		
+	}
+	
+	
 	
 	/**
 	* Add hypothesis column to wp-admin.

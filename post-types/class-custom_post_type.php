@@ -23,6 +23,7 @@ class Evidence_Hub_CustomPostType {
 		add_action('manage_'.$this->post_type.'_posts_custom_column', array(&$this, 'column'),10 ,2);
 		// add filters
 		add_filter('post_type_link', array(&$this, 'custom_post_type_link'), 1, 3);
+		add_action('edit_form_after_title', array(&$this, 'foo_move_deck'),999);
 		// push post types for caching
 		Evidence_Hub::$post_types[] = $this->post_type;
 	} // END public function __construct()
@@ -37,7 +38,10 @@ class Evidence_Hub_CustomPostType {
 		$this->create_post_type();
 		// save post action
 		add_action('save_post', array(&$this, 'save_post'));
+
 	} // END public function init()
+	public function foo_move_deck(){
+	}
 	
 	/**
 	* Register custom post type.
@@ -78,7 +82,10 @@ class Evidence_Hub_CustomPostType {
 			$field_name = "evidence_hub_$name";
 			if (isset($_POST[$field_name])){
 				if ($option['save_as'] == 'term'){
-					wp_set_object_terms( $post_id, $_POST[$field_name], $field_name);
+					$term = term_exists($_REQUEST[$field_name], $field_name);
+					if ($term !== 0 && $term !== NULL){
+						wp_set_object_terms( $post_id, $_POST[$field_name], $field_name);
+					}
 				} else {
 					update_post_meta($post_id, $field_name, $_POST[$field_name]);
 				}

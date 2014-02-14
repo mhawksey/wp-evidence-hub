@@ -57,6 +57,7 @@ if(!class_exists('Evidence_Hub'))
 			// include shortcodes
 			require_once(sprintf("%s/shortcodes/class-shortcode.php", EVIDENCE_HUB_PATH));
 			
+			require_once(sprintf("%s/shortcodes/class-bookmarklet.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-evidence_entry.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-evidence_geomap.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-evidence_map.php", EVIDENCE_HUB_PATH));
@@ -81,6 +82,8 @@ if(!class_exists('Evidence_Hub'))
 			add_filter('json_api_controllers', array(&$this,'add_hub_controller'));
 			add_filter('json_api_hub_controller_path', array(&$this,'set_hub_controller_path'));
 			
+			require_once(sprintf("%s/lib/wp-postratings/wp-postratings.php", EVIDENCE_HUB_PATH));
+			
 			// Initialize Facetious library
 			if (!class_exists('Facetious')){
 				require_once(sprintf("%s/lib/facetious/facetious.php", EVIDENCE_HUB_PATH));
@@ -102,13 +105,18 @@ if(!class_exists('Evidence_Hub'))
 
 			// removed library plugin menus
 			add_action( 'admin_menu', array(&$this,'my_remove_named_menus'),999 );
+			add_action( 'admin_bar_menu', array(&$this,'remove_wp_nodes'), 999 );
 			
 			// open ajax for project autom complete
 			add_action('wp_ajax_evidence_hub_project_callback', array(&$this, 'ajax_evidence_hub_project_callback') );
 			add_action('wp_ajax_evidence_hub_if_project_exists_by_value', array(&$this, 'ajax_evidence_hub_if_project_exists_by_value') );
 			
+			// prevent evidence contributors from seeing other image ulpoads
+			add_filter( 'ajax_query_attachments_args', array(&$this, 'user_restrict_media_library') );
+			
 			// debug function
 			add_action( 'wp_head', array(&$this, 'show_current_query') );
+			add_filter( 'tiny_mce_before_init', array(&$this, 'idle_function_to_tinymce') );
 
 		} // END public function __construct
 		
@@ -132,7 +140,9 @@ if(!class_exists('Evidence_Hub'))
 		* @since 0.1.1
     	*/
     	public function init() {	
-			$caps = array('evidence_read_post', 'evidence_delete_posts', 'evidence_edit_posts');
+			$caps = array('read_evidence', 
+						  'delete_evidence', 
+						  'edit_evidence');
 			
 			// define new role of Evidence Contributor to create but not publish/edit their evidence
 			global $wp_roles;
@@ -142,6 +152,8 @@ if(!class_exists('Evidence_Hub'))
 			$adm = $wp_roles->get_role('subscriber');
 			$wp_roles->add_role('evidence_contributor', 'Evidence Contributor', $adm->capabilities);
 			$contributor = get_role('evidence_contributor');
+			$contributor->add_cap('upload_files');
+			
 			$this->add_evidence_capability($contributor, $caps);
 			
 			// add capability to authors to create publish their evidence
@@ -154,6 +166,8 @@ if(!class_exists('Evidence_Hub'))
 			// add capability to admin account to let only them them modify/add hypotheses
 			$caps[] = 'hypothesis_admin';
 			$this->add_evidence_capability(get_role('administrator'), $caps);
+			
+			
 			
 			// add permalink rewrites
 			$this->do_rewrites();
@@ -193,7 +207,7 @@ if(!class_exists('Evidence_Hub'))
 			
 			Pronamic_Google_Maps_Site::bootstrap();		
 		}
-		
+			
 		/**
     	* Add extra capabilities to WP roles.
 		*
@@ -208,6 +222,22 @@ if(!class_exists('Evidence_Hub'))
 		}
 		
 		/**
+    	* Prevents evidence contributors from see other image uploads.
+		* From http://stackoverflow.com/a/21710919/1027723
+		*
+		* @since 0.1.1
+		* @param array $query WP Query.
+		* @return array $query WP Query.
+    	*/
+		public function user_restrict_media_library(  $query ) {
+			global $current_user;
+			if (!current_user_can('evidence_admin')){
+				$query['author'] = $current_user->ID ;	
+			}
+			return $query;
+		}
+		
+		/**
     	* Register custom querystring variables.
 		*
 		* @since 0.1.1
@@ -216,6 +246,7 @@ if(!class_exists('Evidence_Hub'))
     	*/
 		public function evidence_hub_queryvars( $qvars ) {
 		  $qvars[] = 'hyp_id';
+		  $qvars[] = 'bookmarklet';
 		  return $qvars;
 		}
 		
@@ -257,11 +288,12 @@ if(!class_exists('Evidence_Hub'))
 		* @since 0.1.1
     	*/
 		public function set_hub_controller_path() {
-		  return sprintf("%s/json/hub.php", EVIDENCE_HUB_PATH);
+		  return sprintf("%s/api/hub.php", EVIDENCE_HUB_PATH);
 		}
 		
 		/**
     	* Remove Pronamic Google Map Library wp-admin menu option.
+		* Remove Dashboard, posts and comments for Evidence Contributors
 		*
 		* @since 0.1.1
     	*/
@@ -270,10 +302,30 @@ if(!class_exists('Evidence_Hub'))
 			foreach ( $menu as $i => $item ) {
 				if ( 'pronamic_google_maps' == $item[2] ) {
 						unset( $menu[$i] );
-						return $item;
+						
+				}
+				if (!current_user_can( 'evidence_admin' )){
+					if ('index.php' === $item[2] || 'edit.php' === $item[2] || 'edit-comments.php' === $item[2] || 'tools.php' === $item[2]){
+						unset( $menu[$i] );
+					}
 				}
 	        }
-	        return false;
+
+			return $item;
+		}
+		
+		/**
+    	* Remove New Post from admin bar for Evidence Contributors
+		*
+		* @since 0.1.1
+    	*/
+		public function remove_wp_nodes() {
+			if (!current_user_can( 'evidence_admin' )){
+				global $wp_admin_bar;   
+				$wp_admin_bar->remove_node( 'new-post' );
+				$wp_admin_bar->remove_node( 'comments' );
+				$wp_admin_bar->remove_node( 'my-sites' );
+			}
 		}
 		
 		/**
@@ -354,8 +406,8 @@ if(!class_exists('Evidence_Hub'))
 			wp_register_style('pronamic_google_maps_admin_eh', EVIDENCE_HUB_URL.'/lib/pronamic-google-maps/css/admin.css'	);
 			// Add the localization for giving the settings.
 			wp_localize_script( 'pronamic_google_maps_admin_eh', 'pronamic_google_maps_settings', array(
-			'visualRefresh' => get_option( 'pronamic_google_maps_visual_refresh' )
-		) );
+								'visualRefresh' => get_option( 'pronamic_google_maps_visual_refresh' )
+								) );
 			wp_enqueue_script('pronamic_google_maps_admin_eh');
 			wp_enqueue_style('pronamic_google_maps_admin_eh');
 		}
@@ -366,9 +418,24 @@ if(!class_exists('Evidence_Hub'))
 		* @since 0.1.1
     	*/
 		public function enqueue_front_scripts() {
-			$scripts = array( 'jquery', 'jquery-ui-autocomplete', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-datepicker');
+			global $wp_styles;
+			
+			$scripts = array( 'jquery', 'jquery-ui-autocomplete', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-datepicker', 'suggest');
+			wp_register_script('pronamic_google_maps_admin_eh', EVIDENCE_HUB_URL.'/lib/pronamic-google-maps/js/admin.js',	array( 'jquery', 'google-jsapi' ));
+			wp_register_style('pronamic_google_maps_admin_eh', EVIDENCE_HUB_URL.'/lib/pronamic-google-maps/css/admin.css'	);
+			wp_enqueue_script('pronamic_google_maps_admin_eh');
+			wp_enqueue_style('pronamic_google_maps_admin_eh');
+			wp_localize_script( 'pronamic_google_maps_admin_eh', 'pronamic_google_maps_settings', array(
+					'visualRefresh' => get_option( 'pronamic_google_maps_visual_refresh' )
+					) );
 			wp_register_script( 'd3js', plugins_url( 'lib/map/lib/d3.v3.min.js' , EVIDENCE_HUB_REGISTER_FILE), array( 'jquery' )  );
 			wp_enqueue_script( 'd3js' );
+			
+			wp_enqueue_style( 'leafletcss', 'http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css' );
+			wp_enqueue_style( 'leafletcss-ie8', "http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css", array( 'leafletcss' )  );
+			$wp_styles->add_data( 'leafletcss-ie8', 'conditional', 'IE 8' );
+			wp_enqueue_script( 'leafletjs', 'http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js' );
+			
 			wp_register_script( 'evidence_hub_script', plugins_url( 'js/script.js' , EVIDENCE_HUB_REGISTER_FILE), $scripts  );
 			wp_enqueue_script( 'evidence_hub_script' );
 			wp_register_style( 'evidence_hub_style', plugins_url( 'css/style.css' , EVIDENCE_HUB_REGISTER_FILE ) );
@@ -522,7 +589,7 @@ if(!class_exists('Evidence_Hub'))
 		}
 
 		/**
-    	* Generates a post excerpt (used in json/hub.php).
+    	* Generates a post excerpt (used in api/hub.php).
 		*
 		* @since 0.1.1
 		* @param int $post_id.
@@ -555,6 +622,16 @@ if(!class_exists('Evidence_Hub'))
 		
 			return apply_filters('wp_trim_excerpt', $content, $raw_content);
 		}
+		
+		function idle_function_to_tinymce( $initArray ) {
+			if ( !is_admin() ) {					
+				$initArray['init_instance_callback'] = 'myCustomInitInstance'; 
+				$initArray['file_browser_callback'] = 'myCustomInitInstance'; // seems you need to call this if media_button true 
+				//print_r($initArray);
+			}
+			return $initArray;
+		}
+		
 		
 		/**
     	* Set country terms.
@@ -622,13 +699,90 @@ if(!class_exists('Evidence_Hub'))
 		}
 		
 		/**
+    	* formats required labels on data entry.
+		*
+		* @since 0.1.1
+		* @params array $options values
+    	*/
+		public static function format_label($option){
+			$lab = (isset($option['label'])) ? $option['label'].'%s:' : '';
+			if (is_admin()){
+				$resp = (isset($option['required']) && $option['required']) ? '(*)' : '';
+			} else {
+				$resp = (isset($option['required']) && $option['required']) ? '(<span class="required">*</span>)' : '';
+			}
+			echo sprintf($lab, $resp);		
+		}
+		
+		// http://wordpress.org/support/topic/plugin-pronamic-google-maps-display-pronamic-meta-box-in-a-front-end-page#post-3124660
+		////////   PRONAMIC GOOGLE MAPS IN FRONT END   //////////
+		/**
+		 * Add google maps options to the add custom post area<br />
+		 *
+		 * @uses wpuf_add_post_form_description action hook
+		 *
+		 * @param object|null $post the post object
+		 */
+		public static function wpufe_gmaps($post = null) {
+			
+			// Pronamic custom function to get custom fields
+			//$pgm = ( $post != null ) ? pronamic_get_google_maps_meta() : '' ;
+			//print_r(pronamic_get_google_maps_meta());
+			
+			$pgm_map_type = ( $post != null ) ? get_post_meta( $post->ID, '_pronamic_google_maps_map_type', true ) : '';
+			$pgm_zoom = ( $post != null ) ? get_post_meta( $post->ID, '_pronamic_google_maps_zoom', true ) : '';
+			$pgm_address = ( $post != null ) ? get_post_meta( $post->ID, '_pronamic_google_maps_address', true ) : '';
+			$pgm_latitude = ( $post != null ) ? get_post_meta( $post->ID, '_pronamic_google_maps_latitude', true ) : '';
+			$pgm_longitude = ( $post != null ) ? get_post_meta( $post->ID, '_pronamic_google_maps_longitude', true ) : '';
+		
+		?>
+            <div id="pronamic-google-maps-meta-box" >
+            
+            <li>
+                    <input id="pgm-map-type-field" name="<?php echo Pronamic_Google_Maps_Post::META_KEY_MAP_TYPE; ?>" value="<?php echo esc_attr( $pgm_map_type ); ?>" type="hidden" />
+                <input id="pgm-zoom-field" name="<?php echo Pronamic_Google_Maps_Post::META_KEY_ZOOM; ?>" value="<?php echo esc_attr( $pgm_zoom ); ?>" type="hidden" />
+                    <input id="pgm-active-field" name="<?php echo Pronamic_Google_Maps_Post::META_KEY_ACTIVE; ?>" value="true" type="hidden" />
+            
+                <label for="pgm-address-field">Address</label>
+                <textarea id="pgm-address-field" name="<?php echo Pronamic_Google_Maps_Post::META_KEY_ADDRESS; ?>" rows="2" cols="40"><?php echo esc_attr( $pgm_address ); ?></textarea>
+                <p class="description">Please type the address and click on "Geocode ↓" to find the location.</p>
+            
+            </li>
+            <li>
+                <input id="pgm-geocode-button" type="button" value="<?php _e('Geocode ↓', 'pronamic_google_maps'); ?>" class="button" name="pgm_geocode" />
+            
+                <input id="pgm-reverse-geocode-button" type="button" value="<?php echo _e('Reverse Geocode ↑', 'pronamic_google_maps'); ?>" class="button" name="pgm_reverse_geocode" />
+            
+            </li>
+            <li>
+                    <label for="pgm-lat-field">Latitude</label>
+                    <input id="pgm-lat-field" name="<?php echo Pronamic_Google_Maps_Post::META_KEY_LATITUDE; ?>" value="<?php echo esc_attr($pgm_latitude); ?>" type="text" style="width: 200px;" />
+                °
+                </li>
+            <li>
+                    <label for="pgm-lng-field">Longitude</label>
+                <input id="pgm-lng-field" name="<?php echo Pronamic_Google_Maps_Post::META_KEY_LONGITUDE; ?>" value="<?php echo esc_attr($pgm_longitude); ?>" type="text" style="width: 200px;" />
+                °
+                </li>
+            <li>
+                    <label for="pgm-canvas">Location result</label>
+            
+                <div id="pgm-canvas" style="width: 380px!important; height: 330px; border: 1px solid white; margin:auto"></div>
+            
+                    <p class="description">Tip: Change the zoom level and map type to your own wishes.</p>
+            
+            </li>
+            </div>
+			<?php
+		}
+		/**
 		* Activate the plugin
 		*
 		* @since 0.1.1
 		*/
 		public static function activate(){
 			flush_rewrite_rules();
-			update_option( 'Pronamic_Google_maps', array( 'active' => array( 'location' => true, 'evidence' => true, 'project' => true, 'policy' => true  ) ) );
+			update_option( 'Pronamic_Google_maps', array( 'active' => false ) );
 			// Do nothing
 		} // END public static function activate
 	

@@ -206,7 +206,55 @@ class JSON_API_Hub_Controller {
 		  'count_total' => (int) $query->found_posts,
 		  'pages' => $query->max_num_pages
 		);
-	  }
+	}
+	
+	public function create_evidence() {
+		global $json_api;
+		if (!current_user_can('edit_posts')) {
+		  $json_api->error("You need to login with a user that has 'edit_posts' capacity.");
+		}
+		if (!$json_api->query->nonce) {
+		  $json_api->error("You must include a 'nonce' value to create posts. Use the `get_nonce` Core API method.");
+		}
+		$nonce_id = $json_api->get_nonce_id('hub', 'create_evidence');
+		if (!wp_verify_nonce($json_api->query->nonce, $nonce_id)) {
+		  $json_api->error("Your 'nonce' value was incorrect. Use the 'get_nonce' API method.");
+		}
+		nocache_headers();
+		$didwhat = array("type" => $_REQUEST['type']);
+
+		
+		$post = new JSON_API_Post();
+		$id = $post->create($_REQUEST);
+
+		update_post_meta( $id, '_pronamic_google_maps_map_type', $_REQUEST['_pronamic_google_maps_map_type'] );
+		update_post_meta( $id, '_pronamic_google_maps_zoom', $_REQUEST['_pronamic_google_maps_zoom'] );
+		update_post_meta( $id, '_pronamic_google_maps_active', $_REQUEST['_pronamic_google_maps_active'] );
+		update_post_meta( $id, '_pronamic_google_maps_address', $_REQUEST['_pronamic_google_maps_address'] );
+		update_post_meta( $id, '_pronamic_google_maps_latitude', $_REQUEST['_pronamic_google_maps_latitude'] );
+		update_post_meta( $id, '_pronamic_google_maps_longitude', $_REQUEST['_pronamic_google_maps_longitude'] );
+		
+		if (empty($id)) {
+		  $json_api->error("Could not create post.");
+		}
+		
+		return array(
+		  'post' => $id
+		);
+	}
+	
+	private function create($values = null) {
+		unset($values['id']);
+		if (empty($values) || empty($values['title'])) {
+		  $values = array(
+			'title' => 'Untitled',
+			'content' => ''
+		  );
+		}
+		return $this->save($values);
+	}
+	
+	
 	
 	public function get_reingold_tilford() {
 		$args = array('post_type' => 'hypothesis', // my custom post type
@@ -253,7 +301,7 @@ class JSON_API_Hub_Controller {
 		return $tree;
 	}
 	
-	protected function get_all_post_by_query($args,  $name, $postmeta){
+	protected function get_all_post_by_query($args, $name, $postmeta){
 		$args = array_merge($args, array('posts_per_page' => -1)); // show all posts);
 		$the_query = new WP_Query($args);
 		$children = array();

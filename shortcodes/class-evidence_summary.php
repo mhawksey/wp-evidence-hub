@@ -43,6 +43,9 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 			} else {
 				$content .= do_shortcode('[evidence_summary display_sankey=0]');
 			}
+			if (function_exists('the_ratings')){
+				$content .= '<div id="postvoting">'.the_ratings('div', $id, false).'</div>';
+			}
 		}
 		return $content;
 	}

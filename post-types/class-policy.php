@@ -44,16 +44,15 @@ class Policy_Template extends Evidence_Hub_CustomPostType {
 				'description' => __("A policy"),
 				'taxonomies' => array('post_tag'),
 				'supports' => array(
-					'title', 'editor', 'excerpt', 'author', 
+					'title', 'editor', 'excerpt', 'author', 'comments'
 				),
 				'capabilities' => array(
-					'edit_post'          => 'evidence_edit_posts',
-					'read_post'          => 'evidence_read_post',
-					'delete_post'        => 'evidence_delete_posts',
-					'edit_posts'         => 'evidence_edit_posts',
+					'edit_post'          => 'edit_evidence',
+					'read_post'          => 'read_evidence',
+					'delete_post'        => 'delete_evidence',
 					'edit_others_posts'  => 'evidence_admin',
 					'publish_posts'      => 'evidence_admin',
-					'read_private_posts' => 'evidence_admin'
+					'read_private_posts' => 'evidence_admin',
 				),
 				'has_archive' => true,
 				'rewrite' => array(
@@ -133,12 +132,14 @@ class Policy_Template extends Evidence_Hub_CustomPostType {
 			sprintf('%s Information', ucwords(str_replace("_", " ", $this->post_type))),
 			array(&$this, 'add_inner_meta_boxes_side'),
 			$this->post_type,
-			'side'
+			'side',
+			'high'
 		);	
 		
 		remove_meta_box('tagsdiv-evidence_hub_sector',$this->post_type,'side');
 		remove_meta_box('tagsdiv-evidence_hub_country',$this->post_type,'side');
-		remove_meta_box('tagsdiv-evidence_hub_locale',$this->post_type,'side');			
+		remove_meta_box('tagsdiv-evidence_hub_locale',$this->post_type,'side');	
+		Pronamic_Google_Maps_MetaBox::register($this->post_type, 'normal', 'high');		
 					
 	} // END public function add_meta_boxes()
 } // END class Post_Type_Template

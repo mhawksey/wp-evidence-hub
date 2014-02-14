@@ -12,7 +12,7 @@ $user_option_count = 0;
 <div id="<?php if (is_admin()) { echo 'eh-admin'; } else { echo 'eh-form'; }?>">
     <fieldset id="evidence_hub_options"> 
     <?php
-    foreach($sub_options as $name => $option) { // foreach suboption render form part    
+    foreach($sub_options as $name => $option) : // foreach suboption render form part    
         $user_option_count++;
         $name = "evidence_hub_$name"; // prefix for evidence hub fields
         $style = "eh_$name"; // style string
@@ -40,10 +40,10 @@ $user_option_count = 0;
                 // current assumption is all post meta is singles
                 $value = get_post_meta( $post->ID, $name, true );
             }
-        }
+        } 
     // common label html ?>      
     <div class="eh_input <?php echo $style; ?>">
-        <label for="<?php echo $name; ?>"  class="eh_label"><?php echo $option['label']; ?> :</label> 	
+        <label for="<?php echo $name; ?>" class="eh_label"><?php Evidence_Hub::format_label($option);?></label> 	
             <span class="eh_input_field">
     <?php if ($option['type'] == 'text') : ?>
         <input
@@ -51,7 +51,7 @@ $user_option_count = 0;
             type="text"
             name="<?php echo $name; ?>"
             id="<?php echo $name; ?>"
-            value="<?php echo htmlentities($value); ?>"
+            value="<?php if (isset($_GET['url'])) { echo $_GET['url']; } else { echo htmlentities($value); } ?>"
         />
     <?php elseif ($option['type'] == 'int') : ?>
             <input
@@ -158,7 +158,24 @@ $user_option_count = 0;
                     name="<?php echo $name; ?>[]"
                     id="<?php echo $name; ?>"
                     value="<?php echo($itemValue) ?>"
-                    <?php if ((is_array($value) && in_array($itemValue, $value)) || ($value == $itemValue)) echo 'checked'; ?>/><?php echo $itemName; ?>
+                    <?php if ((is_array($value) && in_array($itemValue, $value)) || ($value == $itemValue)) echo 'checked'; ?>></input><?php echo $itemName; ?>
+            </label></li>
+            <?php } ?>
+        </ul>
+    <?php elseif ($option['type'] == 'single-checkbox') : ?>
+        <ul>
+            <?php foreach ($option['options'] as $optionValue => $text) { ?>
+            <?php 
+            $itemValue = ($option['save_as'] != 'term') ? $optionValue : $text->slug; 
+            $itemName = ($option['save_as'] != 'term') ? $text : $text->name; 
+            ?>
+            <li><label>
+                <input
+                    type="radio"
+                    name="<?php echo $name; ?>"
+                    id="<?php echo $name; ?>"
+                    value="<?php echo($itemValue) ?>"
+                    <?php if ((is_array($value) && in_array($itemValue, $value)) || ($value == $itemValue)) echo 'checked'; ?>></input><?php echo $itemName; ?>
             </label></li>
             <?php } ?>
         </ul>
@@ -169,13 +186,15 @@ $user_option_count = 0;
             id="<?php echo $name; ?>"
             <?php if ($value) echo 'checked'; ?>
         />
+    <?php elseif ($option['type'] == 'pgm') : ?>
+    	<?php Evidence_hub::wpufe_gmaps(); ?>
     <?php else: ?>
         <p>unknown option type <?php $option['type']; ?> </p>
     <?php endif; ?>
         </span>
     </div>
     <?php if ($maphtml) echo $maphtml; ?>
-    <?php } // end foreach suboption?>
+    <?php endforeach; // end foreach suboption?>
     <?php  if (!$user_option_count) { ?>
         <p>There aren't any Evidence Hub options for <?php echo $this->plural; ?>.</p>
     <?php } ?>

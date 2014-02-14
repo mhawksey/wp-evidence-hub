@@ -42,7 +42,7 @@ class Hypothesis_Template extends Evidence_Hub_CustomPostType {
 				'public' => true,
 				'description' => __("A hypothesis"),
 				'supports' => array(
-					'title', 'editor', 'excerpt', 'author',
+					'title', 'editor', 'excerpt', 'author', 'comments'
 				),
 				'capabilities' => array(
 					'edit_post'          => 'hypothesis_admin',
