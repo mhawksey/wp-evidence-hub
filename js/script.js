@@ -302,7 +302,7 @@ function array_unique_noempty(a) {
 
 				} else {
 
-					$.getJSON(options.source, {q: q}, function(txt) {
+					$.getJSON(options.source, {q: q, post_id: $('input[name="post_ID"]').val()}, function(txt) {
 						console.log("getting results..");
 						$results_block.hide();
 

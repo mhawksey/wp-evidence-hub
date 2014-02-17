@@ -599,6 +599,8 @@ if(!class_exists('Evidence_Hub'))
     	*/
 		public function ajax_evidence_match_lookup() {
 			if (isset($_REQUEST['q']) && !empty($_REQUEST['q']) && isset($_REQUEST['lookup_field']) && !empty($_REQUEST['lookup_field'])){
+				$skipSelf = (isset($_REQUEST['post_id'])) ? true : false;
+				$toSkip = (isset($_REQUEST['post_id'])) ? $_REQUEST['post_id'] : false;
 				$args = array(
 							   'orderby' => 'meta_value',
 							   'order' => 'ASC',
@@ -619,7 +621,11 @@ if(!class_exists('Evidence_Hub'))
 						//echo '<ul>';
 					while ( $the_query->have_posts() ) {
 						$the_query->the_post();
-						$results[] = array('title' => get_the_title(), 'url' => get_permalink());
+						if ($toSkip && $toSkip != get_the_ID()){
+							$results[] = array('title' => get_the_title(), 'url' => get_permalink() );
+						} elseif (!$toSkip) {
+							$results[] = array('title' => get_the_title(), 'url' => get_permalink());
+						}
 					}
 						echo json_encode($results);
 				} else {
