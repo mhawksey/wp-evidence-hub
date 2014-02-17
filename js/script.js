@@ -226,6 +226,7 @@ function array_unique_noempty(a) {
 		$results.addClass(options.resultsClass);
 		$results_block.addClass(options.resultsBlockClass).insertAfter(options.attachTo);
 		$results_block.append($results);
+		$results_block.hide();
 
 		$input.keydown(processKey);
 		if ($.trim($input.val()).length >= options.minchars) {
@@ -502,7 +503,7 @@ jQuery.noConflict()(function(){
 	}
 	
 	jQuery( 'input.lookup[type="text"]' ).each( function() {
-		jQuery(this).lookup( ajaxurl + '?action=evidence_match_lookup&lookup_field=' + jQuery(this).attr('id'), { attachTo: jQuery(this), description: 'Possible existing results:', delay: 500, minchars: 2 } );
+		jQuery(this).lookup( ajaxurl + '?action=evidence_match_lookup&lookup_field=' + jQuery(this).attr('id'), { attachTo: jQuery(this), description: 'Possible existing results:', delay: 500, minchars: 10 } );
 	});
 	
 	jQuery( 'input#evidence_hub_project_id_field' ).each( function() {
