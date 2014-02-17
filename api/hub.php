@@ -7,7 +7,7 @@ Controller description: Evidence Hub APIs
 class JSON_API_Hub_Controller {
 	public function hello_world() {
 		return array(
-		  "message" => "JSON API for OER Evidence Hub"
+		  "message" => "JSON API for the Evidence Hub"
 		);
 	}
 	public function get_hypothesis() {
@@ -239,7 +239,9 @@ class JSON_API_Hub_Controller {
 		}
 		
 		return array(
-		  'post' => $id
+		  'post_id' => $id,
+		  'edit_link_url' => get_edit_post_link($id, ""),
+		  'edit_link_html' => '<a href="'.get_edit_post_link($id, "").'">Click here to edit your submission</a>',
 		);
 	}
 	

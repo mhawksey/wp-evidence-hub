@@ -111,6 +111,9 @@ if(!class_exists('Evidence_Hub'))
 			add_action('wp_ajax_evidence_hub_project_callback', array(&$this, 'ajax_evidence_hub_project_callback') );
 			add_action('wp_ajax_evidence_hub_if_project_exists_by_value', array(&$this, 'ajax_evidence_hub_if_project_exists_by_value') );
 			
+			// open ajax for match lookup
+			add_action('wp_ajax_evidence_match_lookup', array(&$this, 'ajax_evidence_match_lookup') );
+			
 			// prevent evidence contributors from seeing other image ulpoads
 			add_filter( 'ajax_query_attachments_args', array(&$this, 'user_restrict_media_library') );
 			
@@ -566,6 +569,68 @@ if(!class_exists('Evidence_Hub'))
 		* @return object 
     	*/
 		public function ajax_evidence_hub_if_project_exists_by_value() {
+			if ( $project_id = ( isset( $_POST[ 'autocomplete_eh_project_id' ] ) && ! empty( $_POST[ 'autocomplete_eh_project_id' ] ) ) ? $_POST[ 'autocomplete_eh_project_id' ] : NULL ) {
+				$project_name = $_POST[ 'autocomplete_eh_project_value' ];
+			
+				$actual_project_name = get_the_title($project_id);
+				
+				if($project_name !== $actual_project_name){
+					echo json_encode( (object)array( 'notamatch' => 1 ) );
+					die();
+				} else {	
+					echo json_encode( (object)array( 'valid' => 1,
+													 //'map' => $mapcode,
+													 'country' => ($loc = wp_get_object_terms($project_id, 'evidence_hub_country')) ? $loc[0]->slug : NULL,
+													 'lat' => get_post_meta($project_id, '_pronamic_google_maps_latitude', true ),
+													 'lng' => get_post_meta($project_id, '_pronamic_google_maps_longitude', true ),
+													 'zoom' => get_post_meta($project_id, '_pronamic_google_maps_zoom', true )));
+					die();
+				}
+			} 
+			echo json_encode( (object)array( 'noid' => 1 ) );
+			die();
+		}
+		/**
+    	* Adds ajaxable evidence match lookup.
+		*
+		* @since 0.1.1
+		* @return object 
+    	*/
+		public function ajax_evidence_match_lookup() {
+			if (isset($_REQUEST['q']) && !empty($_REQUEST['q']) && isset($_REQUEST['lookup_field']) && !empty($_REQUEST['lookup_field'])){
+				$args = array(
+							   'orderby' => 'meta_value',
+							   'order' => 'ASC',
+							   'post_status' => array( 'pending', 'draft', 'future', 'publish' ),
+							   'post_type' => Evidence_Hub::$post_types,
+							   'meta_query' => array(
+								   array(
+									   'key' => $_REQUEST['lookup_field'],
+									   'value' => $_REQUEST['q'],
+									   'compare' => 'LIKE',
+								   )
+							   )
+							 );
+				$the_query = new WP_Query($args);
+				// The Loop
+				if ( $the_query->have_posts() ) {
+					$results = array();
+						//echo '<ul>';
+					while ( $the_query->have_posts() ) {
+						$the_query->the_post();
+						$results[] = array('title' => get_the_title(), 'url' => get_permalink());
+					}
+						echo json_encode($results);
+				} else {
+					echo json_encode($args);	
+				}
+				
+				/* Restore original Post Data */
+				wp_reset_postdata();
+				die();
+			
+			} 
+			
 			if ( $project_id = ( isset( $_POST[ 'autocomplete_eh_project_id' ] ) && ! empty( $_POST[ 'autocomplete_eh_project_id' ] ) ) ? $_POST[ 'autocomplete_eh_project_id' ] : NULL ) {
 				$project_name = $_POST[ 'autocomplete_eh_project_value' ];
 			

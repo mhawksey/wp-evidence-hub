@@ -12,6 +12,9 @@ Author URI: http://www.rachelcarden.com
 */
 
 var errorDNA = "The project does not exist. <a href='?post_type=project' target='_blank'>Add New Project if required</a>";
+
+
+// tagBox from wp-admin\js\posts.js
 var tagBox;
 var postL10n = {'comma':','};
 
@@ -191,16 +194,320 @@ function array_unique_noempty(a) {
 	};
 }(jQuery));
 
+/*
+ *	jquery.suggest 1.1b - 2007-08-06
+ * Patched by Mark Jaquith with Alexander Dick's "multiple items" patch to allow for auto-suggesting of more than one tag before submitting
+ * See: http://www.vulgarisoip.com/2007/06/29/jquerysuggest-an-alternative-jquery-based-autocomplete-library/#comment-7228
+ *
+ *	Uses code and techniques from following libraries:
+ *	1. http://www.dyve.net/jquery/?autocomplete
+ *	2. http://dev.jquery.com/browser/trunk/plugins/interface/iautocompleter.js
+ *
+ *	All the new stuff written by Peter Vulgaris (www.vulgarisoip.com)
+ *	Feel free to do whatever you want with this file
+ *
+ */
+
+(function($) {
+
+	$.lookup = function(input, options) {
+		var $input, $results, timeout, prevLength, cache, cacheSize;
+
+		$input = $(input).attr("autocomplete", "off");
+		
+		$results_block = $("<div><p>"+options.description+"</p></div>");
+		$results = $("<ul/>");
+
+		timeout = false;		// hold timeout ID for suggestion results to appear
+		prevLength = 0;			// last recorded length of $input.val()
+		cache = [];				// cache MRU list
+		cacheSize = 0;			// size of cache in chars (bytes?)
+
+		$results.addClass(options.resultsClass);
+		$results_block.addClass(options.resultsBlockClass).insertAfter(options.attachTo);
+		$results_block.append($results);
+
+		$input.keydown(processKey);
+		if ($.trim($input.val()).length >= options.minchars) {
+			lookup();
+		}
+
+		function processKey(e) {
+
+			// handling up/down/escape requires results to be visible
+			// handling enter/tab requires that AND a result to be selected
+			if ((/27$|38$|40$/.test(e.keyCode) && $results.is(':visible')) ||
+				(/^13$|^9$/.test(e.keyCode) && getCurrentResult())) {
+
+				if (e.preventDefault)
+					e.preventDefault();
+				if (e.stopPropagation)
+					e.stopPropagation();
+
+				e.cancelBubble = true;
+				e.returnValue = false;
+
+				switch(e.keyCode) {
+
+					case 38: // up
+						prevResult();
+						break;
+
+					case 40: // down
+						nextResult();
+						break;
+
+					case 9:  // tab
+					case 13: // return
+						selectCurrentResult();
+						break;
+
+					case 27: //	escape
+						$results_block.hide();
+						break;
+
+				}
+
+			} else if ($input.val().length != prevLength) {
+
+				if (timeout)
+					clearTimeout(timeout);
+				timeout = setTimeout(lookup, options.delay);
+				prevLength = $input.val().length;
+
+			}
+
+
+		}
+
+
+		function lookup() {
+
+			var q = $.trim($input.val()), multipleSepPos, items;
+
+			if ( options.multiple ) {
+				multipleSepPos = q.lastIndexOf(options.multipleSep);
+				if ( multipleSepPos != -1 ) {
+					q = $.trim(q.substr(multipleSepPos + options.multipleSep.length));
+				}
+			}
+			if (q.length >= options.minchars) {
+				console.log("checking cached..");
+				cached = checkCache(q);
+
+				if (cached) {
+					console.log("getting cached..");
+					displayItems(cached['items']);
+
+				} else {
+
+					$.getJSON(options.source, {q: q}, function(txt) {
+						console.log("getting results..");
+						$results_block.hide();
+
+						items = parseTxt(txt);
+
+						displayItems(items);
+						addToCache(q, items, txt.length);
+
+					});
+
+				}
+
+			} else {
+				console.log("I'm hiding..");
+				$results_block.hide();
+
+			}
+
+		}
+
+
+		function checkCache(q) {
+			var i;
+			for (i = 0; i < cache.length; i++)
+				if (cache[i]['q'] == q) {
+					cache.unshift(cache.splice(i, 1)[0]);
+					return cache[0];
+				}
+
+			return false;
+
+		}
+
+		function addToCache(q, items, size) {
+			var cached;
+			while (cache.length && (cacheSize + size > options.maxCacheSize)) {
+				cached = cache.pop();
+				cacheSize -= cached['size'];
+			}
+
+			cache.push({
+				q: q,
+				size: size,
+				items: items
+				});
+
+			cacheSize += size;
+
+		}
+
+		function displayItems(items) {
+			var html = '', i;
+			if (!items)
+				return;
+
+			if (!items.length) {
+				$results_block.hide();
+				return;
+			}
+			console.log(items);
+			//resetPosition(); // when the form moves after the page has loaded
+
+			for (i = 0; i < items.length; i++)
+				html += '<li>' + items[i] + '</li>';
+
+			$results.html(html);
+			$results_block.show();
+
+			/*$results
+				.children('li')
+				.mouseover(function() {
+					$results.children('li').removeClass(options.selectClass);
+					$(this).addClass(options.selectClass);
+				})
+				.click(function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+					selectCurrentResult();
+				});*/
+
+		}
+
+		function parseTxt(results) {
+
+			var items = [];
+			
+			for (i = 0; i < results.length; i++) {
+				items.push('<strong>'+results[i].title+'</strong><br/> <a href="'+results[i].url+'" target="_blank">'+results[i].url+'</a>');
+			}
+
+			return items;
+		}
+
+		function getCurrentResult() {
+			var $currentResult;
+			if (!$results.is(':visible'))
+				return false;
+
+			$currentResult = $results.children('li.' + options.selectClass);
+
+			if (!$currentResult.length)
+				$currentResult = false;
+
+			return $currentResult;
+
+		}
+
+		function selectCurrentResult() {
+
+			$currentResult = getCurrentResult();
+
+			if ($currentResult) {
+				if ( options.multiple ) {
+					if ( $input.val().indexOf(options.multipleSep) != -1 ) {
+						$currentVal = $input.val().substr( 0, ( $input.val().lastIndexOf(options.multipleSep) + options.multipleSep.length ) );
+					} else {
+						$currentVal = "";
+					}
+					$input.val( $currentVal + $currentResult.text() + options.multipleSep);
+					$input.focus();
+				} else {
+					$input.val($currentResult.text());
+				}
+				$results_block.hide();
+				$input.trigger('change');
+
+				if (options.onSelect)
+					options.onSelect.apply($input[0]);
+
+			}
+
+		}
+
+		function nextResult() {
+
+			$currentResult = getCurrentResult();
+
+			if ($currentResult)
+				$currentResult
+					.removeClass(options.selectClass)
+					.next()
+						.addClass(options.selectClass);
+			else
+				$results.children('li:first-child').addClass(options.selectClass);
+
+		}
+
+		function prevResult() {
+			var $currentResult = getCurrentResult();
+
+			if ($currentResult)
+				$currentResult
+					.removeClass(options.selectClass)
+					.prev()
+						.addClass(options.selectClass);
+			else
+				$results.children('li:last-child').addClass(options.selectClass);
+
+		}
+	}
+
+	$.fn.lookup = function(source, options) {
+
+		if (!source)
+			return;
+
+		options = options || {};
+		options.multiple = options.multiple || false;
+		options.multipleSep = options.multipleSep || ", ";
+		options.source = source;
+		options.delay = options.delay || 100;
+		options.resultsBlockClass  = options.resultsBlockClass || 'lookup_results';
+		options.resultsClass = options.resultsClass || 'lookup_results_list';
+		options.selectClass = options.selectClass || 'lookup_over';
+		options.matchClass = options.matchClass || 'lookup_match';
+		options.minchars = options.minchars || 2;
+		options.delimiter = options.delimiter || '\n';
+		options.onSelect = options.onSelect || false;
+		options.maxCacheSize = options.maxCacheSize || 65536;
+		options.attachTo = options.attachTo || 'body';
+		options.description = options.description || '';
+
+		this.each(function() {
+			new $.lookup(this, options);
+		});
+
+		return this;
+
+	};
+
+})(jQuery);
+
 jQuery.noConflict()(function(){
 	
 	jQuery.ui.autocomplete.prototype._resizeMenu = function () {
 	  var ul = this.menu.element;
 	  ul.outerWidth(this.element.outerWidth());
 	}
+	
+	jQuery( 'input.lookup[type="text"]' ).each( function() {
+		jQuery(this).lookup( ajaxurl + '?action=evidence_match_lookup&lookup_field=' + jQuery(this).attr('id'), { attachTo: jQuery(this), description: 'Possible existing results:', delay: 500, minchars: 2 } );
+	});
+	
 	jQuery( 'input#evidence_hub_project_id_field' ).each( function() {
 	
 		var $evidence_hub_project_id_field = jQuery( 'input#evidence_hub_project_id_field' );	
-
 		
 		// autocomplete new tags
 		if ( $evidence_hub_project_id_field.size() > 0 ) {
@@ -322,6 +629,7 @@ function autocomplete_eh_change_project(id, label){
 			// if the user exists
 			if ( $project.valid ) {
 				jQuery( '#MapHolder' ).show();
+				map.invalidateSize();
 				map.setView([$project.lat, $project.lng], $project.zoom);
 				marker.setLatLng([$project.lat, $project.lng]).update();	
 				
@@ -376,11 +684,9 @@ function autocomplete_eh_change_project(id, label){
 		};
 		return false;
 	});
-	
-
-
 
 	jQuery(document).ready(function( $ ) {
+		jQuery( 'input.lookup[type="text"]' ).trigger('change');
 		// multi-taxonomies
 		if ( $('#tagsdiv-post_tag').length && typeof(eadminpage) == 'undefined') {
 			tagBox.init();
@@ -417,7 +723,6 @@ function autocomplete_eh_change_project(id, label){
 		$("#evidence_hub_hypothesis_id").change(function() {
 			if ($("#evidence_hub_hypothesis_id option:selected").text().indexOf("–") === -1 ){
 				$("input#evidence_hub_polarity").each(function(){
-					console.log($(this));
 					$(this).prop('checked', false);
 					$(this).attr("disabled", true);
 				})
@@ -429,9 +734,7 @@ function autocomplete_eh_change_project(id, label){
 		$( "select#type" ).change(function() {
 			var what = "form#content_for_"+$(this).val();
 			$( "form[id^=content_for]" ).fadeOut();
-			$( what ).fadeIn(500); 
-			console.log($(this).val());
-			
+			$( what ).fadeIn(500); 			
 		});
 	});
 	
@@ -492,13 +795,20 @@ function autocomplete_eh_change_project(id, label){
 			   url: MyAjax.apiurl+'/?json=hub.create_evidence',
 			   data: jQuery("#common_entry, #tagsdiv-post_tag, #pgm_map, #content_for_"+type).serialize(), // serializes the form's elements.
 			   success: function(data) {
-				   jQuery('#add_data').text("Submitted");
-				   jQuery('.action-area #status').append('<div id="message" class="success fade"> Thank you! Your contribution has been sent for review </div>');
+				   console.log(data);
+				   if(data.status == "ok"){
+					   jQuery('#add_data').text("Submitted");
+					   jQuery('#eh-entry').before('<div id="status"><div id="message" class="success fade"> <p>Thank you! Your contribution has been sent for review</p> <p>'+data.edit_link_html+'</p> </div></div>');
+				   } else {
+					   jQuery('#add_data').text("Submit for Review").removeAttr("disabled");
+					   jQuery('#eh-entry').before('<div id="status"><div id="message" class="error fade"> <p>Oops something went wrong. Please try submitting again</p><p>Error: '+data.error+'</p> </div></div>');
+				   }
 				   jQuery('.spinner').hide();
+				   jQuery('#eh-entry').hide();
 			   },
 			   error: function(data) {
 				   jQuery('#add_data').text("Submit for Review").removeAttr("disabled");
-				   jQuery('.action-area #status').append('<div id="message" class="error fade"> Oops something went wrong. Please try submitting again </div>');
+				   jQuery('.action-area #status').append('<div id="message" class="error fade"> <p>Oops something went wrong. Please try submitting again</p><p>Error: '+data.error+'</p> </div>');
 				   jQuery('.spinner').hide();
 			   }
 			 });

@@ -923,9 +923,7 @@ font-weight:bold;
 #eh-admin .eh_input label { 
 	white-space: nowrap; 
 	display: table-cell; 
-	width:150px;
-	
-
+	vertical-align: baseline;
 }
 #wp_evidence_hub_evidence_side_section .eh_input label{
 	vertical-align: baseline;
@@ -987,6 +985,9 @@ padding: 5px 10px;
 }
 #eh-entry input[type=text]{
 	width:100%;	
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 }
 #eh-entry .eh_block{
 border: 1px solid #E5E5E5;
@@ -1071,25 +1072,25 @@ font-family: 'Open Sans', Helvetica, Arial, 'Nimbus Sans L', sans-serif;
 font-size: 13px;
 color: #FFF!important;
 }
-#eh-entry #status {	
+#status {	
 float: left;
 font-size: 13px;
 margin-left: 3px;
 }
-#eh-entry #status #message {
+#status #message {
 background: #FFF;
 -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
 box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
 margin: 5px 0 15px;
 padding: 1px 12px;
 }
-#eh-entry #message.error {
+#status #message.error {
 border-left: 4px solid #DD3D36;
 }
-#eh-entry #message.success {
+#status #message.success {
 border-left: 4px solid #7AD03A;
 }
-#eh-entry #message > p {
+#status #message > p {
 margin-bottom:0px;	
 }
 #eh-entry button:hover, a.ehbutton:hover{
@@ -1163,13 +1164,31 @@ padding: 2px 5px;
 white-space: nowrap;
 text-align: left;
 }
+.lookup_results_list li {
+padding: 2px 5px;
+text-align: left;
+line-height:1.2em;
+font-size:85%;
+margin-left:10px;
+}
 
-.eh_results .ac_over {
+.eh_results .ac_over, .lookup_results_list lookup_over {
 background-color: #F0F0B8;
 }
 
 .eh_results .ac_over {
 cursor: pointer;
+}
+.lookup_results {
+padding: 0;
+margin: 0;
+
+z-index: 10000;
+display: none;
+width:inherit;
+}
+.lookup_results p{
+margin-bottom:0px!important;
 }
 #eh-entry .tagchecklist span a:before{
 content: '\f153';
@@ -1210,11 +1229,15 @@ border-radius: 6px;
 border-color: #DDD;
 }
 #eh-form .ui-autocomplete ul{
-list-style-type:none;
 border:none;
+font-size:85%;
+text-align:left;
 }
 #eh-form .ui-autocomplete li{
-margin:3px;
+padding:8px;
+margin:0px;
+list-style:none;
+line-height:1.2em;
 }
 #eh-form .ui-autocomplete li:hover{
 background:#CCC;

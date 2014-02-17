@@ -47,7 +47,7 @@ $user_option_count = 0;
             <span class="eh_input_field">
     <?php if ($option['type'] == 'text') : ?>
         <input
-            class="text"
+            class="text <?php if (isset($option['lookup'])) { echo "lookup "; } ?>"
             type="text"
             name="<?php echo $name; ?>"
             id="<?php echo $name; ?>"
