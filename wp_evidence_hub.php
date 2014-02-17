@@ -83,6 +83,7 @@ if(!class_exists('Evidence_Hub'))
 			add_filter('json_api_hub_controller_path', array(&$this,'set_hub_controller_path'));
 			
 			require_once(sprintf("%s/lib/wp-postratings/wp-postratings.php", EVIDENCE_HUB_PATH));
+
 			
 			// Initialize Facetious library
 			if (!class_exists('Facetious')){
@@ -848,6 +849,10 @@ if(!class_exists('Evidence_Hub'))
 		public static function activate(){
 			flush_rewrite_rules();
 			update_option( 'Pronamic_Google_maps', array( 'active' => false ) );
+			Evidence_Hub_Shortcode::activate();
+			if (function_exists('create_ratinglogs_table')){
+				create_ratinglogs_table();
+			}
 			// Do nothing
 		} // END public static function activate
 	
@@ -857,7 +862,7 @@ if(!class_exists('Evidence_Hub'))
 		* @since 0.1.1
 		*/		
 		public static function deactivate(){
-			// Do nothing
+			Evidence_Hub_Shortcode::deactivate();
 		} // END public static function deactivate
 	} // END class Evidence_Hub
 } // END if(!class_exists('Evidence_Hub'))

@@ -35,7 +35,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 define('RATINGS_IMG_EXT', 'gif');
 //define('RATINGS_IMG_EXT', 'png');
 
-define('WP_POSTRATINGS_PATH',  dirname(__FILE__));
+define('WP_POSTRATINGS_PATH',  preg_replace('@\/var\/www\/[^\/]+@', '', dirname(__FILE__)));
 define('WP_POSTRATINGS_URL', plugin_dir_url(preg_replace('@\/var\/www\/[^\/]+@', '', __FILE__)));
 
 ### Create Text Domain For Translations
@@ -442,7 +442,7 @@ if(!function_exists('get_ipaddress')) {
 ### Function: Return All Images From A Rating Image Folder
 function ratings_images_folder($folder_name) {
 	$normal_images = array('rating_over.'.RATINGS_IMG_EXT, 'rating_on.'.RATINGS_IMG_EXT, 'rating_half.'.RATINGS_IMG_EXT, 'rating_off.'.RATINGS_IMG_EXT);
-	$postratings_path = WP_POSTRATINGS_PATH.'/images/'.$folder_name;
+	$postratings_path = dirname(__FILE__).'/images/'.$folder_name;
 	$images_count_temp = 1;
 	$images_count = 1;
 	$count = 0;
@@ -662,7 +662,7 @@ function manage_ratings()
 
 		//Variables
 		$postratings_url = WP_POSTRATINGS_URL.'images';
-		$postratings_path = WP_POSTRATINGS_PATH.'images';
+		$postratings_path = WP_POSTRATINGS_PATH.'/images';
 		$postratings_ratingstext = get_option('postratings_ratingstext');
 		$postratings_ratingsvalue = get_option('postratings_ratingsvalue');
 

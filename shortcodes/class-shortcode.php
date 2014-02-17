@@ -27,8 +27,8 @@ abstract class Evidence_Hub_Shortcode {
 		add_action('save_post', array(&$this, 'save_post'));
 		add_action('trash_post', array(&$this, 'trash_post'));
 		
-		register_activation_hook(EVIDENCE_HUB_REGISTER_FILE, array(&$this, 'activate'));
-		register_deactivation_hook(EVIDENCE_HUB_REGISTER_FILE, array(&$this, 'deactivate'));
+		//register_activation_hook(EVIDENCE_HUB_REGISTER_FILE, array(&$this, 'activate'));
+		//register_deactivation_hook(EVIDENCE_HUB_REGISTER_FILE, array(&$this, 'deactivate'));
 		
 		global $wpdb;
 		$wpdb->evidence_hub_shortcode_cache = $wpdb->prefix.'evidence_hub_shortcode_cache';
