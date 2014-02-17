@@ -81,6 +81,7 @@ class Project_Template extends Evidence_Hub_CustomPostType {
 		$this->options = array_merge($this->options, array(
 			'resource_link' => array(
 				'type' => 'text',
+				'lookup' => true,
 				'save_as' => 'post_meta',
 				'position' => 'bottom',
 				'label' => 'Link'

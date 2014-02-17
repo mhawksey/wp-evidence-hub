@@ -103,6 +103,7 @@ class Policy_Template extends Evidence_Hub_CustomPostType {
 		 $this->options = array_merge($this->options, array(
 			'citation' => array(
 				'type' => 'text',
+				'lookup' => true,
 				'save_as' => 'post_meta',
 				'position' => 'bottom',
 				'label' => 'Citation'
