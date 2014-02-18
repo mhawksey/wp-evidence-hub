@@ -923,7 +923,8 @@ font-weight:bold;
 #eh-admin .eh_input label { 
 	white-space: nowrap; 
 	display: table-cell; 
-	vertical-align: baseline;
+	vertical-align: top;
+	padding-top: 5px;
 }
 #wp_evidence_hub_evidence_side_section .eh_input label{
 	vertical-align: baseline;

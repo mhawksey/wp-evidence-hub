@@ -82,10 +82,25 @@ class Evidence_Hub_CustomPostType {
 			$field_name = "evidence_hub_$name";
 			if (isset($_POST[$field_name])){
 				if ($option['save_as'] == 'term'){
-					$term = term_exists($_REQUEST[$field_name], $field_name);
-					if ($term !== 0 && $term !== NULL){
-						wp_set_object_terms( $post_id, $_POST[$field_name], $field_name);
+					$allterms = true;
+					if (!is_array($_REQUEST[$field_name])){
+						$term = term_exists($_REQUEST[$field_name], $field_name);
+						if ($term !== 0 && $term !== NULL){
+							$allterms = false;
+						}
+					} else {
+						foreach($_REQUEST[$field_name] as $value){
+							$term = term_exists($value, $field_name);
+							if ($term !== 0 && $term !== NULL){
+								
+								wp_set_object_terms( $post_id, $value, $field_name);
+							}
+						}
 					}
+					if ($allterms){
+						wp_set_object_terms( $post_id, $_REQUEST[$field_name], $field_name);
+					}		
+					
 				} else {
 					update_post_meta($post_id, $field_name, $_POST[$field_name]);
 				}

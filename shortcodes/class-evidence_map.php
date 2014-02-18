@@ -19,8 +19,8 @@
 new Evidence_Hub_Shortcode_Evidence_Map();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
-	var $shortcode = 'evidence_map';
-	var $defaults = array(
+	public $shortcode = 'evidence_map';
+	public $defaults = array(
 		'title' => false,
 		'no_evidence_message' => "There is no evidence map yet to display",
 		'title_tag' => 'h3',

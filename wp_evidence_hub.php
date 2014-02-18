@@ -9,7 +9,7 @@ Author URI: http://mashe.hawksey.info
 License: GPL2
 
 /*
-Copyright 2012  Francis Yaconiello  (email : francis@yaconiello.com)
+Copyright 2014  Martin Hawksey  (email : m.hawksey@gmail.com)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as 
@@ -43,7 +43,7 @@ if(!class_exists('Evidence_Hub'))
 		*/
 		public function __construct() {			
 			add_action('init', array(&$this, 'init'));
-			// Register custom post types - hypothesis
+			// Register custom post types
 			require_once(sprintf("%s/post-types/class-custom_post_type.php", EVIDENCE_HUB_PATH));
 			// Register custom post types - hypothesis
 			require_once(sprintf("%s/post-types/class-hypothesis.php", EVIDENCE_HUB_PATH));
@@ -442,6 +442,8 @@ if(!class_exists('Evidence_Hub'))
 			
 			wp_register_script( 'evidence_hub_script', plugins_url( 'js/script.js' , EVIDENCE_HUB_REGISTER_FILE), $scripts  );
 			wp_enqueue_script( 'evidence_hub_script' );
+			wp_register_script( 'evidence_hub_frontonlyscript', plugins_url( 'js/frontonlyscript.js' , EVIDENCE_HUB_REGISTER_FILE)  );
+			wp_enqueue_script( 'evidence_hub_frontonlyscript' );
 			wp_register_style( 'evidence_hub_style', plugins_url( 'css/style.css' , EVIDENCE_HUB_REGISTER_FILE ) );
 			wp_enqueue_style( 'evidence_hub_style');
 		}
@@ -599,7 +601,6 @@ if(!class_exists('Evidence_Hub'))
     	*/
 		public function ajax_evidence_match_lookup() {
 			if (isset($_REQUEST['q']) && !empty($_REQUEST['q']) && isset($_REQUEST['lookup_field']) && !empty($_REQUEST['lookup_field'])){
-				$skipSelf = (isset($_REQUEST['post_id'])) ? true : false;
 				$toSkip = (isset($_REQUEST['post_id'])) ? $_REQUEST['post_id'] : false;
 				$args = array(
 							   'orderby' => 'meta_value',
