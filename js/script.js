@@ -508,33 +508,40 @@ function autocomplete_eh_change_project(id, label){
 	jQuery(document).ready(function( $ ) {
 		jQuery( 'input.lookup[type="text"]' ).trigger('change');
 		// multi-taxonomies
+		if (typeof(typenow) !== 'undefined'){
+			/*if (typenow == 'evidence'){ 
+				$('#publish').click(function(){
+						if (!isValidateForm()){
+							$('#post').submit();
+						} else {
+							$('#publishing-action .spinner').hide();
+							$('#publish').prop('disabled', false).removeClass('button-primary-disabled');
+						}
+						return false;
+					
+				});
+			}*/
+		} else {
 		
-		if (typenow == 'evidence'){ 
-			$('#publish').click(function(){
-					if (!isValidateForm()){
-						$('#post').submit();
-					} else {
-						$('#publishing-action .spinner').hide();
-						$('#publish').prop('disabled', false).removeClass('button-primary-disabled');
-					}
-					return false;
-				
+			$('#add_data').click(function(){
+				$('div.tagsdiv').each( function() {
+						tagBox.flushTags(this, false, 1);
+				});
+				$('#tags').val($('.the-tags', $('div.tagsdiv')).val());
+				if (!isValidateForm()){
+					$(this).attr("disabled", true);
+					$('.spinner').show();
+					getNonce();	
+				}
+				return false;
+			});
+			
+			$( "select#type" ).on('change', function() {
+				var what = "form#content_for_"+$(this).val();
+				$( "form[id^=content_for]" ).fadeOut();
+				$( what ).fadeIn(500); 			
 			});
 		}
-		
-		$('#add_data').click(function(){
-			$('div.tagsdiv').each( function() {
-					tagBox.flushTags(this, false, 1);
-			});
-			$('#tags').val($('.the-tags', $('div.tagsdiv')).val());
-			if (!isValidateForm()){
-				$(this).attr("disabled", true);
-				$('.spinner').show();
-				getNonce();	
-			}
-			return false;
-		});
-		
 		$('#evidence_hub_options .date').datepicker({dateFormat : 'dd/mm/yy'});
 		
 		$("#evidence_hub_hypothesis_id").change(function() {
@@ -548,11 +555,7 @@ function autocomplete_eh_change_project(id, label){
 			}
 		});
 		
-		$( "select#type" ).change(function() {
-			var what = "form#content_for_"+$(this).val();
-			$( "form[id^=content_for]" ).fadeOut();
-			$( what ).fadeIn(500); 			
-		});
+
 	});
 	
 	function isValidateForm(){

@@ -176,17 +176,7 @@ if(!class_exists('Evidence_Hub'))
 			// add permalink rewrites
 			$this->do_rewrites();
 			
-			// install contry codes/terms
-			$countries = get_terms( 'evidence_hub_country', array( 'hide_empty' => false ) );
-			// if no terms then lets add our terms
-			if( empty( $countries ) ){
-				$countries = $this->set_countries();
-				foreach( $countries as $country_code => $country_name ){
-					if( !term_exists( $country_name, 'evidence_hub_country' ) ){
-						wp_insert_term( $country_name, 'evidence_hub_country', array( 'slug' => $country_code ) );
-					}
-				}
-			}
+
 			
 			// register custom post type taxonomies
 			// register post type taxonomies for hypothesis
@@ -208,6 +198,18 @@ if(!class_exists('Evidence_Hub'))
 			// register post type taxonomies for locale
 			$args = Evidence_Hub::get_taxonomy_args("Locale","Locales");
 			register_taxonomy( 'evidence_hub_locale', 'policy', $args );
+			
+			// install contry codes/terms
+			$countries = get_terms( 'evidence_hub_country', array( 'hide_empty' => false ) );
+			// if no terms then lets add our terms
+			if( empty( $countries ) ){
+				$countries = $this->set_countries();
+				foreach( $countries as $country_code => $country_name ){
+					if( !term_exists( $country_name, 'evidence_hub_country' ) ){
+						wp_insert_term( $country_name, 'evidence_hub_country', array( 'slug' => $country_code ) );
+					}
+				}
+			}
 			
 			Pronamic_Google_Maps_Site::bootstrap();		
 		}

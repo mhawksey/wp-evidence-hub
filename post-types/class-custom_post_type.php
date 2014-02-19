@@ -75,29 +75,29 @@ class Evidence_Hub_CustomPostType {
 		
 		if (isset($_POST['evidence_hub_nonce']) && !wp_verify_nonce($_POST['evidence_hub_nonce'], plugin_basename(__FILE__))) return;
 		
-		if (!current_user_can('evidence_edit_posts', $post_id)) return;
+		if (!current_user_can('edit_evidence', $post_id)) return;
 
 		foreach($this->options as $name => $option)	{
 			// Update the post's meta field
 			$field_name = "evidence_hub_$name";
 			if (isset($_POST[$field_name])){
 				if ($option['save_as'] == 'term'){
-					$allterms = true;
-					if (!is_array($_REQUEST[$field_name])){
-						$term = term_exists($_REQUEST[$field_name], $field_name);
+					$foundterm = false;
+					if (!is_array($_REQUEST[$field_name])){ // handle if single term
+						$term = term_exists($_REQUEST[$field_name], $field_name); // find if terms exists on list
 						if ($term !== 0 && $term !== NULL){
-							$allterms = false;
+							$foundterm = true; // not on list to don't update
+							//
 						}
 					} else {
-						foreach($_REQUEST[$field_name] as $value){
+						foreach($_REQUEST[$field_name] as $value){ // handle array of terms
 							$term = term_exists($value, $field_name);
 							if ($term !== 0 && $term !== NULL){
-								
-								wp_set_object_terms( $post_id, $value, $field_name);
+								$foundterm = true; // not on list to don't update
 							}
 						}
 					}
-					if ($allterms){
+					if ($foundterm){ // if still true that term(s) on list update 
 						wp_set_object_terms( $post_id, $_REQUEST[$field_name], $field_name);
 					}		
 					
