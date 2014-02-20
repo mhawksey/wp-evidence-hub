@@ -37,8 +37,10 @@ class Evidence_Hub_Shortcode_Evidence_Entry extends Evidence_Hub_Shortcode {
   </div>
 </div>
 <?php
+
 		// if user can submit posts render form
-		elseif (current_user_can('edit_evidence')) :
+		// elseif (current_user_can('edit_evidence')) :
+		elseif (Evidence_Hub::appthemes_check_user_role('evidence_contributor')):
 			if(isset($_GET['bookmarklet'])){
 				echo '<style>#site-title-wrapper h2, #site-navigation, #secondary { display:none; }</style>';	
 			}
@@ -157,6 +159,9 @@ class Evidence_Hub_Shortcode_Evidence_Entry extends Evidence_Hub_Shortcode {
             
 			<?php
 			//print_r(Evidence_Hub::$post_type_fields);
+		else: ?>
+        <p>I'm sorry you don't have enough permissions to submit evidence</p>
+		<?
 		endif; // user can see edit form 
 		return ob_get_clean();
 	}
