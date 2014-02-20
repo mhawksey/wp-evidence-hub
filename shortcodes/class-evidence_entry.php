@@ -38,7 +38,7 @@ class Evidence_Hub_Shortcode_Evidence_Entry extends Evidence_Hub_Shortcode {
 </div>
 <?php
 		// if user can submit posts render form
-		elseif (current_user_can('evidence_edit_posts')) :
+		elseif (current_user_can('edit_evidence')) :
 			if(isset($_GET['bookmarklet'])){
 				echo '<style>#site-title-wrapper h2, #site-navigation, #secondary { display:none; }</style>';	
 			}

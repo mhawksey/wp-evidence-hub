@@ -390,6 +390,8 @@ if(!class_exists('Evidence_Hub'))
 		public function enqueue_autocomplete_scripts() {
 			global $typenow;
 			global $wp_styles;
+			global $wp_version;
+			
 			$scripts = array( 'jquery', 'jquery-ui-autocomplete', 'jquery-ui-datepicker','jquery-ui-tabs');
   			if ($typenow=='evidence') {
 				wp_enqueue_style( 'leafletcss', 'http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css' );
@@ -416,6 +418,10 @@ if(!class_exists('Evidence_Hub'))
 								) );
 			wp_enqueue_script('pronamic_google_maps_admin_eh');
 			wp_enqueue_style('pronamic_google_maps_admin_eh');
+			if (version_compare( $wp_version, '3.8', '<' )){
+				wp_register_style('dashicons', EVIDENCE_HUB_URL.'/css/dashicons.css'	);
+				wp_enqueue_style('dashicons');
+			}
 		}
 		
 		/**
@@ -448,6 +454,10 @@ if(!class_exists('Evidence_Hub'))
 			wp_enqueue_script( 'evidence_hub_frontonlyscript' );
 			wp_register_style( 'evidence_hub_style', plugins_url( 'css/style.css' , EVIDENCE_HUB_REGISTER_FILE ) );
 			wp_enqueue_style( 'evidence_hub_style');
+			if (version_compare( $wp_version, '3.8', '<' )){
+				wp_register_style('dashicons', EVIDENCE_HUB_URL.'/css/dashicons.css'	);
+				wp_enqueue_style('dashicons');
+			}
 		}
 		
 		/**
