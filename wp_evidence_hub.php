@@ -452,6 +452,7 @@ if(!class_exists('Evidence_Hub'))
     	*/
 		public function enqueue_front_scripts() {
 			global $wp_styles;
+			global $wp_version;
 			
 			$scripts = array( 'jquery', 'jquery-ui-autocomplete', 'jquery-ui-core', 'jquery-ui-tabs', 'jquery-ui-datepicker', 'suggest');
 			wp_register_script('pronamic_google_maps_admin_eh', EVIDENCE_HUB_URL.'/lib/pronamic-google-maps/js/admin.js',	array( 'jquery', 'google-jsapi' ));

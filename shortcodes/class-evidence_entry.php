@@ -15,8 +15,8 @@
 new Evidence_Hub_Shortcode_Evidence_Entry();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_Evidence_Entry extends Evidence_Hub_Shortcode {
-	var $shortcode = 'evidence_entry';
-	var $options = array('do_cache' => false);
+	public $shortcode = 'evidence_entry';
+	public $options = array('do_cache' => false);
 	
 	
 	/**
@@ -29,21 +29,19 @@ class Evidence_Hub_Shortcode_Evidence_Entry extends Evidence_Hub_Shortcode {
 		extract($this->options);
 		
 		// display login form if not signed in
-		if (!is_user_logged_in()) : ?>
-
-<div id="login">
-  <div class="login_form">
-    <?php wp_login_form(); ?>
-  </div>
-</div>
-<?php
-
+		if(!is_user_logged_in()): // if user not logged in show form ?>
+            <div id="login">
+              <div class="login_form">
+                <?php wp_login_form(); ?>
+              </div>
+            </div>
+            <?php
 		// if user can submit posts render form
 		// elseif (current_user_can('edit_evidence')) :
-		elseif (Evidence_Hub::appthemes_check_user_role('evidence_contributor')):
-			if(isset($_GET['bookmarklet'])){
+		elseif(Evidence_Hub::appthemes_check_user_role('evidence_contributor') || Evidence_Hub::appthemes_check_user_role('administrator') || Evidence_Hub::appthemes_check_user_role('editor')): // if can add posts
+			if(isset($_GET['bookmarklet'])):
 				echo '<style>#site-title-wrapper h2, #site-navigation, #secondary { display:none; }</style>';	
-			}
+			endif;
 			?>
 			<script> 
 			function getPath(url) {
@@ -156,14 +154,9 @@ class Evidence_Hub_Shortcode_Evidence_Entry extends Evidence_Hub_Shortcode {
                     <br style="clear:both"/>
                 </div>
             </div> <!-- EOF eh-entry -->
-            
-			<?php
-			//print_r(Evidence_Hub::$post_type_fields);
-		else: ?>
-        <p>I'm sorry you don't have enough permissions to submit evidence</p>
-		<?
-		endif; // user can see edit form 
+<?php	else: ?>
+			<p>I'm sorry you don't have enough permissions to submit evidence</p>
+<?php	endif;
 		return ob_get_clean();
 	}
 }
-
