@@ -21,8 +21,8 @@
 new Evidence_Hub_Shortcode_Evidence_Summary();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
-	var $shortcode = 'evidence_summary';
-	var $defaults = array(
+	public $shortcode = 'evidence_summary';
+	public $defaults = array(
 		'title' => false,
 		'display_sankey' => true,
 		'no_evidence_message' => "There is no evidence yet for this hypothesis",
@@ -44,7 +44,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 				$content .= do_shortcode('[evidence_summary display_sankey=0]');
 			}
 			if (function_exists('the_ratings')){
-				$content .= '<div id="postvoting">'.the_ratings('div', $id, false).'</div>';
+				$content .= '<div id="postvoting">'.the_ratings('div', get_the_ID(), false).'</div>';
 			}
 		}
 		return $content;
