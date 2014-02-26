@@ -189,6 +189,7 @@ var errorDNA = "The project does not exist. <a href='?post_type=project' target=
 
 			$results.html(html);
 			$results_block.show();
+			$results_block.css('display','inline');
 
 			/*$results
 				.children('li')

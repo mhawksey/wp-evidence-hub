@@ -82,7 +82,7 @@ class Policy_Template extends Evidence_Hub_CustomPostType {
 		));
 		$this->options = array_merge($this->options, array(
 			'locale' => array(
-				'type' => 'multi-checkbox',
+				'type' => 'select',
 				'save_as' => 'term',
 				'position' => 'side',
 				'quick_edit' => true,
