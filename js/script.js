@@ -30,7 +30,7 @@ var errorDNA = "The project does not exist. <a href='?post_type=project' target=
 (function($) {
 
 	$.lookup = function(input, options) {
-		var $input, $results, timeout, prevLength, cache, cacheSize;
+		var $input, $results, $results_block, timeout, prevLength, cache, cacheSize;
 
 		$input = $(input).attr("autocomplete", "off");
 		
@@ -189,7 +189,6 @@ var errorDNA = "The project does not exist. <a href='?post_type=project' target=
 
 			$results.html(html);
 			$results_block.show();
-			$results_block.css('display','inline');
 
 			/*$results
 				.children('li')
