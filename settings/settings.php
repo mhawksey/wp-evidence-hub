@@ -32,6 +32,8 @@ if(!class_exists('Evidence_Hub_Settings'))
 				'29'
 			);
 			add_submenu_page('evidence_hub', 'JSON API', 'JSON API', 'hypothesis_admin', 'json-api', array( '__JSON_API__', 'admin_options' ));
+			add_submenu_page('evidence_hub', 'Cookie Notice', 'Cookie Notice', 'hypothesis_admin', 'cookie-notice', array( '__Cookie_Notice__', 'options_page' ));
+			add_submenu_page('evidence_hub', 'Custom Headers and Footers', 'Custom Headers and Footers', 'hypothesis_admin', sprintf("%s/lib/custom-headers-and-footers/custom-headers-and-footers.php", EVIDENCE_HUB_PATH), array( '__CustomHeadersAndFooters__', 'options_panel') ); 
 			
 			$GLOBALS['menu'][28] = array('', 'read', 'separator-28', '', 'wp-menu-separator');
 

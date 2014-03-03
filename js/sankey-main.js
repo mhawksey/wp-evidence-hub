@@ -1,7 +1,7 @@
 // JavaScript Document
-function renderSankey(slug,includeMarkers){
-	d3.json(MyAjax.apiurl+'hub/get_sankey_data/?country_slug='+slug, function(graph) { 
-		if (includeMarkers) displayMarkers(graph.markers);
+function renderSankey(country_slug, hyp_id){
+	var hyp_query = (hyp_id) ? '&hyp_id='+hyp_id : '';
+	d3.json(MyAjax.apiurl+'hub/get_sankey_data/?country_slug='+country_slug+hyp_query, function(graph) { 
 			
 		var margin = SANKEY_MARGIN,
 		width = SANKEY_WIDTH - margin.left - margin.right,

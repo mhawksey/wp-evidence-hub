@@ -13,34 +13,7 @@ margin:0;
 font-weight:bold;
 text-align:center;	
 }
-.evidence-box {
-width:48%;
-font-size:90%;
-text-align:left;	
-}
-.evidence-box.pos {
-float:right;
 
-}
-.evidence-box.neg{
-float:left;
-width:47%;
-border-right: 1px #ccc inset;
-padding-right:15px;		
-}
-.evidence-box ul li {
-list-style:none;	
-margin-left:0px;
-font-weight:bold;
-}
-.evidence-box ul li li {	
-list-style:disc;
-margin-left:30px;
-font-weight:normal
-}
-.evidence-box ul li ul {
-margin-top:0px;	
-}
 #evidence-meta {
 font-size:90%;	
 text-align:left;
@@ -79,6 +52,43 @@ text-align:left;
 .leaflet-popup .poptc.h{
 	padding-right: 5px;
 	font-weight: bold;
+}
+
+.evidence-breakdown {
+table-layout: fixed;
+}
+evidence-table td {
+border:none!important;	
+}
+.evidence-breakdown td{
+text-align: center;
+line-height: 1.2em;
+background-color:#FFF;
+border:solid 1px #666!important;
+padding:4px!important;
+}
+
+.evidence-box {
+	font-size:90%;
+}
+.evidence-box .left, .evidence-box .right {
+	width:48%;
+}
+div.evidence-box .left {
+float:left;
+}
+div.evidence-box .right {
+float:right;
+}
+@media screen and (max-width: 992px){
+	.evidence-box .left, .evidence-box .right {
+		float:none;
+		width:100%;
+	}
+}
+.evidence-breakdown thead td {
+font-weight:600;
+font-size:90%;
 }
 #evidence-map fieldset {
 	position: relative;
@@ -1254,6 +1264,59 @@ line-height: 26px;
 margin: 0;
 padding: 0 10px 1px;
 }
+}
+/*  SECTIONS  */
+/* line 5, ../sass/test.scss */
+.section {
+  clear: both;
+  padding: 0px;
+  margin: 0px;
+}
+
+/* line 11, ../sass/test.scss */
+.l {
+  background-color: #CCF;
+}
+
+/* line 14, ../sass/test.scss */
+.m {
+  background-color: #CFC;
+}
+
+/* line 17, ../sass/test.scss */
+.r {
+  background-color: #FCC;
+}
+
+/*  GRID OF THREE           ============================================================================= */
+@media only screen and (min-width: 912px) {
+  /* line 24, ../sass/test.scss */
+  .span_3_of_3 {
+    width: 100%;
+  }
+
+  /* line 28, ../sass/test.scss */
+  .span_2_of_3 {
+    width: 66.1%;
+  }
+
+  /* line 32, ../sass/test.scss */
+  .span_1_of_3 {
+    width: 32.2%;
+  }
+
+  /*  COLUMN SETUP  */
+  /* line 37, ../sass/test.scss */
+  .col {
+    display: block;
+    float: left;
+    margin: 1% 0 1% 1.6%;
+  }
+
+  /* line 42, ../sass/test.scss */
+  .col:first-child {
+    margin-left: 0;
+  }
 }
 
 

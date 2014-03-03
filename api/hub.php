@@ -85,6 +85,7 @@ class JSON_API_Hub_Controller {
 	public function get_sankey_data(){
 		global $json_api;
 		$country_slug = isset($json_api->query->country_slug) ? $json_api->query->country_slug : "World";
+		$hyp_id = isset($json_api->query->hyp_id) ? $json_api->query->hyp_id : NULL;
 		$title = "World";
 		$nodes = array();
 		$links = array();
@@ -107,13 +108,18 @@ class JSON_API_Hub_Controller {
 		
 		$posts = Evidence_Hub::add_terms(get_posts($args));
 		
+		$args = array( 'post_type' => 'hypothesis', // my custom post type
+					   'posts_per_page' => -1,
+					   'post_status' => 'publish',
+					   'orderby' => 'title',
+					   'order' => 'ASC',
+					   'fields' => 'ids');
+		if ($hyp_id) {
+			$args['p'] = $hyp_id;
+		}
+		
 		$polarities = get_terms('evidence_hub_polarity', 'hide_empty=0');
-		$hypotheses = get_posts(array('post_type' => 'hypothesis', // my custom post type
-									   'posts_per_page' => -1,
-									   'post_status' => 'publish',
-									   'orderby' => 'title',
-									   'order' => 'ASC',
-									   'fields' => 'ids'));
+		$hypotheses = get_posts($args);
 		$sectors = get_terms('evidence_hub_sector', 'hide_empty=0');
 		if ($country_slug != "World"){
 			foreach ($posts as $post){

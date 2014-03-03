@@ -62,8 +62,9 @@ if(!class_exists('Evidence_Hub'))
 			require_once(sprintf("%s/shortcodes/class-evidence_geomap.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-evidence_map.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-evidence_meta.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/class-evidence_summary.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/class-hypothesis_summary.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-hypothesis_archive.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/class-hypothesis_breakdown.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-hypothesis_bars.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-hypothesis_sankey.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-policy_geomap.php", EVIDENCE_HUB_PATH));
@@ -84,10 +85,19 @@ if(!class_exists('Evidence_Hub'))
 			
 			require_once(sprintf("%s/lib/wp-postratings/wp-postratings.php", EVIDENCE_HUB_PATH));
 
-			
 			// Initialize Facetious library
 			if (!class_exists('Facetious')){
 				require_once(sprintf("%s/lib/facetious/facetious.php", EVIDENCE_HUB_PATH));
+			}
+			
+			// Initialize Cookie Notice library
+			if (!class_exists('Cookie_Notice')){
+				require_once(sprintf("%s/lib/cookie-notice/cookie-notice.php", EVIDENCE_HUB_PATH));
+			}
+			
+			// Initialize Custom Headers and Footers
+			if ( !class_exists( 'CustomHeadersAndFooters' ) ) {
+				require_once(sprintf("%s/lib/custom-headers-and-footers/custom-headers-and-footers.php", EVIDENCE_HUB_PATH));
 			}
 			
 			// Initialize Settings pages in wp-admin
@@ -121,8 +131,44 @@ if(!class_exists('Evidence_Hub'))
 			// debug function
 			add_action( 'wp_head', array(&$this, 'show_current_query') );
 			add_filter( 'tiny_mce_before_init', array(&$this, 'idle_function_to_tinymce') );
+			
+			add_filter( 'single_template', array(&$this, 'get_custom_post_type_template') );
 
 		} // END public function __construct
+		
+		/**
+		* Debug function to check wp_query. Add ?q to url to use. 
+		
+		* @since 0.1.1
+		*
+		* @param object Existing template.
+		* @return object New template.
+		*/
+		function get_custom_post_type_template($single_template) {
+			global $post;
+			
+			if ($post->post_type == 'hypothesis') {
+				global $content_width;
+				$content_width = 960;
+				$single_template = get_stylesheet_directory().'/'.get_post_meta( 1525, '_wp_page_template', true );
+				add_filter( 'body_class', array(&$this, 'evidence_hub_body_class') );
+			}
+			return $single_template;
+		}
+		
+		/**
+		* Add full width to hypothesis. 
+		*
+		* @since 0.1.1
+		*
+		* @param array Existing class values.
+		* @return array Filtered class values.
+		*/
+		function evidence_hub_body_class( $classes ) {
+			$classes[] = 'full-width';
+			return $classes;
+		}
+		
 		
 		/**
     	* Debug function to check wp_query. Add ?q to url to use.
@@ -337,7 +383,6 @@ if(!class_exists('Evidence_Hub'))
 					}
 				}
 	        }
-
 			return $item;
 		}
 		
@@ -476,6 +521,7 @@ if(!class_exists('Evidence_Hub'))
 			wp_enqueue_script( 'evidence_hub_frontonlyscript' );
 			wp_register_style( 'evidence_hub_style', plugins_url( 'css/style.css' , EVIDENCE_HUB_REGISTER_FILE ) );
 			wp_enqueue_style( 'evidence_hub_style');
+			wp_enqueue_style( 'facetious_widget', EVIDENCE_HUB_URL.'/lib/facetious/facetious.css' );
 			if (version_compare( $wp_version, '3.8', '<' )){
 				wp_register_style('dashicons', EVIDENCE_HUB_URL.'/css/dashicons.css'	);
 				wp_enqueue_style('dashicons');
