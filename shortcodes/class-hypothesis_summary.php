@@ -33,15 +33,132 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 	*/
 	function add_to_page($content) {
 		if (in_array(get_post_type(), self::$post_types_with_shortcode)) {
-			if (is_single()) {
-				$included_page = get_page( 1525 ); 
-				$content = $included_page->post_content;
-			} 
+			if (get_option('hypothesis_template_page')){
+				if (is_single()) {
+					$included_page = get_page( get_option('hypothesis_template_page') ); 
+					
+					
+					$content = '<script type="text/javascript" src="//www.google.com/jsapi"></script>'
+							 . '<script type="text/javascript">'
+              				 . "		google.load('visualization', '1', {packages: ['corechart', 'geochart', 'table']});"
+            				 . '</script>'
+							 . $this->get_google_visualisation_data()
+                             .   the_excerpt() .$included_page->post_content;
+				} 
+			} else {
+				require_once(sprintf("%s/shortcodes/class-evidence_summary.php", EVIDENCE_HUB_PATH));
+				if (is_single()) {
+					$content = preg_replace('/(<span id=\"more-[0-9]*\"><\/span>)/', '$1'.do_shortcode('[evidence_summary]').'<h3>Hypothesis Details</h3>', $content, 1); 
+				} else {
+					$content .= do_shortcode('[evidence_summary display_sankey=0]');
+				}
+				if (function_exists('the_ratings')){
+					$content .= '<div id="postvoting">'.the_ratings('div', get_the_ID(), false).'</div>';
+				}
+			}
 		}
 		return $content;
 	}
 
 	function content(){
+	}
+	
+	function get_google_visualisation_data(){
+		ob_start();
+		extract($this->options);
+		$id = ($post_id) ? $post_id : get_the_ID();
+
+		// prep query to fetch all evidence post ids associated to hypothesis 
+		$args = array('post_type' => 'evidence', // my custom post type
+    				   'posts_per_page' => -1,
+					   'post_status' => 'publish',
+					   'fields' => 'ids',
+					   'meta_query' => array(
+									array(
+										'key' => 'evidence_hub_hypothesis_id',
+										'value' => $id,
+										'compare' => '='
+									)
+								)); // show all posts);
+		// add custom terms and fields
+		$evidence = Evidence_Hub::add_terms(get_posts($args));
+		// if evidence do something with it 
+		if (!empty($evidence)) :
+			$bal = array();
+			$country_bal = array();
+			$dt = array('cols'=>array(), 'rows'=>array());
+			$dt['cols'] = array(array('label' => 'Hyp', 'type'=> 'string'));
+			$dt['rows'] = array(array('c' => array(array('v'=>get_the_title($id)))));
+			$series = array();
+			$sectors = get_terms('evidence_hub_sector', 'hide_empty=0');
+			$polarities = get_terms('evidence_hub_polarity', 'hide_empty=0&order=DESC');
+			
+			foreach($evidence as $post){
+				if ($post['polarity_slug'] !== ""){
+						if (!is_array($country_bal[$post['country_slug']])){
+							$country_bal[$post['country_slug']] = array('country' => $post['country'],
+																		'country_code' => strtoupper($post['country_slug']), 
+																		'pos' => 0,
+																		'neg' => 0,
+																		'total' => 0);
+						}
+				}
+			}
+			
+			foreach ($polarities as $polarity){
+				$pposts = Evidence_Hub::filterOptions($evidence, 'polarity_slug', $polarity->slug);
+				$bal[$polarity->slug] = count($pposts);
+				foreach($pposts as $post){
+					$country_bal[$post['country_slug']][$polarity->slug] ++;
+					$country_bal[$post['country_slug']]['total'] ++;
+				}
+				foreach($sectors as $sector){	
+					$sposts = Evidence_Hub::filterOptions($pposts, 'sector_slug', $sector->slug);
+					$dt['cols'][] = array('label' => $sector->name, 'type'=> 'number');
+					$dt['rows'][0]['c'][] = array('v' => ($polarity->slug == 'pos') ? count($sposts) : -count($sposts), 'f' => (string)count($sposts) );
+					$series[] = array('color'=> json_decode($sector->description)->fill);
+				}
+				
+			}
+			
+			$dt_country = array('cols'=>array(), 'rows'=>array());
+			$dt_country['cols'] = array(array('label' => 'Country', 'type'=> 'string'),
+								array('label' => 'Country Code', 'type'=> 'string'),
+								array('label' => 'Negative', 'type'=> 'number'),
+								array('label' => 'Positive', 'type'=> 'number'),
+								array('label' => 'Total', 'type'=> 'number'));
+			foreach ($country_bal as $country){
+					$dt_country['rows'][]['c'] = array(array('v' => $country['country']),
+													   array('v' => $country['country_code']),
+													   array('v' => $country['neg']),
+													   array('v' => $country['pos']),
+													   array('v' => $country['total']));
+			}
+			
+			?>
+            <script type="text/javascript">
+				var dt_balance = <?php print_r(json_encode($dt)); ?>;
+				var dt_totals = <?php print_r(json_encode($bal)); ?>;
+				var dt_country = <?php print_r(json_encode($dt_country)); ?>;
+				var dt_series = <?php print_r(json_encode($series)); ?>;
+				var hyp_id = <?php print_r($id); ?>;
+				function drawVisualization() {
+  // Create and populate the data table.
+ 
+  var data = new google.visualization.DataTable(dt_country, 0.6);
+  var view = new google.visualization.DataView(data);
+  view.setColumns([1, 2, 3, 4]);
+
+  // Create and draw the visualization.
+  new google.visualization.IntensityMap(document.getElementById('visualization')).
+      draw(view, null);
+}
+            </script>
+            <?php
+        else: 
+			echo "<p>$no_evidence_message</p>"; //html
+		endif; // end of if !empty($evidence)
+		return ob_get_clean();
 	}
 
 } // end of class

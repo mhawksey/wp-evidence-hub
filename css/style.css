@@ -1,6 +1,5 @@
 /* CSS Document */
 #evidence-balance, #evidence-meta {
-background-color: #F8F8F8;
 padding: 10px;
 -moz-border-radius: 5px;
 -webkit-border-radius: 5px;
@@ -8,12 +7,73 @@ border-radius: 5px;
 overflow: hidden;
 font-face: "PT Sans", sans-serif;
 }
+#evidence-meta {
+background-color: #F8F8F8;
+}
+#evidence-balance{
+display:table;
+}
+.pos, .neg{
+font-size:85%;
+display: inline-table;
+}
+.neg{
+border-right:1px solid #ccc;
+}
 #evidence-balance h4, #evidence-meta h4 {
 margin:0;
 font-weight:bold;
 text-align:center;	
 }
-
+#evidence-balance ul li {
+list-style:none;	
+margin-right: 5px;
+margin-left: 0px;
+font-weight:bold;
+}
+#evidence-balance ul li li {	
+list-style:disc;
+margin-left:30px;
+font-weight:normal
+}
+#evidence-balance ul li ul {
+margin-top:0px;	
+}
+.evidence-summary{
+text-align:center;
+}
+.balance-holder{
+border-bottom: none!important;
+margin: 0!important;
+}
+.balance-holder td{
+border-top: none!important;
+padding: 0!important;
+}
+#country-vis-table td{
+padding: 3px;
+line-height:1.5em;	
+}
+#country-vis-table{
+line-height:1em;	
+}
+.evidence-scorecard{
+display: inline-block;	
+-webkit-border-radius: 4px;
+-moz-border-radius: 4px;
+border-radius: 4px;
+border:2px solid #A0A0A0;
+text-align:center;
+padding: 4px 6px;
+}
+#visualization {
+	display: inline-block;
+}
+.evidence-scorecard .count {
+font-size:200%;
+font-weight:600;
+line-height:1.2em;	
+}
 #evidence-meta {
 font-size:90%;	
 text-align:left;
@@ -36,6 +96,12 @@ text-align:left;
 }
 #evidence-map img{
 	box-shadow:none;	
+}
+.postrank-list{
+	font-size:80%
+}
+.postrank-list li{
+	clear:both;
 }
 #fullscreen-button { 
 	text-align: right;
@@ -942,10 +1008,10 @@ font-weight:bold;
 #wp_evidence_hub_policy_side_section  .eh_input label{
 	vertical-align: text-top;
 }
-#eh-admin .eh_input span { 
+#eh-admin .eh_input span.eh_input_field { 
 	width: 100%; display: table-cell; 
 }
-#eh-admin .eh_input input { 
+#eh-admin .eh_input input.eh { 
 	width: 100%; display: block; 
 }
 #eh-admin .eh_input input[type=checkbox] { 
@@ -1288,34 +1354,40 @@ padding: 0 10px 1px;
   background-color: #FCC;
 }
 
-/*  GRID OF THREE           ============================================================================= */
+/*  GRID OF THREE/TWO ============================================================================= */
 @media only screen and (min-width: 912px) {
   /* line 24, ../sass/test.scss */
-  .span_3_of_3 {
+  .section.group .span_3_of_3 {
     width: 100%;
   }
 
   /* line 28, ../sass/test.scss */
-  .span_2_of_3 {
+  .section.group .span_2_of_3 {
     width: 66.1%;
   }
 
   /* line 32, ../sass/test.scss */
-  .span_1_of_3 {
+  .section.group .span_1_of_3 {
     width: 32.2%;
+  }
+  .section.group .span_1_of_2 {
+    width: 49%;
   }
 
   /*  COLUMN SETUP  */
   /* line 37, ../sass/test.scss */
-  .col {
+  .section .col {
     display: block;
     float: left;
-    margin: 1% 0 1% 1.6%;
+    margin: 1% 0 1% 1.6% !important;
   }
 
   /* line 42, ../sass/test.scss */
-  .col:first-child {
-    margin-left: 0;
+  .section.group .col:first-child {
+    margin-left: 0 !important;
+  }
+  table.neg{
+	direction: rtl;
   }
 }
 

@@ -47,15 +47,18 @@ $user_option_count = 0;
             <span class="eh_input_field">
     <?php if ($option['type'] == 'text') : ?>
         <input
-            class="text <?php if (isset($option['lookup'])) { echo "lookup "; } ?>"
+            class="eh text <?php if (isset($option['lookup'])) { echo "lookup "; } ?>"
             type="text"
             name="<?php echo $name; ?>"
             id="<?php echo $name; ?>"
             value="<?php if (isset($_GET['url'])) { echo $_GET['url']; } else { echo htmlentities($value); } ?>"
         />
-    <?php elseif ($option['type'] == 'int') : ?>
+    <?php elseif ($option['type'] == 'html') : ?>
+     	<?php wp_editor( $value, $name, array('media_buttons' => false,
+											  'textarea_rows' => 10,)); ?>
+	<?php elseif ($option['type'] == 'int') : ?>
             <input
-                class="int"
+                class="eh int"
                 type="text"
                 name="<?php echo $name; ?>"
                 id="<?php echo $name; ?>"
@@ -63,7 +66,7 @@ $user_option_count = 0;
             />
     <?php elseif ($option['type'] == 'date') : ?>
             <input
-                class="date"
+                class="eh date"
                 type="text"
                 name="<?php echo $name; ?>"
                 id="<?php echo $name; ?>"
@@ -72,7 +75,7 @@ $user_option_count = 0;
             />
      <?php elseif ($option['type'] == 'project') : ?>
             <input
-                class="newtag form-input-tip"
+                class="eh newtag form-input-tip"
                 type="text"
                 autocomplete="off"
                 name="<?php echo $name; ?>_field"

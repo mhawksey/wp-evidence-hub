@@ -79,6 +79,13 @@ class Hypothesis_Template extends Evidence_Hub_CustomPostType {
 				'options' => get_terms('evidence_hub_rag', 'hide_empty=0&orderby=id'),
 				),
 			));
+		$this->options = array_merge($this->options, array(
+			'key_questions' => array(
+				'type' => 'html',
+				'save_as' => 'post_meta',
+				'position' => 'bottom',
+				),
+			));
 		Evidence_Hub::$post_type_fields[$this->post_type] = $this->options;
 	}
 		
@@ -88,6 +95,15 @@ class Hypothesis_Template extends Evidence_Hub_CustomPostType {
 	* @since 0.1.1
 	*/
 	public function add_meta_boxes() {
+		// Add this metabox to every selected post	
+		add_meta_box( 
+			sprintf('wp_evidence_hub_%s_section', $this->post_type),
+			sprintf('%s Key Questions', ucwords(str_replace("_", " ", $this->post_type))),
+			array(&$this, 'add_inner_meta_boxes'),
+			$this->post_type,
+			'normal',          // The part of the page where the edit screen section should be shown.
+            'high'
+		);
 		// Add this metabox to custom post wp-admin
 		add_meta_box( 
 			sprintf('wp_evidence_hub_%s_side_section', $this->post_type),

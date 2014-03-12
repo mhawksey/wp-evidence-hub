@@ -88,7 +88,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 		// add custom terms and fields
 		$evidence = Evidence_Hub::add_terms(get_posts($args));
 		
-		echo '<div id="evidence-balance">'; //html start evidence-balance
+		echo '<div class="section group" id="evidence-balance">'; //html start evidence-balance
 		// if evidence do something with it 
 		if (!empty($evidence) || !empty($no_evidence_message)) :
 			$nodes = array();
@@ -98,7 +98,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
             
 			 // out evidence balance
             $this->print_get_nodes_links($evidence, $nodes, $links, $bal, $post_id);
-			$this->print_evidence_balance($bal);
+			//$this->print_evidence_balance($bal);
 			$graph = array('nodes' => $nodes, 'links' => $links);
 			 // out evidence sankey
             if ($display_sankey) : 
@@ -110,36 +110,6 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 		echo '</div>'; //html end of evidence-balance
 		return ob_get_clean();
 	} // end of function content
-    
-	function print_evidence_balance($data){
-		?>
-        <table>
-            <tbody>
-                <tr>
-                    <td width="50%">We have found the following evidence against the hypothesis in these sectors:<?php $this->print_evidence_table($data['-ve']['sectors']);?></td>
-                    <td width="50%">We have found the following evidence for the hypothesis in these sectors:<?php $this->print_evidence_table($data['+ve']['sectors']);?></td>
-                </tr>
-            </tbody>
-        </table>
-	<?php		
-	}
-	
-	function print_evidence_table($pol){
-		?>
-        <table>
-          <thead>
-            <tr>
-              <td align="center"><?php echo implode('</td><td align="center">', array_keys($pol)); ?></td>
-            </tr>
-          </thead>
-            <tbody>
-            	<tr>
-                  <td align="center"><?php echo implode('</td><td align="center">', array_values($pol)); ?></td>
-            	</tr>
-            </tbody>
-        </table>
-	<?php		
-	}
 	
 	/**
 	* Output evidence balance table pos/neg and return sankey links.
@@ -159,13 +129,13 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 		$nodes[] = array("name" => $hposts_title, "url" => $base_link, "id" => $post_id, "type" => "hypothesis" );
 
         // get polarity and sector terms
-			$polarities = get_terms('evidence_hub_polarity', 'hide_empty=0');
+			$polarities = get_terms('evidence_hub_polarity', 'hide_empty=0&order=DESC');
 			$sectors = get_terms('evidence_hub_sector', 'hide_empty=0');
 			foreach ($polarities as $polarity){
 				$pposts = Evidence_Hub::filterOptions($evidence, 'polarity_slug', $polarity->slug);
-				//echo '<div class="evidence-box '.$polarity->slug.'">'; //html 
-				//echo '<h4>'.$polarity->name.' Evidence ('.count($pposts).')</h4>'; //html
-				//echo '<ul>'; //html
+				echo '<div class="col span_1_of_2 '.$polarity->slug.'">'; //html 
+				echo '<h4>'.$polarity->name.' Evidence ('.count($pposts).')</h4>'; //html
+				echo '<ul>'; //html
 				if (empty($nodeList[$polarity->name])){
 					$nodes[] = array("name" => $polarity->name, "url" => $base_link."evidence/polarity/".$polarity->slug, "id" => $polarity->slug, "type" => "polarity", "fill" => json_decode($polarity->description)->fill);
 					$nodeList[$polarity->name] = 1;
@@ -183,17 +153,17 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 					$bal[$polarity->name]['sectors'][$sector->name] = count($sposts);
 					if (count($sposts) > 0) {
 						$links[] = array("source" => $polarity->name, "target" => $sector->name, "value" => count($sposts));
-						//echo '<li>'.$sector->name; //html
-						//echo '<ul>'; //html 
-						//foreach($sposts as $epost){
-						//	echo '<li><a href="'.get_permalink($epost['ID']).'">'.get_the_title($epost['ID']).'</a></li>'; //html
-						//}
-						//echo '</ul>'; //html
-						//echo '</li>'; //html
+						echo '<li>'.$sector->name; //html
+						echo '<ul>'; //html 
+						foreach($sposts as $epost){
+							echo '<li><a href="'.get_permalink($epost['ID']).'">'.get_the_title($epost['ID']).'</a></li>'; //html
+						}
+						echo '</ul>'; //html
+						echo '</li>'; //html
 					}
 				}
-				//echo '</ul>'; // html
-				//echo '</div>'; //html end of div evidence-box
+				echo '</ul>'; // html
+				echo '</div>'; //html end of div evidence-box
 			}
         //return $links;
     }

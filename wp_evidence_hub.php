@@ -36,6 +36,7 @@ if(!class_exists('Evidence_Hub'))
 	class Evidence_Hub {
 		static $post_types = array(); // used in shortcode caching
 		static $post_type_fields = array(); // used to collect field types for frontend data entry 
+		static $options = array();
 		/**
 		* Construct the plugin object.
 		*
@@ -43,6 +44,10 @@ if(!class_exists('Evidence_Hub'))
 		*/
 		public function __construct() {			
 			add_action('init', array(&$this, 'init'));
+			Evidence_Hub::$options['cookies'] = get_option('display_cookie_notice');
+			Evidence_Hub::$options['custom_head_foot'] = get_option('display_custom_head_foot');
+			Evidence_Hub::$options['postrating'] = get_option('display_postrating');
+			Evidence_Hub::$options['facetious'] = get_option('display_facetious');
 			// Register custom post types
 			require_once(sprintf("%s/post-types/class-custom_post_type.php", EVIDENCE_HUB_PATH));
 			// Register custom post types - hypothesis
@@ -59,14 +64,23 @@ if(!class_exists('Evidence_Hub'))
 			
 			require_once(sprintf("%s/shortcodes/class-bookmarklet.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-evidence_entry.php", EVIDENCE_HUB_PATH));
+			
+			require_once(sprintf("%s/shortcodes/class-general_getpostmeta.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/class-general_getpoststagged.php", EVIDENCE_HUB_PATH));
+			
 			require_once(sprintf("%s/shortcodes/class-evidence_geomap.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-evidence_map.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-evidence_meta.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/class-hypothesis_summary.php", EVIDENCE_HUB_PATH));
+			
+			require_once(sprintf("%s/shortcodes/class-hypothesis_summary.php", EVIDENCE_HUB_PATH));			 
 			require_once(sprintf("%s/shortcodes/class-hypothesis_archive.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/class-hypothesis_balance.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-hypothesis_breakdown.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/class-hypothesis_geosummary.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-hypothesis_bars.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-hypothesis_sankey.php", EVIDENCE_HUB_PATH));
+			require_once(sprintf("%s/shortcodes/class-hypothesis_ratings.php", EVIDENCE_HUB_PATH));
+			
 			require_once(sprintf("%s/shortcodes/class-policy_geomap.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-policy_meta.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-project_meta.php", EVIDENCE_HUB_PATH));
@@ -83,21 +97,29 @@ if(!class_exists('Evidence_Hub'))
 			add_filter('json_api_controllers', array(&$this,'add_hub_controller'));
 			add_filter('json_api_hub_controller_path', array(&$this,'set_hub_controller_path'));
 			
-			require_once(sprintf("%s/lib/wp-postratings/wp-postratings.php", EVIDENCE_HUB_PATH));
+			if (Evidence_Hub::$options['postrating'] === 'yes'){
+				// ratings
+				require_once(sprintf("%s/lib/wp-postratings/wp-postratings.php", EVIDENCE_HUB_PATH));
+			}
 
-			// Initialize Facetious library
-			if (!class_exists('Facetious')){
-				require_once(sprintf("%s/lib/facetious/facetious.php", EVIDENCE_HUB_PATH));
+			if (Evidence_Hub::$options['facetious'] === 'yes'){
+				// Initialize Facetious library
+				if (!class_exists('Facetious')){
+					require_once(sprintf("%s/lib/facetious/facetious.php", EVIDENCE_HUB_PATH));
+				}
 			}
 			
-			// Initialize Cookie Notice library
-			if (!class_exists('Cookie_Notice')){
-				require_once(sprintf("%s/lib/cookie-notice/cookie-notice.php", EVIDENCE_HUB_PATH));
+			if (Evidence_Hub::$options['cookies'] === 'yes'){
+				// Initialize Cookie Notice library
+				if (!class_exists('Cookie_Notice')){
+					require_once(sprintf("%s/lib/cookie-notice/cookie-notice.php", EVIDENCE_HUB_PATH));
+				}
 			}
-			
-			// Initialize Custom Headers and Footers
-			if ( !class_exists( 'CustomHeadersAndFooters' ) ) {
-				require_once(sprintf("%s/lib/custom-headers-and-footers/custom-headers-and-footers.php", EVIDENCE_HUB_PATH));
+			if (Evidence_Hub::$options['custom_head_foot'] === 'yes'){
+				// Initialize Custom Headers and Footers
+				if ( !class_exists( 'CustomHeadersAndFooters' ) ) {
+					require_once(sprintf("%s/lib/custom-headers-and-footers/custom-headers-and-footers.php", EVIDENCE_HUB_PATH));
+				}
 			}
 			
 			// Initialize Settings pages in wp-admin
@@ -125,14 +147,19 @@ if(!class_exists('Evidence_Hub'))
 			// open ajax for match lookup
 			add_action('wp_ajax_evidence_match_lookup', array(&$this, 'ajax_evidence_match_lookup') );
 			
+			// post count functions
+			add_action( 'wp_head', array(&$this, 'eh_track_post_views') );
+			remove_action( 'wp_head', 'adjacent_posts_rel_link_wp_head', 10, 0);
+			
 			// prevent evidence contributors from seeing other image ulpoads
 			add_filter( 'ajax_query_attachments_args', array(&$this, 'user_restrict_media_library') );
 			
 			// debug function
 			add_action( 'wp_head', array(&$this, 'show_current_query') );
 			add_filter( 'tiny_mce_before_init', array(&$this, 'idle_function_to_tinymce') );
-			
-			add_filter( 'single_template', array(&$this, 'get_custom_post_type_template') );
+			if (get_option('hypothesis_template_page')){ 
+				add_filter( 'single_template', array(&$this, 'get_custom_post_type_template') );
+			}
 
 		} // END public function __construct
 		
@@ -150,7 +177,7 @@ if(!class_exists('Evidence_Hub'))
 			if ($post->post_type == 'hypothesis') {
 				global $content_width;
 				$content_width = 960;
-				$single_template = get_stylesheet_directory().'/'.get_post_meta( 1525, '_wp_page_template', true );
+				$single_template = get_stylesheet_directory().'/'.get_post_meta( get_option('hypothesis_template_page'), '_wp_page_template', true );
 				add_filter( 'body_class', array(&$this, 'evidence_hub_body_class') );
 			}
 			return $single_template;
@@ -484,6 +511,13 @@ if(!class_exists('Evidence_Hub'))
 								) );
 			wp_enqueue_script('pronamic_google_maps_admin_eh');
 			wp_enqueue_style('pronamic_google_maps_admin_eh');
+			
+			wp_dequeue_style('cookie-notice-admin');
+			wp_dequeue_style('cookie-notice-wplike');
+			
+			wp_enqueue_style('cookie-notice-admin_eh', EVIDENCE_HUB_URL.'/lib/cookie-notice/css/admin.css');
+			wp_enqueue_style('cookie-notice-wplike_eh', EVIDENCE_HUB_URL.'/lib/cookie-notice/css/wp-like-ui-theme.css');
+			
 			if (version_compare( $wp_version, '3.8', '<' )){
 				wp_register_style('dashicons', EVIDENCE_HUB_URL.'/css/dashicons.css'	);
 				wp_enqueue_style('dashicons');
@@ -522,6 +556,45 @@ if(!class_exists('Evidence_Hub'))
 			wp_register_style( 'evidence_hub_style', plugins_url( 'css/style.css' , EVIDENCE_HUB_REGISTER_FILE ) );
 			wp_enqueue_style( 'evidence_hub_style');
 			wp_enqueue_style( 'facetious_widget', EVIDENCE_HUB_URL.'/lib/facetious/facetious.css' );
+			
+			// handle cookie-notice enqueue (required because of symbolic links)
+			$this->cookie = array(
+					'name' => 'cookie_notice_accepted',
+					'value' => 'TRUE');
+
+			if(!(isset($_COOKIE[$this->cookie['name']]) && $_COOKIE[$this->cookie['name']] === $this->cookie['value'])){
+				wp_dequeue_script('cookie-notice-front');
+				wp_dequeue_style('cookie-notice-front');
+				
+				wp_enqueue_script('cookie-notice-front_eh', EVIDENCE_HUB_URL.'/lib/cookie-notice/js/front.js' ,array('jquery'));
+				$this->cookieoptions = get_option('cookie_notice_options');
+				$this->times = array(
+					'day' => array(__('1 day', 'cookie-notice'), 86400),
+					'week' => array(__('1 week', 'cookie-notice'), 604800),
+					'month' => array(__('1 month', 'cookie-notice'), 2592000),
+					'3months' => array(__('3 months', 'cookie-notice'), 7862400),
+					'6months' => array(__('6 months', 'cookie-notice'), 15811200),
+					'year' => array(__('1 year', 'cookie-notice'), 31536000),
+					'infinity' => array(__('infinity', 'cookie-notice'), 31337313373)
+				);
+
+				wp_localize_script(
+					'cookie-notice-front_eh',
+					'cnArgs',
+					array(
+						'ajaxurl' => admin_url('admin-ajax.php'),
+						'hideEffect' => $this->cookieoptions['hide_effect'],
+						'cookieName' => $this->cookie['name'],
+						'cookieValue' => $this->cookie['value'],
+						'cookieTime' => $this->times[$this->cookieoptions['time']][1],
+						'cookiePath' => (defined('COOKIEPATH') ? COOKIEPATH : ''),
+						'cookieDomain' => (defined('COOKIE_DOMAIN') ? COOKIE_DOMAIN : '')
+					)
+				);
+	
+				wp_enqueue_style('cookie-notice-front_eh', EVIDENCE_HUB_URL.'/lib/cookie-notice/css/front.css');
+			}
+			
 			if (version_compare( $wp_version, '3.8', '<' )){
 				wp_register_style('dashicons', EVIDENCE_HUB_URL.'/css/dashicons.css'	);
 				wp_enqueue_style('dashicons');
@@ -867,6 +940,36 @@ if(!class_exists('Evidence_Hub'))
 			echo sprintf($lab, $resp);		
 		}
 		
+		/**
+		* record page view counts
+		* taken from http://www.wpbeginner.com/wp-tutorials/how-to-track-popular-posts-by-views-in-wordpress-without-a-plugin/
+		*
+		* @since 0.1.1
+		* @params string $postID
+		*/
+		public function eh_set_post_views($postID) {
+			$count_key = 'post_views_count';
+			$count = get_post_meta($postID, $count_key, true);
+			if($count==''){
+				$count = 0;
+				delete_post_meta($postID, $count_key);
+				add_post_meta($postID, $count_key, '0');
+			}else{
+				$count++;
+				update_post_meta($postID, $count_key, $count);
+			}
+		}
+		
+		
+		function eh_track_post_views($post_id) {
+			if ( !is_single() ) return;
+			if ( empty ( $post_id) ) {
+				global $post;
+				$post_id = $post->ID;    
+			}
+			$this->eh_set_post_views($post_id);
+		}
+		
 		// http://wordpress.org/support/topic/plugin-pronamic-google-maps-display-pronamic-meta-box-in-a-front-end-page#post-3124660
 		////////   PRONAMIC GOOGLE MAPS IN FRONT END   //////////
 		/**
@@ -928,6 +1031,7 @@ if(!class_exists('Evidence_Hub'))
             </div>
 			<?php
 		}
+		
 		/**
 		* Activate the plugin
 		*

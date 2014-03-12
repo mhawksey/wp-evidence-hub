@@ -31,6 +31,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Breakdown extends Evidence_Hub_Shortcode
 		ob_start();
 		extract($this->options);
 		$id = ($post_id) ? $post_id : get_the_ID();
+		$polarity_slug = ($polarity === '+ve') ? 'pos' : 'neg';
 
 		// prep query to fetch all evidence post ids associated to hypothesis 
 		$args = array('post_type' => 'evidence', // my custom post type
@@ -51,13 +52,17 @@ class Evidence_Hub_Shortcode_Hypothesis_Breakdown extends Evidence_Hub_Shortcode
 		if (!empty($evidence)) :
 			$bal = array();
 			$sectors = get_terms('evidence_hub_sector', 'hide_empty=0');
-			$pposts = Evidence_Hub::filterOptions($evidence, 'polarity', $polarity);
+			$pposts = Evidence_Hub::filterOptions($evidence, 'polarity_slug', $polarity);
 			foreach($sectors as $sector){	
 				$sposts = Evidence_Hub::filterOptions($pposts, 'sector_slug', $sector->slug);
 				$bal[$sector->name] = count($sposts);
 			}
+			/*
+			if ($polarity == '-ve'){
+				$bal = array_reverse($bal);
+			}*/
 			?>
-			<table class="evidence-breakdown">
+			<table class="evidence-breakdown <?php echo $polarity_slug; ?>">
 			  <thead>
 				<tr>
 				  <td><?php echo implode('</td><td>', array_keys($bal)); ?></td>
@@ -76,75 +81,5 @@ class Evidence_Hub_Shortcode_Hypothesis_Breakdown extends Evidence_Hub_Shortcode
 		echo '</div>'; //html end of evidence-balance
 		return ob_get_clean();
 	} // end of function content
-    
-	function print_evidence_balance($data){
-		?>
-        <div class="evidence-box">
-        	<div class="left">
-            	We have found the following evidence against the hypothesis in these sectors:<?php $this->print_evidence_table($data['-ve']['sectors']);?>
-            </div>
-            <div class="right">
-				We have found the following evidence for the hypothesis in these sectors:<?php $this->print_evidence_table($data['+ve']['sectors']);?>
-            </div>
-         </div>
-	<?php		
-	}
-	
-	function print_evidence_table($pol){
-		?>
-        <table class="evidence-breakdown">
-          <thead>
-            <tr>
-              <td><?php echo implode('</td><td>', array_keys($pol)); ?></td>
-            </tr>
-          </thead>
-            <tbody>
-            	<tr>
-                  <td><?php echo implode('</td><td>', array_values($pol)); ?></td>
-            	</tr>
-            </tbody>
-        </table>
-	<?php		
-	}
-	
-	/**
-	* Output evidence balance table pos/neg and return sankey links.
-	*
-	* @since 0.1.1
-	* @param array $evidence posts.
-	* @param array &$nodes used in sankey generation.
-	* @param string $post_id of hypothesis
-	* @return array Get array of links.
-	*/
-    function print_get_nodes_links($evidence, &$nodes, &$links, &$bal, $post_id) {			
-			$sectors = get_terms('evidence_hub_sector', 'hide_empty=0');
-			$pposts = Evidence_Hub::filterOptions($evidence, 'polarity_slug', $polarity->slug);
-			$bal[$polarity->name] = array("total" => count($pposts), "sectors" => array());
-			foreach($sectors as $sector){	
-				$sposts = Evidence_Hub::filterOptions($pposts, 'sector_slug', $sector->slug);
-				$bal[$polarity->name]['sectors'][$sector->name] = count($sposts);
-			}
-    }
-
-
-	/**
-	* Output sankey script.
-	*
-	* @since 0.1.1
-	* @param array $graph of sankey data.
-	* @return NULL.
-	*/
-    function print_sankey_javascript($graph) { ?>
-		<script>
-        var graph = <?php print_r(json_encode($graph)); ?>;
-        var margin = {top: 20, right: 25, bottom: 20, left: 1},
-            width = document.getElementById("content").offsetWidth - margin.left - margin.right,
-            height = 400 - margin.top - margin.bottom;
-        </script>
-        <link rel="stylesheet" type="text/css" href="<?php echo plugins_url( 'lib/map/css/styles.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
-        <script src="<?php echo plugins_url( 'js/sankey.js' , EVIDENCE_HUB_REGISTER_FILE )?>"></script>
-        <script src="<?php echo plugins_url( 'js/sankey-control.js' , EVIDENCE_HUB_REGISTER_FILE )?>"></script>
-    <?php 
-    }
 
 } // end of class

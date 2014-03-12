@@ -34,10 +34,15 @@ class Evidence_Hub_Shortcode_Hypothesis_Sankey extends Evidence_Hub_Shortcode {
 	function content() {
 		ob_start();
 		extract($this->options); 
+		$hyp_id = "";
 		$id = ($post_id) ? $post_id : get_the_ID();
+		if (get_post_type($id) === 'hypothesis'){
+			$hyp_id = $id;	
+		}
 		?>
 		<script src="<?php echo plugins_url( 'js/sankey.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
         <script src="<?php echo plugins_url( 'js/sankey-main.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
+        <div>Evidence flow - <span id="sankey-display-title">World</span></div>
         <div id="sankey-display"></div>
         <script> 
 			function getPath(url) {
@@ -58,10 +63,12 @@ class Evidence_Hub_Shortcode_Hypothesis_Sankey extends Evidence_Hub_Shortcode {
 			var svg = d3.select('#sankey-display').append('svg');
 			san = svg
 				.attr("height" , SANKEY_HEIGHT)
+				.attr("preserveAspectRatio", "xMinYMin meet")
+		        .attr("viewBox", "0 0 " + SANKEY_WIDTH + " " + SANKEY_HEIGHT )
 				.append('g')
 				.attr('id', 'sandisplay');
 			
-			renderSankey('<?php echo $slug ?>', <?php echo $id; ?>);
+			renderSankey('<?php echo $slug ?>', '<?php echo $hyp_id; ?>');
 		</script>
         <?php
 		return ob_get_clean();
