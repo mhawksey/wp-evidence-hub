@@ -13,7 +13,7 @@
    id="svg3059"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="marker-template.svg">
+   sodipodi:docname="marker-template.eps">
   <metadata
      id="metadata3131">
     <rdf:RDF>
@@ -35,18 +35,18 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1680"
-     inkscape:window-height="1028"
+     inkscape:window-width="1366"
+     inkscape:window-height="716"
      id="namedview3129"
      showgrid="false"
      inkscape:snap-global="false"
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:zoom="4.4211812"
-     inkscape:cx="387.15124"
-     inkscape:cy="613.38531"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
+     inkscape:cx="475.05331"
+     inkscape:cy="631.48002"
+     inkscape:window-x="130"
+     inkscape:window-y="1042"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg3059">
     <sodipodi:guide
@@ -56,6 +56,19 @@
   </sodipodi:namedview>
   <defs
      id="defs3061">
+    <linearGradient
+       id="linearGradient4219">
+      <stop
+         id="stop4221"
+         stop-color="#2e6c97"
+         offset="0"
+         style="stop-color:#8c8c8c;stop-opacity:1;" />
+      <stop
+         id="stop4224"
+         stop-color="#3883b7"
+         offset="1"
+         style="stop-color:#dddddd;stop-opacity:1;" />
+    </linearGradient>
     <linearGradient
        id="b">
       <stop
@@ -640,6 +653,103 @@
          id="stop3066-8-3-60"
          style="stop-color:#7b480b;stop-opacity:1;" />
     </linearGradient>
+    <linearGradient
+       xlink:href="#linearGradient4219"
+       id="c-1-2-4-1"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(65.716515,-76.725598)"
+       x1="445.30099"
+       y1="541.28601"
+       x2="445.30099"
+       y2="503.72" />
+    <linearGradient
+       id="a-7-2-7">
+      <stop
+         offset="0"
+         stop-color="#126fc6"
+         id="stop3069-4-6-4"
+         style="stop-color:#fdac4d;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#4c9cd1"
+         id="stop3071-0-4-0"
+         style="stop-color:#fd9417;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#b-4-7-8"
+       id="d-9-0-3-94"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(157.29651,-76.726598)"
+       x1="351.74799"
+       y1="522.77399"
+       x2="351.74799"
+       y2="503.72101" />
+    <linearGradient
+       id="b-4-7-8">
+      <stop
+         offset="0"
+         stop-color="#2e6c97"
+         id="stop3064-8-0-8"
+         style="stop-color:#500000;stop-opacity:0;" />
+      <stop
+         offset="1"
+         stop-color="#3883b7"
+         id="stop3066-8-3-2"
+         style="stop-color:#7b480b;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#linearGradient3298"
+       id="c-1-2-45"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(65.942695,-121.96239)"
+       x1="445.30099"
+       y1="541.28601"
+       x2="445.30099"
+       y2="503.72" />
+    <linearGradient
+       id="linearGradient3298">
+      <stop
+         offset="0"
+         stop-color="#126fc6"
+         id="stop3300"
+         style="stop-color:#fdac4d;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#4c9cd1"
+         id="stop3302"
+         style="stop-color:#fd9417;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#b-4-7-8"
+       id="d-9-0-51"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(157.52269,-121.96339)"
+       x1="351.74799"
+       y1="522.77399"
+       x2="351.74799"
+       y2="503.72101" />
+    <linearGradient
+       id="linearGradient3305">
+      <stop
+         offset="0"
+         stop-color="#2e6c97"
+         id="stop3307"
+         style="stop-color:#8b510c;stop-opacity:1;" />
+      <stop
+         offset="1"
+         stop-color="#3883b7"
+         id="stop3309"
+         style="stop-color:#7b480b;stop-opacity:1;" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4219"
+       id="linearGradient4217"
+       x1="499.6055"
+       y1="445.7804"
+       x2="522.51849"
+       y2="445.7804"
+       gradientUnits="userSpaceOnUse" />
   </defs>
   <image
      y="502.237"
@@ -986,4 +1096,56 @@
      inkscape:export-xdpi="90"
      inkscape:export-ydpi="90"
      sodipodi:nodetypes="sscccccsscscsc" />
+  <rect
+     style="fill:#ff9206"
+     y="385.89963"
+     x="505.06772"
+     height="14.5"
+     width="12.625"
+     id="rect3101-2-71"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-pos.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:url(#c-1-2-45);stroke:url(#d-9-0-51);stroke-width:1.10000002000000000;stroke-linecap:round;fill-opacity:1.0"
+     inkscape:connector-curvature="0"
+     d="m 511.3327,381.93661 c -6.573,0 -12.044,5.691 -12.044,11.866 0,2.778 1.564,6.308 2.694,8.746 l 9.306,17.872 9.262,-17.872 c 1.13,-2.438 2.738,-5.791 2.738,-8.746 0,-6.175 -5.383,-11.866 -11.956,-11.866 z m 0,7.155 c 2.584,0.017 4.679,2.122 4.679,4.71 0,2.588 -2.095,4.663 -4.679,4.679 -2.584,-0.017 -4.679,-2.09 -4.679,-4.679 0,-2.588 2.095,-4.693 4.679,-4.71 z"
+     id="path3103-4-15"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-pos.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:none;stroke:#ffffff;stroke-width:1.10000002;stroke-linecap:round;stroke-opacity:0.122"
+     inkscape:connector-curvature="0"
+     d="m 511.3197,383.04361 c -5.944,0 -10.938,5.219 -10.938,10.75 0,2.359 1.443,5.832 2.563,8.25 l 0.031,0.031 8.313,15.969 8.25,-15.969 0.031,-0.031 c 1.135,-2.448 2.625,-5.706 2.625,-8.25 0,-5.538 -4.931,-10.75 -10.875,-10.75 z m 0,4.969 c 3.168,0.021 5.781,2.601 5.781,5.781 0,3.18 -2.613,5.761 -5.781,5.781 -3.168,-0.02 -5.75,-2.61 -5.75,-5.781 0,-3.172 2.582,-5.761 5.75,-5.781 z"
+     id="path3127-5-2"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-pos.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <rect
+     style="opacity:0.59999999999999998;fill:#555555;fill-opacity:1"
+     y="431.13641"
+     x="504.84155"
+     height="14.5"
+     width="12.625"
+     id="rect3101-2-7-7"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-neg.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:url(#c-1-2-4-1);fill-opacity:1.0;stroke:url(#d-9-0-3-94);stroke-width:1.10000002000000000;stroke-linecap:round"
+     inkscape:connector-curvature="0"
+     d="m 511.10651,427.1734 c -6.573,0 -12.044,5.691 -12.044,11.866 0,2.778 1.564,6.308 2.694,8.746 l 9.306,17.872 9.262,-17.872 c 1.13,-2.438 2.738,-5.791 2.738,-8.746 0,-6.175 -5.383,-11.866 -11.956,-11.866 z m 0,7.155 c 2.584,0.017 4.679,2.122 4.679,4.71 0,2.588 -2.095,4.663 -4.679,4.679 -2.584,-0.017 -4.679,-2.09 -4.679,-4.679 0,-2.588 2.095,-4.693 4.679,-4.71 z"
+     id="path3103-4-5-6"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-neg.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
+  <path
+     style="fill:url(#linearGradient4217);stroke:#ffffff;stroke-width:1.10000002000000000;stroke-linecap:round;stroke-opacity:0.12200000000000000;fill-opacity:1.0"
+     inkscape:connector-curvature="0"
+     d="m 511.09351,428.2804 c -5.944,0 -10.938,5.219 -10.938,10.75 0,2.359 1.443,5.832 2.563,8.25 l 0.031,0.031 8.313,15.969 8.25,-15.969 0.031,-0.031 c 1.135,-2.448 2.625,-5.706 2.625,-8.25 0,-5.538 -4.931,-10.75 -10.875,-10.75 z m 0,4.969 c 3.168,0.021 5.781,2.601 5.781,5.781 0,3.18 -2.613,5.761 -5.781,5.781 -3.168,-0.02 -5.75,-2.61 -5.75,-5.781 0,-3.172 2.582,-5.761 5.75,-5.781 z"
+     id="path3127-5-0-1"
+     inkscape:export-filename="C:\Users\MartinHa\Documents\hawksey3\sites\wp-content\plugins\wp-evidence-hub\images\icons\marker-evidence-neg.png"
+     inkscape:export-xdpi="90"
+     inkscape:export-ydpi="90" />
 </svg>

@@ -29,6 +29,13 @@ class Evidence_Hub_Shortcode_Hypothesis_GeoSummary extends Evidence_Hub_Shortcod
 		ob_start();
 		extract($this->options); ?>
         <div id="country-vis-map" style="width:100%"></div>
+        <div id="country-vis-select"><label for="change-map">Filter map:</label>
+        							 <select id="change-map">
+        								<option value=4>Total</option>
+                                        <option value=3>+ve</option>
+                                        <option value=2>-ve</option>
+                                     </select>
+        </div>
         <div id="country-vis-table" style="width:100%"></div>
         
         <script type="text/javascript">
@@ -36,25 +43,44 @@ class Evidence_Hub_Shortcode_Hypothesis_GeoSummary extends Evidence_Hub_Shortcod
             $(window).resize(function(){
                 drawCountryVisualization();
             });
+			$('#change-map').on('change', function(){
+				console.log($(this).val());
+				view.setColumns([0, parseInt($(this).val())]);
+				var setViewOptions = viewOptions[$(this).val()] || {};
+				setViewOptions.datalessRegionColor = '#FFFFFF';
+				
+				countryMap.draw(view, setViewOptions);
+				
+				tableOptions.sortColumn = $(this).val()-1;
+				countryTable.draw(tableView, tableOptions);
+			});
         });
-		var countryTable, countryMap, data;
+		
+		var countryTable, countryMap, data, view, tableView;
+		var viewOptions = {};
+		viewOptions[2] = {colorAxis: {colors: ['white', '#AAA']}};
+		viewOptions[3] = {colorAxis: {colors: ['white', '#FF9206']}};
+		viewOptions[4] = {colorAxis: {colors: ['white', '#0E66A4']}};
+		
+		var tableOptions = {'page': 'enable',
+			  			  'pageSize': 5,
+			  			  'sortColumn': 3,
+						  'sortAscending': false};
+		
         function drawCountryVisualization() {
             data = new google.visualization.DataTable(dt_country, 0.6);
 			
-			var view = new google.visualization.DataView(data);
+			view = new google.visualization.DataView(data);
 			view.setColumns([0, 4]);
 			
 			// Create and draw the visualization.
-			var countryMap = new google.visualization.GeoChart(document.getElementById('country-vis-map'));
-			countryMap.draw(view, null);
+			countryMap = new google.visualization.GeoChart(document.getElementById('country-vis-map'));
+			countryMap.draw(view, {datalessRegionColor: '#FFFFFF', colorAxis: viewOptions[4].colorAxis});
 			
-			var tableView = new google.visualization.DataView(data);
+			tableView = new google.visualization.DataView(data);
 			tableView.setColumns([0, 2, 3, 4]);
 			countryTable = new google.visualization.Table(document.getElementById('country-vis-table'));
-			countryTable.draw(tableView, {'page': 'enable',
-			  			  'pageSize': 5,
-			  			  'sortColumn': 3,
-						  'sortAscending': false});
+			countryTable.draw(tableView, tableOptions);
 						  
 			if(typeof renderSankey == 'function') {
 				google.visualization.events.addListener(countryTable , 'select', function(){
@@ -81,7 +107,8 @@ class Evidence_Hub_Shortcode_Hypothesis_GeoSummary extends Evidence_Hub_Shortcod
 				document.getElementById('sankey-display-title').innerHTML = 'World';
 			}
 		}
-		google.setOnLoadCallback(drawCountryVisualization);  
+		google.setOnLoadCallback(drawCountryVisualization); 
+		 
 		function getSum(data, column) {
 			var total = 0;
 			for (i = 0; i < data.getNumberOfRows(); i++)

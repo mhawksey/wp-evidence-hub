@@ -87,7 +87,7 @@ class Policy_Template extends Evidence_Hub_CustomPostType {
 				'position' => 'side',
 				'quick_edit' => true,
 				'label' => 'Locale',
-				'options' => get_terms('evidence_hub_locale', 'hide_empty=0&orderby=title'),
+				'options' => get_terms('evidence_hub_locale', 'hide_empty=0&orderby=id'),
 				)
 		 ));
 		$this->options = array_merge($this->options, array(

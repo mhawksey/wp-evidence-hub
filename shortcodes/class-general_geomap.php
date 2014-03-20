@@ -1,9 +1,10 @@
 <?php
 /**
- * Construct a detailed map of evidence using LeafletJS
+ * Construct a detailed map using LeafletJS
  * 
- * Shortcode: [evidence_geomap]
- * Options: do_cache - boolean to disable cache option default: true
+ * Shortcode: [geomap]
+ * Options: type - string comma list of types to map
+ *          do_cache - boolean to disable cache option default: true
  *
  * Based on shortcode class construction used in Conferencer http://wordpress.org/plugins/conferencer/.
  *
@@ -12,14 +13,15 @@
  * @package Evidence_Hub
  * @subpackage Evidence_Hub_Shortcode
  */
-new Evidence_Hub_Shortcode_Evidence_GeoMap();
+new Evidence_Hub_Shortcode_GeoMap();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
-class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
-	var $shortcode = 'evidence_geomap';
+class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
+	var $shortcode = 'geomap';
 	var $defaults = array(
 		'title' => false,
-		'no_evidence_message' => "There is no evidence map yet to display",
+		'no_evidence_message' => "There is no map yet to display",
 		'title_tag' => 'h3',
+		'type' => 'evidence'
 	);
 
 	static $post_types_with_shortcode = array();
@@ -36,17 +38,13 @@ class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
 		$errors = array();	
 		$sub_options = array();
 		$hypothesis_options = array();
+		$types = explode(',', $this->options['type']);
 		
-		// get all the hypothesis ids													
-		$hypotheses = get_posts( array(	'post_type' => 'hypothesis', // my custom post type
-										'posts_per_page' => -1,
-										'post_status' => 'publish',
-										'orderby' => 'title',
-										'order' => 'ASC',
-										'fields' => 'ids'));
-		foreach($hypotheses as $hypothesis){
-			$hypothesis_options[$hypothesis] = get_the_title($hypothesis);
+		$types_array = array();
+		foreach ($types as $i => $value) {
+			$types_array[strtolower($value)] = ucwords($value);
 		}
+
 		
 		// build dropdown filters for map 
 		// type
@@ -55,29 +53,52 @@ class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
 				'type' => 'select',
 				'save_as' => 'post_meta',
 				'label' => "Type",
-				'options' => array('evidence' => 'Evidence',
-								   'project' => 'Project'),
+				'options' => $types_array,
 				),
 		));
-		// hypothesis
-		$sub_options = array_merge($sub_options, array(
-			'hypothesis_id' => array(
-				'type' => 'select',
-				'save_as' => 'post_meta',
-				'label' => "Hypothesis",
-				'options' => $hypothesis_options,
-				),
-		));
-		// polarity
-		$sub_options = array_merge($sub_options, array(
-			'polarity' => array(
-				'type' => 'select',
-				'save_as' => 'term',
-				'label' => "Polarity",
-				'options' => get_terms('evidence_hub_polarity', 'hide_empty=0&orderby=id'),
-				),
-		));
-		// sector
+		
+		if (in_array('evidence', $types)){
+			// get all the hypothesis ids													
+			$hypotheses = get_posts( array(	'post_type' => 'hypothesis', // my custom post type
+											'posts_per_page' => -1,
+											'post_status' => 'publish',
+											'orderby' => 'title',
+											'order' => 'ASC',
+											'fields' => 'ids'));
+			foreach($hypotheses as $hypothesis){
+				$hypothesis_options[$hypothesis] = get_the_title($hypothesis);
+			}
+			// hypothesis
+			$sub_options = array_merge($sub_options, array(
+				'hypothesis_id' => array(
+					'type' => 'select',
+					'save_as' => 'post_meta',
+					'label' => "Hypothesis",
+					'options' => $hypothesis_options,
+					),
+			));
+			// polarity
+			$sub_options = array_merge($sub_options, array(
+				'polarity' => array(
+					'type' => 'select',
+					'save_as' => 'term',
+					'label' => "Polarity",
+					'options' => get_terms('evidence_hub_polarity', 'hide_empty=0&orderby=id'),
+					),
+			));
+		}
+		
+		if (in_array('policy', $types)){
+			$sub_options = array_merge($sub_options, array(
+				'locale' => array(
+					'type' => 'select',
+					'save_as' => 'term',
+					'label' => 'Locale',
+					'options' => get_terms('evidence_hub_locale', 'hide_empty=0&orderby=id'),
+					)
+			 ));
+		}
+	
 		$sub_options = array_merge($sub_options, array(
 			'sector' => array(
 				'type' => 'select',
@@ -97,7 +118,7 @@ class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
          <div id="fullscreen-button"><a href="#" id="evidence-map-fullscreen">Full Screen</a></div>
          <script type="application/javascript">
 		 /* <![CDATA[ */	
-		 	var json = <?php print_r(file_get_contents(site_url().'/'.get_option('json_api_base', 'api').'/hub/get_geojson/?count=-1&type=evidence,project')); ?>;	
+		 	var json = <?php print_r(file_get_contents(site_url().'/'.get_option('json_api_base', 'api').'/hub/get_geojson/?count=-1&type='.strtolower($type))); ?>;	
 			var hubPoints = json['geoJSON'] || null;
 			var pluginurl = '<?php echo EVIDENCE_HUB_URL; ?>';
 			jQuery('#map').css('height', parseInt(jQuery('#evidence-map').width()*9/16));	
@@ -133,6 +154,7 @@ class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
 			map.invalidateSize();
 		}
 		jQuery("#eh-form").appendTo(".my-custom-control");
+		jQuery('#evidence-map fieldset').show();
 		</script>
 		<?php
 		// <<html dump	
