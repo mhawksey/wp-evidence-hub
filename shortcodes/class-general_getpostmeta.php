@@ -31,11 +31,17 @@ class Evidence_Hub_Shortcode_GetPostMeta extends Evidence_Hub_Shortcode {
 	function content() {
 		ob_start();
 		extract($this->options); 
+		$output;
 		if ($meta_key){
 			$id = ($post_id) ? $post_id : get_the_ID();
-			echo get_post_meta( $id, 'evidence_hub_'.$meta_key, $single );
+			$output = get_post_meta( $id, 'evidence_hub_'.$meta_key, $single );
+			if ($output){
+				echo $output;
+			} else {
+				echo 'No key questions have been identified yet';	
+			}
 		} else {
-			echo '<p>No key provided in $shortcode';	
+			echo '<p>No key provided in $shortcode</p>';	
 		}
 		return ob_get_clean();
 	} // end of function content

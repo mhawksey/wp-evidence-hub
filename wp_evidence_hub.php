@@ -164,7 +164,7 @@ if(!class_exists('Evidence_Hub'))
 		} // END public function __construct
 		
 		/**
-		* Debug function to check wp_query. Add ?q to url to use. 
+		* Custom page tempalte 
 		
 		* @since 0.1.1
 		*
@@ -174,7 +174,7 @@ if(!class_exists('Evidence_Hub'))
 		function get_custom_post_type_template($single_template) {
 			global $post;
 			
-			if ($post->post_type == 'hypothesis') {
+			if ($post->post_type == 'hypothesis' && get_option('hypothesis_template_page') !="") {
 				global $content_width;
 				$content_width = 960;
 				$single_template = get_stylesheet_directory().'/'.get_post_meta( get_option('hypothesis_template_page'), '_wp_page_template', true );

@@ -66,7 +66,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 	function get_google_visualisation_data(){
 		ob_start();
 		extract($this->options);
-		$id = ($post_id) ? $post_id : get_the_ID();
+		$id = get_the_ID();
 
 		// prep query to fetch all evidence post ids associated to hypothesis 
 		$args = array('post_type' => 'evidence', // my custom post type
@@ -95,7 +95,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 			
 			foreach($evidence as $post){
 				if ($post['polarity_slug'] !== ""){
-						if (!is_array($country_bal[$post['country_slug']])){
+						if (!isset($country_bal[$post['country_slug']])){
 							$country_bal[$post['country_slug']] = array('country' => $post['country'],
 																		'country_code' => strtoupper($post['country_slug']), 
 																		'pos' => 0,
@@ -109,8 +109,10 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 				$pposts = Evidence_Hub::filterOptions($evidence, 'polarity_slug', $polarity->slug);
 				$bal[$polarity->slug] = count($pposts);
 				foreach($pposts as $post){
-					$country_bal[$post['country_slug']][$polarity->slug] ++;
-					$country_bal[$post['country_slug']]['total'] ++;
+					//if (isset($country_bal[$post['country_slug']])){
+						$country_bal[$post['country_slug']][$polarity->slug] ++;
+						$country_bal[$post['country_slug']]['total'] ++;
+					//}
 				}
 				foreach($sectors as $sector){	
 					$sposts = Evidence_Hub::filterOptions($pposts, 'sector_slug', $sector->slug);

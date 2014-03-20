@@ -35,7 +35,8 @@ class Evidence_Hub_Shortcode_EvidenceRatings extends Evidence_Hub_Shortcode {
 	function content() {
 		ob_start();
 		extract($this->options); 
-		$id = ($post_id) ? $post_id : get_the_ID();
+		$id = get_the_ID();
+		$args = array();
 		if ($polarity){
 			$args = array('tax_query' => array(
 											array(
@@ -66,8 +67,27 @@ class Evidence_Hub_Shortcode_EvidenceRatings extends Evidence_Hub_Shortcode {
 		if ($add_args){
 			$args = array_merge($args, $add_args);	
 		}
-		$the_query = new WP_Query($args);
+		//$the_query = new WP_Query($args);
 		// The Loop
+		$myposts = get_posts( $args );
+		if ($myposts){
+			echo '<ul class="postrank-list">';
+			foreach ( $myposts as $post ) :
+				$rating_block = "";
+				if ($rating_type =='post_views_count'){
+					$rating_block = ' - <span id="postviews">'.$this->eh_get_post_views($post).'</span>';
+				} else {
+					$rating_block = '<span id="postvoting">'.the_ratings('div', $post, false).'</span>';
+				}
+				echo '<li><a href="'.get_permalink($post).'">' . get_the_title($post) . '</a> '.$rating_block.'</li>';
+			endforeach;
+			echo '</ul>';
+		} else {
+			echo '<em class="postrank-list">No posts found</em>';
+		}
+		
+		
+		/*
 		if ( $the_query->have_posts() ) {
 				echo '<ul class="postrank-list">';
 			while ( $the_query->have_posts() ) {
@@ -83,7 +103,7 @@ class Evidence_Hub_Shortcode_EvidenceRatings extends Evidence_Hub_Shortcode {
 				echo '</ul>';
 		} else {
 			echo '<em class="postrank-list">No posts found</em>';
-		}
+		}*/
 		/* Restore original Post Data */
 		wp_reset_postdata();	
 	}
