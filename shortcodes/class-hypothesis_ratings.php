@@ -18,8 +18,7 @@ new Evidence_Hub_Shortcode_EvidenceRatings();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_EvidenceRatings extends Evidence_Hub_Shortcode {
 	var $shortcode = 'evidence_ratings';
-	public $defaults = array('post_id' => false,
-							 'meta_key' => false,
+	public $defaults = array('meta_key' => false,
 							 'post_type' => 'evidence',
 							 'rating_type' => 'ratings_score',
 							 'min_votes' => 0,
@@ -35,7 +34,7 @@ class Evidence_Hub_Shortcode_EvidenceRatings extends Evidence_Hub_Shortcode {
 	function content() {
 		ob_start();
 		extract($this->options); 
-		$id = get_the_ID();
+		$id = ($post_id) ? $post_id : get_the_ID();
 		$args = array();
 		if ($polarity){
 			$args = array('tax_query' => array(
@@ -85,25 +84,6 @@ class Evidence_Hub_Shortcode_EvidenceRatings extends Evidence_Hub_Shortcode {
 		} else {
 			echo '<em class="postrank-list">No posts found</em>';
 		}
-		
-		
-		/*
-		if ( $the_query->have_posts() ) {
-				echo '<ul class="postrank-list">';
-			while ( $the_query->have_posts() ) {
-				$the_query->the_post();
-				$rating_block = "";
-				if ($rating_type =='post_views_count'){
-					$rating_block = ' - <span id="postviews">'.$this->eh_get_post_views(get_the_ID()).'</span>';
-				} else {
-					$rating_block = '<span id="postvoting">'.the_ratings('div', get_the_ID(), false).'</span>';
-				}
-				echo '<li><a href="'.get_permalink().'">' . get_the_title() . '</a> '.$rating_block.'</li>';
-			}
-				echo '</ul>';
-		} else {
-			echo '<em class="postrank-list">No posts found</em>';
-		}*/
 		/* Restore original Post Data */
 		wp_reset_postdata();	
 	}

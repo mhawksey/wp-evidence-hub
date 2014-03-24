@@ -18,8 +18,7 @@ new Evidence_Hub_Shortcode_GetEvidenceTagged();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_GetEvidenceTagged extends Evidence_Hub_Shortcode {
 	var $shortcode = 'get_evidence_tagged';
-	public $defaults = array('post_id' => false,
-							 'tag' => 'featured');
+	public $defaults = array('tag' => 'featured');
 	static $post_types_with_shortcode = array('hypothesis');
 	/**
 	* Generate post content. 

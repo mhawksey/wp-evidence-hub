@@ -18,8 +18,7 @@ new Evidence_Hub_Shortcode_GetPostMeta();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_GetPostMeta extends Evidence_Hub_Shortcode {
 	var $shortcode = 'get_post_meta';
-	public $defaults = array('post_id' => false,
-							 'meta_key' => false,
+	public $defaults = array('meta_key' => false,
 							 'single' => true);
 	static $post_types_with_shortcode = array('hypothesis');
 	/**

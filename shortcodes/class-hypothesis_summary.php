@@ -66,7 +66,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 	function get_google_visualisation_data(){
 		ob_start();
 		extract($this->options);
-		$id = get_the_ID();
+		$id = ($post_id) ? $post_id : get_the_ID();
 
 		// prep query to fetch all evidence post ids associated to hypothesis 
 		$args = array('post_type' => 'evidence', // my custom post type

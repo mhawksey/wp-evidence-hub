@@ -17,7 +17,7 @@ new Evidence_Hub_Shortcode_Hypothesis_GeoSummary();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_Hypothesis_GeoSummary extends Evidence_Hub_Shortcode {
 	var $shortcode = 'hypothesis_geosummary';
-	public $defaults = array('post_id' => false);
+	public $defaults = array();
 	static $post_types_with_shortcode = array('hypothesis');
 	/**
 	* Generate post content. 

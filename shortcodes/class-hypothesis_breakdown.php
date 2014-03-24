@@ -18,8 +18,7 @@ new Evidence_Hub_Shortcode_Hypothesis_Breakdown();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_Hypothesis_Breakdown extends Evidence_Hub_Shortcode {
 	var $shortcode = 'hypothesis_breakdown';
-	public $defaults = array('post_id' => false,
-							 'polarity' => false);
+	public $defaults = array('polarity' => false);
 	static $post_types_with_shortcode = array('hypothesis');
 	/**
 	* Generate post content. 
