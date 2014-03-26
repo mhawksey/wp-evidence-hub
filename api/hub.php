@@ -177,7 +177,8 @@ class JSON_API_Hub_Controller {
 		if (!empty($posts) && !empty($args['type'])){
 			foreach (explode(",", $args['type']) as $type){ 
 				foreach ($posts[$type] as $post){
-					$property = array("type" => $type,
+					$property = array("id" => $post['ID'],
+									  "type" => $type,
 									  "name" => $post['title'],
 									  "desc" => Evidence_Hub::generate_excerpt($post['ID']),
 									  "url" => $post['url'],

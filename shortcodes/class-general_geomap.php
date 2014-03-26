@@ -278,5 +278,5 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 		  }
 		  google.setOnLoadCallback(drawVisualization);
 	  </script>
- <? }
+ <?php }
 }
