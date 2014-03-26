@@ -86,6 +86,13 @@ class Evidence_Template extends Evidence_Hub_CustomPostType {
 		
 		// regester different field options
 		$this->options = array_merge($this->options, array(
+			'post_type' => array(
+				'type' => 'select-posttype',
+				'position' => 'side',
+				'label' => "Post Type",
+				),
+		));
+		$this->options = array_merge($this->options, array(
 			'hypothesis_id' => array(
 				'type' => 'select',
 				'required' => true,

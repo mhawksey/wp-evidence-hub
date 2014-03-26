@@ -21,7 +21,8 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 		'title' => false,
 		'no_evidence_message' => "There is no map yet to display",
 		'title_tag' => 'h3',
-		'type' => 'evidence'
+		'type' => 'evidence',
+		'table' => true
 	);
 
 	static $post_types_with_shortcode = array();
@@ -157,7 +158,125 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 		jQuery('#evidence-map fieldset').show();
 		</script>
 		<?php
+		if($table){
+			$this->renderGoogleTable();	
+		}
 		// <<html dump	
 		return ob_get_clean();
 	}
+	
+	function renderGoogleTable() { ?>
+		<script type="text/javascript">
+          google.load('visualization', '1.1', {packages: ['controls']});
+        </script>
+        <script type="text/javascript">
+		var data, table;
+		var pickers = {};;
+		var c = [];
+		function drawVisualization() {
+			// Prepare the data.
+			
+			data = google.visualization.arrayToDataTable(tableArray, false);
+			for (i=0; i<data.getNumberOfColumns(); i++){
+				c[data.getColumnLabel(i)] = i;
+			} 
+
+			var formatter = new google.visualization.PatternFormat('<div>{1} - <span style="text-transform: capitalize;">{2}</span><br/><a href="{0}">Read more..</a></div></div>');
+			formatter.format(data, [c['url'],c['name'], c['type']], c['desc']);
+	   
+			// Define a StringFilter control for the 'Name' column
+			var stringFilter = new google.visualization.ControlWrapper({
+			  'controlType': 'StringFilter',
+			  'containerId': 'control1',
+			  'options': {
+				'filterColumnIndex': c['name'],
+				'ui': {'label': 'Search',}
+			  }
+			});
+			jQuery('#evidence-map select').each(function(i,v) {
+				var name = v.id.substring(13)
+				pickers[name] = picker(name);
+				v.addEventListener(
+							 'change',
+							 function() {
+								pickers[name].setState({value: this.value});
+								pickers[name].draw();
+								document.getElementById('result-count').innerHTML = table.getDataTable().getNumberOfRows();
+							 },
+							 false
+						  );
+			});
+		  	var cssClassNames = {headerRow: 'tbl-head', 
+								 headerCell: 'tbl-head',
+								 tableRow: 'tbl-row',
+								 oddTableRow: 'tbl-row'};
+			// Define a table visualization
+			table = new google.visualization.ChartWrapper({
+			  'chartType': 'Table',
+			  'containerId': 'table1',
+			  'options': {'height': '300px', 
+						  'width': '22em',
+						  //'page': 'enable',
+						  //'pageSize': 5,
+						  'allowHtml': true,
+						  'pagingSymbols': {prev: 'prev', next: 'next'},
+						  'pagingButtonsConfiguration': 'auto',
+						  'cssClassNames': cssClassNames},
+			  'view': {'columns': [c['desc']]}
+			});
+			google.visualization.events.addListener(table, 'ready', onReady);
+			google.visualization.events.addListener(stringFilter, 'statechange', function () {
+				var state = stringFilter.getState();
+				document.getElementById('result-count').innerHTML = table.getDataTable().getNumberOfRows();
+			});
+		  
+			// Create the dashboard.
+			var dashboard = new google.visualization.Dashboard(document.getElementById('summary-table')).
+			  // Configure the string filter to affect the table contents
+			  bind(stringFilter, table);
+			for (pick in pickers){
+				dashboard.bind(pickers[pick], table);
+			}
+			  //bind(pickers['type'], table).
+			  // Draw the dashboard
+			  dashboard.draw(data);
+			  
+			  document.getElementById('tbl-holder').style.display = 'block';
+		  }
+		  function onReady(){
+			  google.visualization.events.addListener(table.getChart() , 'select', function(){
+				var sel = table.getChart().getSelection();
+				map.setZoom(3);
+				var curID = table.getDataTable().getValue(sel[0].row, c['id']);
+				var currentMarker = markerMap[curID];
+				setTimeout(function() {  markers.zoomToShowLayer(currentMarker, function(){
+					currentMarker.openPopup();
+				});}, 1000);
+				table.getChart().setSelection(null);
+				event.preventDefault();
+				return false;
+			});
+			document.getElementById('result-count').innerHTML = table.getDataTable().getNumberOfRows();
+		  }
+
+		  function picker(type){
+			var newdiv = document.createElement('div');
+			newdiv.setAttribute('id','control-'+type);
+			newdiv.setAttribute('style', 'display:none');
+			document.getElementById('summary-table').appendChild(newdiv);
+			
+			return new google.visualization.ControlWrapper({
+				'controlType': 'StringFilter',
+				'containerId': 'control-'+type,
+				'options': {
+				  'filterColumnIndex': c[type],
+				  'ui': {
+					'allowTyping': false,
+				  }
+				},
+			});   
+		  }
+		  google.setOnLoadCallback(drawVisualization);
+	  </script>
+ <? }
 }

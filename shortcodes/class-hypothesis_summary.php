@@ -42,7 +42,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 							 . '<script type="text/javascript">'
               				 . "		google.load('visualization', '1', {packages: ['corechart', 'geochart', 'table']});"
             				 . '</script>'
-							 . $this->get_google_visualisation_data()
+							 . $this->get_google_visualisation_data(get_the_ID())
                              .   the_excerpt() .$included_page->post_content;
 				} 
 			} else {
@@ -63,10 +63,9 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 	function content(){
 	}
 	
-	function get_google_visualisation_data(){
+	function get_google_visualisation_data($id){
 		ob_start();
 		extract($this->options);
-		$id = ($post_id) ? $post_id : get_the_ID();
 
 		// prep query to fetch all evidence post ids associated to hypothesis 
 		$args = array('post_type' => 'evidence', // my custom post type

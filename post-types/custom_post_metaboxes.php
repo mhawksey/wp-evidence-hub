@@ -120,6 +120,26 @@ $user_option_count = 0;
                 <?php }
             ?>
             </select>
+    <?php elseif ($option['type'] == 'select-posttype' && is_admin()) : ?> 
+    		<?php
+				$args = array(
+						   'public'   => true,
+						   '_builtin' => false
+						);
+				$post_types	= get_post_types( $args, 'objects', 'and' );
+			?>
+            <select
+            	name="<?php echo $name; ?>"
+                id="<?php echo $name; ?>">>
+						<?php foreach ( $post_types as $post_type => $pt ) : ?>
+
+							<?php if ( ! current_user_can( $pt->cap->publish_posts ) ) continue; ?>
+
+							<option value="<?php echo esc_attr( $pt->name ); ?>" <?php selected( get_post_type(), $post_type ); ?>><?php echo esc_html( $pt->labels->singular_name ); ?></option>
+
+						<?php endforeach; ?>
+
+					</select>
     <?php elseif ($option['type'] == 'multi-select') : ?>
         <ul>
             <li>

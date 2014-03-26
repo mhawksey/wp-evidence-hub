@@ -57,9 +57,26 @@ line-height:1.5em;
 #country-vis-table{
 line-height:1em;	
 }
-#country-vis-select {
+#country-vis-select{
 text-align:right;
 font-size:80%;	
+}
+#maplogoholder{
+float:left;
+width:200px;	
+}
+#summary-table{
+height: 330px;
+position: relative;
+top: 0px;
+padding-top:3px;
+}
+.tbl-head {
+	display:none;
+}
+.tbl-row {
+line-height: 1em;
+opacity:1;
 }
 .evidence-scorecard{
 display: inline-block;	
@@ -160,7 +177,7 @@ float:right;
 font-weight:600;
 font-size:90%;
 }
-#evidence-map fieldset {
+#evidence-map fieldset, .summary-table-block #tbl-holder {
 	border-radius: 4px;
 	-o-border-radius: 4px;
 	-icab-border-radius: 4px;
@@ -173,6 +190,19 @@ font-size:90%;
 	background-color:#EBEBEB;
 	opacity:0.9;
 	display:none;
+}
+.summary-table-block #tbl-holder {
+	width:22em;
+	
+}
+.tbl-header{
+border-bottom: 1px solid #CCC;
+font-weight: 800;
+padding: 3px;
+cursor:pointer;
+}
+.expander{
+	float:right;
 }
 #evidence-map fieldset div {
 	display: inline;

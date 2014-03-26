@@ -76,11 +76,19 @@ class Evidence_Hub_CustomPostType {
 		if (isset($_POST['evidence_hub_nonce']) && !wp_verify_nonce($_POST['evidence_hub_nonce'], plugin_basename(__FILE__))) return;
 		
 		if (!current_user_can('edit_evidence', $post_id)) return;
+		
 
 		foreach($this->options as $name => $option)	{
 			// Update the post's meta field
-			$field_name = "evidence_hub_$name";
+			$field_name = "evidence_hub_$name";		
+			
 			if (isset($_POST[$field_name])){
+				// if change of posttype save and return
+				if ($option['type'] == 'select-posttype'){
+					set_post_type( $post_id, $_REQUEST[$field_name] );
+					return get_admin_url() . 'edit.php?post_type=' . $_REQUEST[$field_name];
+				}
+				
 				if ($option['save_as'] == 'term'){
 					$foundterm = false;
 					if (!is_array($_REQUEST[$field_name])){ // handle if single term

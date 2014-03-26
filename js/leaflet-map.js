@@ -11,7 +11,7 @@ var map = L.map('map').setView([25, 0], 2);
 L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
 			 attribution: "&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors"}
 			).addTo(map);
-var MyControl = L.Control.extend({
+var filterControl = L.Control.extend({
     options: {
         position: 'topright'
     },
@@ -19,14 +19,24 @@ var MyControl = L.Control.extend({
     onAdd: function (map) {
         // create the control container with a particular class name
         var container = L.DomUtil.create('div', 'my-custom-control');
-
-        // ... initialize other DOM elements, add listeners, etc.
-
         return container;
     }
 });
+map.addControl(new filterControl());
 
-map.addControl(new MyControl());
+var summaryControl = L.Control.extend({
+    options: {
+        position: 'bottomleft'
+    },
+
+    onAdd: function (map) {
+        // create the control container with a particular class name
+        var container = L.DomUtil.create('div', 'summary-table-block');
+		container.innerHTML = "<div id='tbl-holder'><div class='tbl-header'>Results (<span id='result-count'></span>) <div class='expander'>▼</div></div><div id='summary-table'><div id='control1'></div><div id='table1'></div></div></div>";		
+        return container;
+    }
+});
+map.addControl(new summaryControl());
 			
 // Spiderfier close markers
 //var oms = new OverlappingMarkerSpiderfier(map);
@@ -53,8 +63,8 @@ var customIcon = function (prop){
 					}
 					m = m.filter(function(v) { return v !== null; });
 					
-					options.iconUrl= iconuri+'marker-'+m.join('-')+'.png';
-					
+					options.iconUrl = iconuri+'marker-'+m.join('-')+'.png';
+					options.className = prop.id;
 					return new LeafIcon(options)
 				};
 // construct custom icon
@@ -77,10 +87,46 @@ var formattedText = function (d){
 			'<div class="poptr">' + d.desc +'</div>';
 }
 
-var markers = L.markerClusterGroup({ spiderfyOnMaxZoom: true, showCoverageOnHover: false, zoomToBoundsOnClick: false});
+var markers = L.markerClusterGroup({ spiderfyOnMaxZoom: true, showCoverageOnHover: false, zoomToBoundsOnClick: false, disableClusteringAtZoom: 4});
 // add markers from geoJson written to page (doing it this way becase hubPoints will be cached)		
 	
 var markerArray = [];
+var tableArray = [];
+var markerMap = {};
+var row = [];
+var switches = [];
+jQuery('#evidence-map select').each(function(i,v) {
+	switches[v.id.substring(13)] = v.value;
+	row.push(v.id.substring(13));
+});
+
+generateTable();
+
+function generateTable(){
+	var d = json['geoJSON'] || null;
+	var row = [];
+	if (d){
+		for (var k in d[0].properties) {
+			row.push(k);
+		}
+		tableArray.push(row);
+		for (var i=0,  tI=d.length; i < tI; i++) {
+			var row = [];
+			for (var j=0,  tJ=tableArray[0].length; j < tJ; j++) {
+				if (d[i].properties[tableArray[0][j]] instanceof Array) {
+					row.push(d[i].properties[tableArray[0][j]].join(","));
+				} else {
+					row.push(d[i].properties[tableArray[0][j]]);
+				}
+			}
+			tableArray.push(row);
+		}
+	}
+}
+
+
+renderLayer(switches);
+
 function renderLayer(switches){
 	markerArray = [];
 	L.geoJson(hubPoints, {
@@ -90,20 +136,17 @@ function renderLayer(switches){
 							marker = new L.Marker(new L.LatLng(feature.geometry.coordinates[1],feature.geometry.coordinates[0]),{
 											  icon: customIcon(feature.properties)})
 									 .bindPopup(formattedText(feature.properties));
+							
+							markerMap[prop.id] = marker;
 							markerArray.push(marker);
 						}
 				}
 	});
 	markers.addLayers(markerArray);
 }
-var switches = [];
-jQuery('#evidence-map select').each(function(i,v) {
-
-	switches[v.id.substring(13)] = v.value;
-});
-renderLayer(switches);
 
 function testSwitches(s, prop){
+	var row = [];
 	if (s['type'] == 'evidence' && prop['polarity'] == '' && prop['hypothesis'] != 'Unassigned'){
 		return false;	
 	}
@@ -119,31 +162,42 @@ function testSwitches(s, prop){
 		} else {
 			set += '0';
 		}
-		if(s[k] !="" && (prop[k] == s[k] ||(typeof prop[k] !== 'string' && prop[k].indexOf(s[k]) > -1))){
+		if(s[k] !="" && (prop[k] == s[k] || (prop[k]!="" && prop[k] instanceof Array && prop[k].indexOf(s[k]) > -1))){
 			hit +='1';	
 		} else {
 			hit +='0';
 		}
+		row.push(prop[k]);
 	}
-	console.log(set+'|'+hit);
 	if (set === hit){
+		tableArray.push(row);
 		return true;	
 	}
 	
-	/*if (count === set){
-		console.log("Adding:"+prop['type']+":"+prop['name']);
-		return true;
-	} */
 	return false;
 }
 
 markers.on('clusterclick', function (a) {
 			a.layer.spiderfy();
-			//a.layer.zoomToBounds();
 		});
 map.addLayer(markers);
-map.fitBounds(markers.getBounds());
-map.invalidateSize();
+var addTitle = function(){
+	
+	d3.xml(pluginurl+'images/logo.svg', "image/svg+xml", function(xml) {  
+	  var importedNode = importNode(xml.documentElement, true);
+		jQuery('.leaflet-top.leaflet-left').append('<div id="maplogoholder"></div>'); 
+		var logo = d3.select('#maplogoholder')
+		.append('svg')
+		.append("g")
+		.attr('id', 'maplogo')
+		.attr('transform', 'scale(' + [0.7,0.7] + ')translate(' + [24, 14] + ')');;
+		
+		document.getElementById('maplogo').appendChild(importedNode.cloneNode(true)); 
+	});
+};
+//map.fitBounds(markers.getBounds());
+//map.invalidateSize();
+addTitle();
 
 function toProperCase(d){
     return d.replace('-',' ').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
@@ -159,3 +213,54 @@ jQuery('#evidence-map select').on('change', function() {
 	});
 	renderLayer(switches);
 })
+// https://gist.github.com/camupod/5165619
+function importNode(node, allChildren, doc) {
+    var a, i, il;
+    doc = doc || document;
+    try {
+        return doc.importNode(node, allChildren);
+    } catch (e) {
+        switch (node.nodeType) {
+            case document.ELEMENT_NODE:
+                var newNode = doc.createElementNS(node.namespaceURI, node.nodeName);
+                if (node.attributes && node.attributes.length > 0) {
+                    for (i = 0, il = node.attributes.length; i < il; i++) {
+                        a = node.attributes[i];
+                        try {
+                            newNode.setAttributeNS(a.namespaceURI, a.nodeName, node.getAttribute(a.nodeName));
+                        } catch (err) {
+                            // ignore this error... doesn't seem to make a difference
+                        }
+                    }
+                }
+                if (allChildren && node.childNodes && node.childNodes.length > 0) {
+                    for (i = 0, il = node.childNodes.length; i < il; i++) {
+                        newNode.appendChild(importNode(node.childNodes[i], allChildren));
+                    }
+                }
+                return newNode;
+            case document.TEXT_NODE:
+            case document.CDATA_SECTION_NODE:
+            case document.COMMENT_NODE:
+                return doc.createTextNode(node.nodeValue);
+        }
+    }
+}
+jQuery(document).ready(function($){
+	$(".tbl-header").click(function () {
+	
+		$header = $(this);
+		//getting the next element
+		$content = $header.next();
+		//open up the content needed - toggle the slide- if visible, slide up, if not slidedown.
+		$content.slideToggle(100, function () {
+			//execute this after slideToggle is done
+			//change text of header based on visibility of content div
+			$header.find('.expander').text(function () {
+				//change text based on condition
+				return $content.is(":visible") ? "▼" : "▲";
+			});
+		});
+	
+	});
+});

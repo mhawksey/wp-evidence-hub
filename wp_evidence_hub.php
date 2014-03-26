@@ -58,6 +58,8 @@ if(!class_exists('Evidence_Hub'))
 			require_once(sprintf("%s/post-types/class-project.php", EVIDENCE_HUB_PATH));
 			// Register custom post types - policy
 			require_once(sprintf("%s/post-types/class-policy.php", EVIDENCE_HUB_PATH));
+			// Register custom post types - suggestion
+			require_once(sprintf("%s/post-types/class-suggestion.php", EVIDENCE_HUB_PATH));
 			
 			// include shortcodes
 			require_once(sprintf("%s/shortcodes/class-shortcode.php", EVIDENCE_HUB_PATH));

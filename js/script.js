@@ -554,6 +554,9 @@ function autocomplete_eh_change_project(id, label){
 				$("input#evidence_hub_polarity").removeAttr("disabled");
 			}
 		});
+		jQuery("#evidence_hub_post_type").change(function() {
+			$('#post').submit();
+		});
 		
 
 	});
