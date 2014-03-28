@@ -22,7 +22,7 @@ $user_option_count = 0;
         // WP stores extra data as terms and post_meta
         // If we have a post get the value depending on type
         if (isset($post)){
-            if ($option['save_as'] == 'term'){
+            if (isset($option['save_as']) && $option['save_as'] == 'term'){
                 $terms = wp_get_object_terms($post->ID, $name); 
                 if (!empty($terms) && !is_wp_error($terms)){
                     // if terms count > 1 it has multiple values, extract slugs into array
@@ -134,9 +134,9 @@ $user_option_count = 0;
 						<?php foreach ( $post_types as $post_type => $pt ) : ?>
 
 							<?php if ( ! current_user_can( $pt->cap->publish_posts ) ) continue; ?>
-
-							<option value="<?php echo esc_attr( $pt->name ); ?>" <?php selected( get_post_type(), $post_type ); ?>><?php echo esc_html( $pt->labels->singular_name ); ?></option>
-
+								<?php if (esc_attr( $pt->name ) !== "hypothesis"): ?>
+									<option value="<?php echo esc_attr( $pt->name ); ?>" <?php selected( get_post_type(), $post_type ); ?>><?php echo esc_html( $pt->labels->singular_name ); ?></option>
+								<?php endif; ?>
 						<?php endforeach; ?>
 
 					</select>

@@ -69,6 +69,14 @@ class Project_Template extends Evidence_Hub_CustomPostType {
 	* @since 0.1.1
 	*/
 	function set_options(){
+		// regester different field options
+		$this->options = array_merge($this->options, array(
+			'post_type' => array(
+				'type' => 'select-posttype',
+				'position' => 'side',
+				'label' => "Post Type",
+				),
+		));
 		$this->options = array_merge($this->options, array(
 			'country' => array(
 				'type' => 'select',

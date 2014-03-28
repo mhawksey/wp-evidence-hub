@@ -18,25 +18,16 @@ var filterControl = L.Control.extend({
 
     onAdd: function (map) {
         // create the control container with a particular class name
-        var container = L.DomUtil.create('div', 'my-custom-control');
-        return container;
+        var controlDiv = L.DomUtil.create('div', 'my-custom-control');
+		L.DomEvent
+			.addListener(controlDiv, 'click', L.DomEvent.stopPropagation)
+			.addListener(controlDiv, 'click', L.DomEvent.preventDefault);
+		return controlDiv;
     }
 });
 map.addControl(new filterControl());
 
-var summaryControl = L.Control.extend({
-    options: {
-        position: 'bottomleft'
-    },
 
-    onAdd: function (map) {
-        // create the control container with a particular class name
-        var container = L.DomUtil.create('div', 'summary-table-block');
-		container.innerHTML = "<div id='tbl-holder'><div class='tbl-header'>Results (<span id='result-count'></span>) <div class='expander'>▼</div></div><div id='summary-table'><div id='control1'></div><div id='table1'></div></div></div>";		
-        return container;
-    }
-});
-map.addControl(new summaryControl());
 			
 // Spiderfier close markers
 //var oms = new OverlappingMarkerSpiderfier(map);
@@ -197,7 +188,7 @@ var addTitle = function(){
 };
 //map.fitBounds(markers.getBounds());
 //map.invalidateSize();
-addTitle();
+//addTitle();
 
 function toProperCase(d){
     return d.replace('-',' ').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
@@ -205,14 +196,15 @@ function toProperCase(d){
 function toVeCase(d) {
     return (d == 'pos') ? '+ve' : '-ve';
 }
-jQuery('#evidence-map select').on('change', function() {
+jQuery('#evidence-map select').on('touchstart change', function() {
 	markers.removeLayers(markerArray);
 	var switches = [];
 	jQuery('#evidence-map select').each(function(i,v) {
 		switches[v.id.substring(13)] = v.value;
 	});
 	renderLayer(switches);
-})
+});
+
 // https://gist.github.com/camupod/5165619
 function importNode(node, allChildren, doc) {
     var a, i, il;
@@ -247,6 +239,17 @@ function importNode(node, allChildren, doc) {
     }
 }
 jQuery(document).ready(function($){
+		jQuery('.google-visualization-table-td').each(function(i,v) {
+
+		v.addEventListener(
+					 'click',
+					 console.log("T"),
+					 false
+				  );
+	});
+	$(".google-visualization-table-td").click(function () {
+		console.log(this);
+	});
 	$(".tbl-header").click(function () {
 	
 		$header = $(this);

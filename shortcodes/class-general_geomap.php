@@ -122,7 +122,8 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 		 	var json = <?php print_r(file_get_contents(site_url().'/'.get_option('json_api_base', 'api').'/hub/get_geojson/?count=-1&type='.strtolower($type))); ?>;	
 			var hubPoints = json['geoJSON'] || null;
 			var pluginurl = '<?php echo EVIDENCE_HUB_URL; ?>';
-			jQuery('#map').css('height', parseInt(jQuery('#evidence-map').width()*9/16));	
+			var h = (jQuery('#evidence-map').width() > 820) ? parseInt(jQuery('#evidence-map').width()*9/16) : 560;
+			jQuery('#map').css('height', h);	
 		/* ]]> */
 		</script>
         <link rel="stylesheet" href="<?php echo plugins_url( 'js/markercluster/MarkerCluster.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
@@ -173,6 +174,21 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 		var data, table;
 		var pickers = {};;
 		var c = [];
+		var summaryControl = L.Control.extend({
+			options: {
+				position: 'bottomleft'
+			},
+		
+			onAdd: function (map) {
+				// create the control container with a particular class name
+				var controlDiv = L.DomUtil.create('div', 'summary-table-block');
+				controlDiv.innerHTML = "<div id='tbl-holder'><div class='tbl-header'>Results (<span id='result-count'></span>) <div class='expander'>▼</div></div><div id='summary-table'><div id='control1'></div><div id='table1'></div></div></div>";	
+				L.DomEvent.disableClickPropagation(controlDiv);
+				return controlDiv;
+			}
+		});
+		map.addControl(new summaryControl());
+
 		function drawVisualization() {
 			// Prepare the data.
 			
@@ -224,6 +240,7 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 						  'cssClassNames': cssClassNames},
 			  'view': {'columns': [c['desc']]}
 			});
+			
 			google.visualization.events.addListener(table, 'ready', onReady);
 			google.visualization.events.addListener(stringFilter, 'statechange', function () {
 				var state = stringFilter.getState();
@@ -277,6 +294,7 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 			});   
 		  }
 		  google.setOnLoadCallback(drawVisualization);
+		  
 	  </script>
  <?php }
 }

@@ -208,6 +208,19 @@ cursor:pointer;
 	display: inline;
 	vertical-align:baseline;
 }
+@media screen and (max-width: 1012px){
+	#evidence-map fieldset div {
+		display: block;
+	}
+	/*#evidence-map .eh_input label {
+		white-space: nowrap;
+		display: table-cell;
+	}
+	#evidence-map .eh_input span.eh_input_field {
+		width: 100%;
+		display: table-cell;
+	}*/
+}
 #evidence-map select {
 vertical-align: initial!important;
 }
