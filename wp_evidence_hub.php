@@ -71,6 +71,8 @@ if(!class_exists('Evidence_Hub'))
 			require_once(sprintf("%s/shortcodes/class-general_getpoststagged.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-general_geomap.php", EVIDENCE_HUB_PATH));
 			
+			require_once(sprintf("%s/shortcodes/class-survey_explorer.php", EVIDENCE_HUB_PATH));
+			
 			require_once(sprintf("%s/shortcodes/class-evidence_map.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-evidence_meta.php", EVIDENCE_HUB_PATH));
 			
@@ -558,6 +560,10 @@ if(!class_exists('Evidence_Hub'))
 			wp_register_style( 'evidence_hub_style', plugins_url( 'css/style.css' , EVIDENCE_HUB_REGISTER_FILE ) );
 			wp_enqueue_style( 'evidence_hub_style');
 			wp_enqueue_style( 'facetious_widget', EVIDENCE_HUB_URL.'/lib/facetious/facetious.css' );
+			
+			wp_register_script( 'selectreplace_script', plugins_url( 'js/selectreplace/jquery.minimalect.min.js' , EVIDENCE_HUB_REGISTER_FILE), $scripts  );
+			wp_enqueue_script( 'selectreplace_script' );
+			wp_enqueue_style( 'selectreplace_style', plugins_url( 'js/selectreplace/jquery.minimalect.min.css' , EVIDENCE_HUB_REGISTER_FILE ) );
 			
 			// handle cookie-notice enqueue (required because of symbolic links)
 			$this->cookie = array(

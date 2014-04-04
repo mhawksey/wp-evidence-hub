@@ -100,7 +100,7 @@ class Evidence_Hub_Shortcode_Evidence_GeoMap extends Evidence_Hub_Shortcode {
 		 	var json = <?php print_r(file_get_contents(site_url().'/'.get_option('json_api_base', 'api').'/hub/get_geojson/?count=-1&type=evidence,project')); ?>;	
 			var hubPoints = json['geoJSON'] || null;
 			var pluginurl = '<?php echo EVIDENCE_HUB_URL; ?>';
-			jQuery('#map').css('height', parseInt(jQuery('#evidence-map').width()*9/16));	
+			jQuery('#map').css('height', (parseInt(jQuery('#evidence-map').width() > 820 ? (parseInt(jQuery('#evidence-map').width()*9/16) : 460);	
 		/* ]]> */
 		</script>
         <link rel="stylesheet" href="<?php echo plugins_url( 'js/markercluster/MarkerCluster.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />

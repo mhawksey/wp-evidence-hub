@@ -50,7 +50,7 @@ margin: 0!important;
 border-top: none!important;
 padding: 0!important;
 }
-#country-vis-table td{
+#country-vis-table td, #querytable td{
 padding: 3px;
 line-height:1.5em;	
 }
@@ -77,6 +77,12 @@ padding-top:3px;
 .tbl-row {
 line-height: 1em;
 opacity:1;
+}
+.tbl-cell {
+padding:5px;
+}
+.tbl-bold {
+
 }
 .evidence-scorecard{
 display: inline-block;	
@@ -1238,7 +1244,7 @@ margin: 8px 5px 0;
 }
 
 
-#eh-entry .modal {
+.modal {
     position:   absolute;
     z-index:    1000;
     top:        0;
@@ -1270,6 +1276,10 @@ z-index: 10000;
 display: none;
 border-width: 1px;
 border-style: solid;
+}
+#survey_title{
+	text-align:center;
+	margin:0px
 }
 
 .eh_results li {
@@ -1427,4 +1437,31 @@ padding: 0 10px 1px;
   }
 }
 
-
+.minict_wrapper ul li {
+margin:0px;
+line-height:1.2em !important;
+height:auto !important;
+padding: 5px !important;
+text-align:left;
+}
+.minict_wrapper ul li:hover, .minict_wrapper ul li.selected {
+background:#ccc !important;
+}
+.tbl-loader, .map-loader{
+	height: 100px;
+	display:none;
+    background: rgba( 255, 255, 255, 1 ) 
+                url('images/loader.gif') 
+                50% 50% 
+                no-repeat;
+}
+#tabs.ui-widget-content{
+border:none;	
+}
+#tabs .ui-tabs-nav {
+font-size:70%;
+background:none;	
+}
+.ui-tabs .ui-tabs-panel{
+border: 1px solid #ECECEC;
+}
