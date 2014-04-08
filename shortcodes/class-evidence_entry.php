@@ -33,6 +33,10 @@ class Evidence_Hub_Shortcode_Evidence_Entry extends Evidence_Hub_Shortcode {
             <div id="login">
               <div class="login_form">
                 <?php wp_login_form(); ?>
+                <?php if (function_exists('sc_render_login_form_social_connect')) :
+					  do_action( 'social_connect_form' ); 
+					endif;
+				?>
               </div>
             </div>
             <?php
@@ -105,7 +109,7 @@ class Evidence_Hub_Shortcode_Evidence_Entry extends Evidence_Hub_Shortcode {
 								?>
 								</div>
 								<div class="eh_input eh_evidence_hub_content_<?php echo $post_type;?>">
-                                	<?php do_action('media_buttons', 'post_content_'.$post_type); ?>
+                                	<?php //do_action('media_buttons', 'post_content_'.$post_type); ?>
 									<?php wp_editor( '', 'post_content_'.$post_type, array(
 																'media_buttons' => true,
 																'textarea_rows' => 20,
