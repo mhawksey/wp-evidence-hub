@@ -185,4 +185,5 @@ jQuery(document).ready(function( $ ) {
 	if ( $('#tagsdiv-post_tag').length && typeof(adminpage) == 'undefined') {
 		tagBox.init();
 	}
+	$('.eh_evidence_hub_post_type').remove();
 });
