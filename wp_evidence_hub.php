@@ -71,7 +71,7 @@ if(!class_exists('Evidence_Hub'))
 			require_once(sprintf("%s/shortcodes/class-general_getpoststagged.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-general_geomap.php", EVIDENCE_HUB_PATH));
 			
-			require_once(sprintf("%s/shortcodes/class-survey_explorer.php", EVIDENCE_HUB_PATH));
+			//require_once(sprintf("%s/shortcodes/class-survey_explorer.php", EVIDENCE_HUB_PATH));
 			
 			require_once(sprintf("%s/shortcodes/class-evidence_map.php", EVIDENCE_HUB_PATH));
 			require_once(sprintf("%s/shortcodes/class-evidence_meta.php", EVIDENCE_HUB_PATH));

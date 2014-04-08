@@ -76,17 +76,19 @@ class Evidence_Hub_CustomPostType {
 		if (isset($_POST['evidence_hub_nonce']) && !wp_verify_nonce($_POST['evidence_hub_nonce'], plugin_basename(__FILE__))) return;
 		
 		if (!current_user_can('edit_evidence', $post_id)) return;
-		
-
+		$saving = array();
 		foreach($this->options as $name => $option)	{
 			// Update the post's meta field
 			$field_name = "evidence_hub_$name";		
+			$return_url = false;
 			
 			if (isset($_POST[$field_name])){
+				
 				// if change of posttype save and return
+				
 				if ($option['type'] == 'select-posttype'){
 					set_post_type( $post_id, $_REQUEST[$field_name] );
-					return get_admin_url() . 'edit.php?post_type=' . $_REQUEST[$field_name];
+					$return_url = get_admin_url() . 'edit.php?post_type=' . $_REQUEST[$field_name];
 				}
 				
 				if ($option['save_as'] == 'term'){
@@ -112,7 +114,11 @@ class Evidence_Hub_CustomPostType {
 				} else {
 					update_post_meta($post_id, $field_name, $_POST[$field_name]);
 				}
+				
 			}
+		}
+		if ($return_url){
+			return $return_url;
 		}
 	} // END public function save_post($post_id)
 	

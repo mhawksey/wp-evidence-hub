@@ -120,7 +120,8 @@ $user_option_count = 0;
                 <?php }
             ?>
             </select>
-    <?php elseif ($option['type'] == 'select-posttype' && is_admin()) : ?> 
+    <?php elseif ($option['type'] == 'select-posttype'):
+			if (is_admin()) : ?> 
     		<?php
 				$args = array(
 						   'public'   => true,
@@ -140,6 +141,9 @@ $user_option_count = 0;
 						<?php endforeach; ?>
 
 					</select>
+         <?php else: // note admin
+		 		echo (get_post_type());
+		  endif; // is_admin ?>
     <?php elseif ($option['type'] == 'multi-select') : ?>
         <ul>
             <li>
