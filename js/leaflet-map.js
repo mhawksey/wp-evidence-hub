@@ -19,9 +19,7 @@ var filterControl = L.Control.extend({
     onAdd: function (map) {
         // create the control container with a particular class name
         var controlDiv = L.DomUtil.create('div', 'my-custom-control');
-		L.DomEvent
-			.addListener(controlDiv, 'click', L.DomEvent.stopPropagation)
-			.addListener(controlDiv, 'click', L.DomEvent.preventDefault);
+		L.DomEvent.disableClickPropagation(controlDiv);
 		return controlDiv;
     }
 });
@@ -95,11 +93,11 @@ generateTable();
 
 function generateTable(){
 	var d = json['geoJSON'] || null;
-	var row = [];
+	var row = ["id", "type", "name", "desc", "url", "sector", "polarity", "project", "hypothesis_id", "hypothesis", "locale"];
 	if (d){
-		for (var k in d[0].properties) {
+		/*for (var k in d[0].properties) {
 			row.push(k);
-		}
+		}*/
 		tableArray.push(row);
 		for (var i=0,  tI=d.length; i < tI; i++) {
 			var row = [];
