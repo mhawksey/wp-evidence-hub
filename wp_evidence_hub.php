@@ -161,6 +161,7 @@ if(!class_exists('Evidence_Hub'))
 			// debug function
 			add_action( 'wp_head', array(&$this, 'show_current_query') );
 			add_filter( 'tiny_mce_before_init', array(&$this, 'idle_function_to_tinymce') );
+			add_filter( 'wp_default_editor', array(&$this, 'force_default_editor') );
 			if (get_option('hypothesis_template_page')){ 
 				add_filter( 'single_template', array(&$this, 'get_custom_post_type_template') );
 			}
@@ -864,6 +865,12 @@ if(!class_exists('Evidence_Hub'))
 				//print_r($initArray);
 			}
 			return $initArray;
+		}
+		
+		
+		function force_default_editor() {
+			//allowed: tinymce, html, test
+			return 'tinymce';
 		}
 		
 		
