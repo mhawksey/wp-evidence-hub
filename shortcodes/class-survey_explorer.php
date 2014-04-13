@@ -216,7 +216,7 @@ class Evidence_Hub_Shortcode_Survey_Explorer extends Evidence_Hub_Shortcode {
 	  // (using a Google Visualisation Table chart handles a lot of this for us)
 	  var respData = response.getDataTable();
 	  var col = respData.getColumnLabel(0);
-	  respData.setColumnLabel(1, '');
+	  respData.setColumnLabel(1, 'est.');
 	  var formatter = new google.visualization.NumberFormat({fractionDigits:0});
 	  formatter.format(respData,1);
 	  
@@ -264,7 +264,7 @@ class Evidence_Hub_Shortcode_Survey_Explorer extends Evidence_Hub_Shortcode {
 			filterQuery.setQuery("SELECT "+value+", COUNT() FROM "+ tableId + " WHERE " + colNames[qVal][0].v +"  NOT EQUAL TO '' GROUP BY "+value+" ORDER BY COUNT() DESC");
 			filterQuery.send(handleFilterQueryResponse);
 		});
-		nIntervId = setInterval(setQuestionQuery, 500); // because filters are handled async we need to poll before we draw the charts
+		nIntervId = setInterval(setQuestionQuery, 1000); // because filters are handled async we need to poll before we draw the charts
 	}
 	
 	// builds all the queries for the questions to be displayed 
@@ -476,6 +476,7 @@ class Evidence_Hub_Shortcode_Survey_Explorer extends Evidence_Hub_Shortcode {
 	  */
 	  
 	  // the lovely chart editor (let users choose the type of chart for rendering data)
+	  data[fetch].sort(1);
 	  editorChart.setDataTable(data[fetch]);
 	  editorChart.setOptions({ animation:{ duration: 1000,
 					  			     	  easing: 'out', }, 
@@ -519,7 +520,7 @@ class Evidence_Hub_Shortcode_Survey_Explorer extends Evidence_Hub_Shortcode {
 		
 		// close filter button removes it from the DOM and re-enables option
 		$jq('.close-filter').live("click", function(e) {
-			var filterGroup = $(this).closest('.group');
+			var filterGroup = $jq(this).closest('.group');
 			$jq("#filter-select option[value='"+filterGroup.attr("id")+"']").prop("disabled",false);
 			$jq('#add-filter [data-value="'+filterGroup.attr("id")+'"]').attr("data-disabled", "false");
 			filterGroup.remove();
@@ -527,14 +528,14 @@ class Evidence_Hub_Shortcode_Survey_Explorer extends Evidence_Hub_Shortcode {
 		});
 	});
 	$jq( document ).ready(function( $ ) {
-		$(window).resize(function(){
+		$jq(window).resize(function(){
 			sendAndDraw();
 			mainMap.draw(mapData, optionsMain);
 			usMap.draw(usMapData, optionsUS);
 		});
 		var h = ($jq('.span_2_of_3').width() > 820) ? parseInt($jq('.span_2_of_3').width()*9/16) : 400;
 		$jq('#map').css('height', h);
-		$( ".modal" ).hide();	
+		$jq( ".modal" ).hide();	
 	});
   </script>
 
