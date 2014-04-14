@@ -190,7 +190,7 @@ class Evidence_Hub_Shortcode_Survey_Explorer extends Evidence_Hub_Shortcode {
 		$jq('#add-filter [data-value="'+value+'"]').attr("data-disabled", "true");
 		
 		// prep filter holder
-		$jq("#data-filters").append('<div class="group" id="'+value+'"><h3><div><a href="#" class="close-filter">X</a></div>'+value+'</h3><div class="filter-table" id="filter-'+value+'" style="height:370px"></div></div>');
+		$jq("#data-filters").append('<div class="group" id="'+value+'"><h3><div><a href="#" class="close-filter">X</a></div>'+value+'</h3><div class="filter-table" id="f'+value+'" style="height:370px"></div></div>');
 	  	$jq("#data-filters").accordion( "refresh" );
 		$jq("#data-filters").accordion( {active: $jq("#data-filters h3").length - 1});
 		
@@ -215,7 +215,7 @@ class Evidence_Hub_Shortcode_Survey_Explorer extends Evidence_Hub_Shortcode {
 	  // get the filter options and render additional ui (radio/check select)
 	  // (using a Google Visualisation Table chart handles a lot of this for us)
 	  var respData = response.getDataTable();
-	  var col = respData.getColumnLabel(0);
+	  var col = "f"+respData.getColumnLabel(0);
 	  respData.setColumnLabel(1, 'est.');
 	  var formatter = new google.visualization.NumberFormat({fractionDigits:0});
 	  formatter.format(respData,1);
@@ -223,7 +223,7 @@ class Evidence_Hub_Shortcode_Survey_Explorer extends Evidence_Hub_Shortcode {
       var filter = new google.visualization.DataView(respData);
 	  filter.setColumns([{calc:filterCheckbox, type:'string', label:''}, {calc:filterBlank, type:'string', label:''}, 1]);
 
-	  filtered[col] = new google.visualization.Table(document.getElementById('filter-'+col));
+	  filtered[col] = new google.visualization.Table(document.getElementById(col));
 	  new google.visualization.events.addListener(filtered[col], 'ready', function(){filtersReady++;});
 	  filtered[col].draw(filter, filterOptions);
 	}
@@ -232,7 +232,7 @@ class Evidence_Hub_Shortcode_Survey_Explorer extends Evidence_Hub_Shortcode {
 	function filterCheckbox(dt, r){
 		var checked = ""; // code to keep selection
 		if (selectedValues[dt.getColumnLabel(0)+"-"+dt.getValue(r, 0)] != undefined){
-			checked = "checked";	
+			checked = 'checked';	
 		}
 		return '<div class="filter-check"><input type="radio" tabindex="-1" name="'+dt.getColumnLabel(0)+'" value="'+dt.getValue(r, 0)+'" '+checked+'/></div>';
 	}
@@ -245,7 +245,7 @@ class Evidence_Hub_Shortcode_Survey_Explorer extends Evidence_Hub_Shortcode {
 	}
 	
 	// handles change of question
-	function setQuestion(){
+	function setQuestion(skipFilterUpdate){
 		$jq( ".modal" ).show(); // load spinner
 		filtersReady = 0;
 		filtersAdded = 0;
@@ -256,20 +256,23 @@ class Evidence_Hub_Shortcode_Survey_Explorer extends Evidence_Hub_Shortcode {
 		$jq('#data-filters :checked').each(function() {
 			selectedValues[$jq(this).attr("name")+"-"+$jq(this).val()] = 1;
 		});
-		// update values for each facet in any filters
-		$jq('#data-filters .group').each(function(){
-			filtersAdded ++;
-			var value = $jq(this).attr("id");
-			filterQuery = 	new google.visualization.Query(url);
-			filterQuery.setQuery("SELECT "+value+", COUNT() FROM "+ tableId + " WHERE " + colNames[qVal][0].v +"  NOT EQUAL TO '' GROUP BY "+value+" ORDER BY COUNT() DESC");
-			filterQuery.send(handleFilterQueryResponse);
-		});
-		nIntervId = setInterval(setQuestionQuery, 1000); // because filters are handled async we need to poll before we draw the charts
+		if (!skipFilterUpdate){
+			// update values for each facet in any filters
+			$jq('#data-filters .group').each(function(){
+				filtersAdded ++;
+				var value = $jq(this).attr("id");
+				filterQuery = 	new google.visualization.Query(url);
+				filterQuery.setQuery("SELECT "+value+", COUNT() FROM "+ tableId + " WHERE " + colNames[qVal][0].v +"  NOT EQUAL TO '' GROUP BY "+value+" ORDER BY COUNT() DESC");
+				filterQuery.send(handleFilterQueryResponse);
+			});
+		}
+		nIntervId = setInterval(setQuestionQuery, 500); // because filters are handled async we need to poll before we draw the charts
 	}
 	
 	// builds all the queries for the questions to be displayed 
 	function setQuestionQuery(){
 		// if the number of filters used equals the number ready proceed
+		console.log(filtersReady+':'+filtersAdded);
 		if (filtersReady == filtersAdded) {
 			clearInterval(nIntervId); // clear the polling
 			var fetchWhere = "";
@@ -515,7 +518,7 @@ class Evidence_Hub_Shortcode_Survey_Explorer extends Evidence_Hub_Shortcode {
 			this.checked = !this.checked;
 		});
 		$jq('.filter-check input[type="radio"]').live("click", function(e) {
-			setQuestion();
+			setQuestion(true);
 		});
 		
 		// close filter button removes it from the DOM and re-enables option
@@ -586,15 +589,3 @@ class Evidence_Hub_Shortcode_Survey_Explorer extends Evidence_Hub_Shortcode {
 	} // end of function content
 
 } // end of class
-
-
-
-
-
-
-
-
-
-
-
-
