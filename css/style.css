@@ -1201,7 +1201,7 @@ border-color: rgba(222, 222, 222, 0.75);
 background: rgba(255, 255, 255, 0.5);
 color: rgba(51, 51, 51, 0.5);
 }
-#eh-entry button, a.ehbutton{
+.action-area button, a.ehbutton{
 background: #2EA2CC;
 border-color: #0074A2;
 -webkit-box-shadow: inset 0 1px 0 rgba(120, 200, 230, 0.5),0 1px 0 rgba(0, 0, 0, 0.15);
@@ -1209,7 +1209,7 @@ box-shadow: inset 0 1px 0 rgba(120, 200, 230, 0.5),0 1px 0 rgba(0, 0, 0, 0.15);
 color: #FFF;
 text-decoration: none;
 }
-#eh-entry button{
+.action-area button{
 float:right
 }
 a.ehbutton{
