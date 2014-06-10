@@ -134,7 +134,6 @@ class JSON_API_Hub_Controller {
 		}
 		
 		foreach($hypotheses as $hypothesis){
-			$test = $hypothesis;
 			$hposts = Evidence_Hub::filterOptions($posts, 'hypothesis_id', $hypothesis);
 			$hposts_title = get_the_title($hypothesis);
 			$base_link = ($country_slug != 'World') ? (site_url().'/country/'.$country_slug) : site_url();
