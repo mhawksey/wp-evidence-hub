@@ -134,6 +134,7 @@ class JSON_API_Hub_Controller {
 		}
 		
 		foreach($hypotheses as $hypothesis){
+			$test = $hypothesis;
 			$hposts = Evidence_Hub::filterOptions($posts, 'hypothesis_id', $hypothesis);
 			$hposts_title = get_the_title($hypothesis);
 			$base_link = ($country_slug != 'World') ? (site_url().'/country/'.$country_slug) : site_url();
@@ -145,16 +146,18 @@ class JSON_API_Hub_Controller {
 					$nodes[] = array("name" => $polarity->name, "url" => $base_link."/evidence/polarity/".$polarity->slug, "id" => $polarity->slug, "type" => "polarity", "fill" => json_decode($polarity->description)->fill);
 					$nodeList[$polarity->name] = 1;
 				}
-				if (count($pposts) > 0) 
+				if (count($pposts) > 0) {
 					$links[] = array("source" => $hposts_title, "target" => $polarity->name, "value" => count($pposts));
+				}
 				foreach($sectors as $sector){
 					$sposts = Evidence_Hub::filterOptions($pposts, 'sector_slug', $sector->slug);
 					if (empty($nodeList[$sector->name])){
 						$nodes[] = array("name" => $sector->name, "url" => $base_link."/evidence/sector/".$sector->slug, "id" => $sector->slug, "type" => "sector", "fill" => json_decode($sector->description)->fill);
 						$nodeList[$sector->name] = 1;
 					}
-					if (count($sposts) > 0) 
-						$links[] = array("source" => $polarity->name, "target" => $sector->name, "value" => count($sposts), "data" => array("url" => "xxx"));		
+					if (count($sposts) > 0) {
+						$links[] = array("source" => $polarity->name, "target" => $sector->name, "value" => count($sposts));	
+					}
 				}
 			}
 		}	

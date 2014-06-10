@@ -473,7 +473,7 @@ if(!class_exists('Evidence_Hub'))
 		public static function filterOptions($arr, $key, $val) {
 			$newArr = array();
 			foreach($arr as $name => $option) {
-				if (array_key_exists($key, $option) && $option[$key]===$val){
+				if (array_key_exists($key, $option) && $option[$key]==$val){
 					$newArr[$name] = $arr[$name];
 				}
 			}
