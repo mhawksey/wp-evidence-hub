@@ -600,7 +600,7 @@ function autocomplete_eh_change_project(id, label){
 	
 	function getNonce(){
 		jQuery.ajax({
-			url: MyAjax.apiurl+'/?json=get_nonce&controller=hub&method=create_evidence',
+			url: MyAjax.apiurl.replace('%s', 'get_nonce') + 'controller=hub&method=create_evidence',
 			type: 'GET',
 			dataType: 'json',
 			success: addContent

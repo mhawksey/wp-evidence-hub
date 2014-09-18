@@ -51,7 +51,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Sankey extends Evidence_Hub_Shortcode {
 			}
 			var MyAjax = {
 				pluginurl: getPath('<?php echo EVIDENCE_HUB_URL; ?>'),
-				apiurl: '<?php echo site_url().'/'.get_option('json_api_base', 'api');?>/',
+				apiurl: '<?php $this->print_api_url() ?>',
 				ajaxurl: getPath('<?php echo admin_url();?>admin-ajax.php')
 			};
 			var graph = {};
