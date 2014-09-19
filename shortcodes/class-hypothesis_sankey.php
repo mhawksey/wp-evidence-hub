@@ -44,16 +44,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Sankey extends Evidence_Hub_Shortcode {
         <div>Evidence flow - <span id="sankey-display-title">World</span></div>
         <div id="sankey-display"></div>
         <script> 
-			function getPath(url) {
-				var a = document.createElement('a');
-				a.href = url;
-				return a.pathname.charAt(0) != '/' ? '/' + a.pathname : a.pathname;
-			}
-			var MyAjax = {
-				pluginurl: getPath('<?php echo EVIDENCE_HUB_URL; ?>'),
-				apiurl: '<?php $this->print_api_url() ?>',
-				ajaxurl: getPath('<?php echo admin_url();?>admin-ajax.php')
-			};
+			<?php $this->print_myajax_config_javascript() ?>
 			var graph = {};
 			var SANKEY_MARGIN = {top: 1, right: 1, bottom: 1, left: 1},
 			SANKEY_WIDTH = document.getElementById("sankey-display").offsetWidth,

@@ -174,14 +174,56 @@ abstract class Evidence_Hub_Shortcode {
 	}
 	abstract function content();
 
-	/**
-	* Output the site's API URL to the `MyAjax` Javascript config. object.
+
+	// Ajax configuration, SVG logo etc. --------------------------------------
+
+	/** Print the `MyAjax` Javascript configuration object.
 	*/
+	protected function print_myajax_config_javascript() {
+		?>
+		var MyAjax = {
+			pluginurl: getPath('<?php echo EVIDENCE_HUB_URL; ?>'),
+			apiurl: '<?php $this->print_api_url() ?>',
+			ajaxurl: getPath('<?php echo admin_url() ?>admin-ajax.php'),
+			svg_logo:  <?php $this->json_option( 'wp_evidence_hub_svg_logo', 'images/oer-evidence-hub-logo.svg' )?>,
+			svg_scale: <?php $this->json_option( 'wp_evidence_hub_svg_logo_scale', array( 0.7, 0.7 ))?>
+		};
+		function getPath(url) {
+			var a = document.createElement('a');
+			a.href = url;
+			return a.pathname.charAt(0) != '/' ? '/' + a.pathname : a.pathname;
+		}
+<?php
+	}
+
+	/** Print custom SVG CSS styles.
+	*/
+	protected function print_custom_svg_style() {
+		?>
+		<style id="custom-svg-style">
+		<?php echo $this->get_option('wp_evidence_hub_svg_style') ?>
+		</style>
+<?php
+	}
+
+	/** Output the site's API URL to the `MyAjax` Javascript object. */
 	protected function print_api_url() {
 		$is_permalink = get_option( 'permalink_structure' );
 		echo site_url() .'/'.
 			($is_permalink ? get_option( 'json_api_base', 'api' ) .'/%s/?' : '?json=%s&' );
 	}
+
+	/** Get a WP configuration option from a PHP define() or the database. */
+	protected function get_option( $option, $default = NULL ) {
+		$KEY = strtoupper( $option );
+		return defined( $KEY ) ? constant( $KEY ) : get_option( $option, $default );
+	}
+
+	/** Print a JSON-encoded config. option */
+	protected function json_option( $option, $default = NULL ) {
+		echo json_encode($this->get_option( $option, $default ));
+	}
+
 
 	// Caching ----------------------------------------------------------------
 
