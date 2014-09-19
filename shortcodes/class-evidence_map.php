@@ -118,7 +118,7 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
 				/* <![CDATA[ */
 		var MyAjax = {
 			pluginurl: getPath('<?php echo EVIDENCE_HUB_URL; ?>'),
-			apiurl: '<?php echo site_url().'/'.get_option('json_api_base', 'api');?>/',
+			apiurl: '<?php $this->print_api_url() ?>',
 			ajaxurl: getPath('<?php echo admin_url();?>admin-ajax.php')
 		};
 		function getPath(url) {
@@ -129,22 +129,22 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
 		var data = <?php echo json_encode($data);?>;
 		/* ]]> */
 		</script>
-        <script src="<?php echo plugins_url( 'lib/map/lib/queue.v1.min.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
-        <script src="<?php echo plugins_url( 'lib/map/lib/topojson.v1.min.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
-        <script src="<?php echo plugins_url( 'lib/map/lib/colorbrewer.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
-        <script src="<?php echo plugins_url( 'lib/map/lib/mootools-core-1.4.5.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
-        <script src="<?php echo plugins_url( 'lib/map/lib/mootools-more-1.4.0.1.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
+        <script src="<?php echo plugins_url( 'lib/map/lib/queue.v1.min.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
+        <script src="<?php echo plugins_url( 'lib/map/lib/topojson.v1.min.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
+        <script src="<?php echo plugins_url( 'lib/map/lib/colorbrewer.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
+        <script src="<?php echo plugins_url( 'lib/map/lib/mootools-core-1.4.5.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
+        <script src="<?php echo plugins_url( 'lib/map/lib/mootools-more-1.4.0.1.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
 		
-        <script src="<?php echo plugins_url( 'lib/map/src/control.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
-        <script src="<?php echo plugins_url( 'js/sankey.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
+        <script src="<?php echo plugins_url( 'lib/map/src/control.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
+        <script src="<?php echo plugins_url( 'js/sankey.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
         
-        <link rel="stylesheet" type="text/css" href="<?php echo plugins_url( 'lib/map/css/skeleton.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
-        <link rel="stylesheet" type="text/css" href="<?php echo plugins_url( 'lib/map/css/styles.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
+        <link rel="stylesheet" href="<?php echo plugins_url( 'lib/map/css/skeleton.css', EVIDENCE_HUB_REGISTER_FILE )?>" />
+        <link rel="stylesheet" href="<?php echo plugins_url( 'lib/map/css/styles.css', EVIDENCE_HUB_REGISTER_FILE )?>" />
         <!--[if gte IE 7]>
            <style>svg { height: 450px }</style>
         <![endif]-->
         <!-- main script -->
-        <script src="<?php echo plugins_url( 'lib/map/src/main.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
+        <script src="<?php echo plugins_url( 'lib/map/src/main.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
         <!--[if lt IE 9]>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
@@ -187,7 +187,7 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
             </div>
 		  </div>
         
-        <script type="text/javascript">
+        <script>
             window.addEvent('domready', function() {
                 init();
                 //constructControlPanel('Global Oil Production & Consumption');
@@ -195,7 +195,7 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
             });
         </script>
         <div id="fullscreen-button"><a href="#" id="evidence-map-fullscreen">Full Screen</a></div>
-		<script src="<?php echo plugins_url( 'lib/map/lib/bigscreen.min.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
+		<script src="<?php echo plugins_url( 'lib/map/lib/bigscreen.min.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
 		<script>
 		var element = document.getElementById('evidence-map');
 

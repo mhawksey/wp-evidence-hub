@@ -39,8 +39,8 @@ class Evidence_Hub_Shortcode_Hypothesis_Sankey extends Evidence_Hub_Shortcode {
 			$hyp_id = $id;	
 		}
 		?>
-		<script src="<?php echo plugins_url( 'js/sankey.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
-        <script src="<?php echo plugins_url( 'js/sankey-main.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
+		<script src="<?php echo plugins_url( 'js/sankey.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
+        <script src="<?php echo plugins_url( 'js/sankey-main.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
         <div>Evidence flow - <span id="sankey-display-title">World</span></div>
         <div id="sankey-display"></div>
         <script> 
@@ -51,7 +51,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Sankey extends Evidence_Hub_Shortcode {
 			}
 			var MyAjax = {
 				pluginurl: getPath('<?php echo EVIDENCE_HUB_URL; ?>'),
-				apiurl: '<?php echo site_url().'/'.get_option('json_api_base', 'api');?>/',
+				apiurl: '<?php $this->print_api_url() ?>',
 				ajaxurl: getPath('<?php echo admin_url();?>admin-ajax.php')
 			};
 			var graph = {};

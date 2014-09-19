@@ -173,7 +173,16 @@ abstract class Evidence_Hub_Shortcode {
 		}
 	}
 	abstract function content();
-	
+
+	/**
+	* Output the site's API URL to the `MyAjax` Javascript config. object.
+	*/
+	protected function print_api_url() {
+		$is_permalink = get_option( 'permalink_structure' );
+		echo site_url() .'/'.
+			($is_permalink ? get_option( 'json_api_base', 'api' ) .'/%s/?' : '?json=%s&' );
+	}
+
 	// Caching ----------------------------------------------------------------
 
 	// TODO: doesn't $wpdb need to be globalized in this function?
