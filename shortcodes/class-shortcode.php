@@ -43,6 +43,7 @@ abstract class Evidence_Hub_Shortcode {
 	public function shortcode($options) {
 		$this->options = shortcode_atts($this->defaults, $options);	
 		$this->prep_options();
+		$this->debug_shortcode( $options );
 		if (!$content = $this->get_cache()) {
 			$content = $this->content();
 			if (!isset($this->options['do_cache'])) {
@@ -237,6 +238,20 @@ abstract class Evidence_Hub_Shortcode {
 <?php
 	}
 
+	/** Put the name of any Evidence Hub shortcodes used on a page in the JS console [Bug: #9].
+	*/
+	protected function debug_shortcode( $options = NULL ) {
+		$js_options = $options ? json_encode( $options ) : '[ no options ]';
+		if (headers_sent()): ?>
+		<script>
+		window.console && console.log('X-WP-Shortcode: "<?php echo $this->shortcode .'"\', '. $js_options ?>);
+		</script>
+		<?php
+		else:
+			header( 'X-Evidence-Hub-Shortcode: '. $this->shortcode );
+			@header( 'X-Evidence-Hub-Shortcode-Opt: '. json_encode( $this->options ));
+		endif;
+	}
 
 	// Caching ----------------------------------------------------------------
 
