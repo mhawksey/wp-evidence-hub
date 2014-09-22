@@ -28,7 +28,9 @@ class Evidence_Hub_Shortcode_Hypothesis_GeoSummary extends Evidence_Hub_Shortcod
 	function content() {
 		ob_start();
 		extract($this->options); ?>
-        <div id="country-vis-map" style="width:100%"></div>
+        <div id="country-vis-map" style="width:100%"><?php
+            $this->print_chart_loading_no_support_message( $is_map = TRUE )
+        ?></div>
         <div id="country-vis-select"><label for="change-map">Filter map:</label>
         							 <select id="change-map">
         								<option value=4>Total</option>
@@ -38,7 +40,7 @@ class Evidence_Hub_Shortcode_Hypothesis_GeoSummary extends Evidence_Hub_Shortcod
         </div>
         <div id="country-vis-table" style="width:100%"></div>
         
-        <script type="text/javascript">
+        <script>
         jQuery(document).ready(function ($) {
             $(window).resize(function(){
                 drawCountryVisualization();

@@ -71,7 +71,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
             </<?php echo $title_tag; ?>>
 		<?php
 		if ($display_sankey){
-			echo '<div id="sankey-chart"></div>';
+			echo '<div id="sankey-chart">'. $this->print_chart_loading_no_support_message() .'</div>';
 		}
 		// prep query to fetch all evidence post ids associated to hypothesis 
 		$args = array('post_type' => 'evidence', // my custom post type
@@ -183,7 +183,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
             width = document.getElementById("content").offsetWidth - margin.left - margin.right,
             height = 400 - margin.top - margin.bottom;
         </script>
-        <link rel="stylesheet" type="text/css" href="<?php echo plugins_url( 'lib/map/css/styles.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
+        <link rel="stylesheet" href="<?php echo plugins_url( 'lib/map/css/styles.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
         <script src="<?php echo plugins_url( 'js/sankey.js' , EVIDENCE_HUB_REGISTER_FILE )?>"></script>
         <script src="<?php echo plugins_url( 'js/sankey-control.js' , EVIDENCE_HUB_REGISTER_FILE )?>"></script>
     <?php 

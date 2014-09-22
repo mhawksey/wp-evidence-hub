@@ -178,9 +178,9 @@ abstract class Evidence_Hub_Shortcode {
 	// Ajax configuration, SVG logo etc. --------------------------------------
 
 	/** Print the `MyAjax` Javascript configuration object.
+	*   Include SVG logo path... [Bug: #6]
 	*/
-	protected function print_myajax_config_javascript() {
-		?>
+	protected function print_myajax_config_javascript() { ?>
 		var MyAjax = {
 			pluginurl: getPath('<?php echo EVIDENCE_HUB_URL; ?>'),
 			apiurl: '<?php $this->print_api_url() ?>',
@@ -196,17 +196,16 @@ abstract class Evidence_Hub_Shortcode {
 <?php
 	}
 
-	/** Print custom SVG CSS styles.
+	/** Print custom SVG CSS styles [Bug: #6].
 	*/
-	protected function print_custom_svg_style() {
-		?>
+	protected function print_custom_svg_style() { ?>
 		<style id="custom-svg-style">
 		<?php echo $this->get_option('wp_evidence_hub_svg_style') ?>
 		</style>
 <?php
 	}
 
-	/** Output the site's API URL to the `MyAjax` Javascript object. */
+	/** Output the site's API URL to the `MyAjax` Javascript object [Bug: #4]. */
 	protected function print_api_url() {
 		$is_permalink = get_option( 'permalink_structure' );
 		echo site_url() .'/'.
@@ -222,6 +221,20 @@ abstract class Evidence_Hub_Shortcode {
 	/** Print a JSON-encoded config. option */
 	protected function json_option( $option, $default = NULL ) {
 		echo json_encode($this->get_option( $option, $default ));
+	}
+
+
+	/** Output a message for Internet Explorer <= 8. And a "Loading..." message [Bug: #8].
+	*/
+	protected function print_chart_loading_no_support_message( $is_map = FALSE ) { ?>
+<!--[if lte IE 8]>
+	<div class="oer-chart-no-js">
+		<p>Unfortunately, the <?php echo $is_map ? 'map' : 'chart' ?> won't display in older browsers. Please
+			href="http://whatbrowser.org/">try a different browser</a>.</p>
+	</div>
+<![endif]-->
+	<div id="loading" class="oer-chart-loading"> Loading... </div>
+<?php
 	}
 
 

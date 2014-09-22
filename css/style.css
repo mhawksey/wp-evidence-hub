@@ -125,7 +125,7 @@ text-align:left;
 	box-shadow:none;	
 }
 
-/* Internet Explorer <= 8 message (MSIE8).
+/* Internet Explorer <= 8 message (MSIE8) [Bug: #8].
 */
 .oer-chart-no-js {
 	text-align: center;
