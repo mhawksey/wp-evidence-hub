@@ -238,7 +238,7 @@ abstract class Evidence_Hub_Shortcode {
 <?php
 	}
 
-	/** Put the name of any Evidence Hub shortcodes used on a page in the JS console [Bug: #9].
+	/** Put Evidence Hub shortcodes used on a page in the Javascript console [Bug: #9].
 	*/
 	protected function debug_shortcode( $options = NULL ) {
 		$js_options = $options ? json_encode( $options ) : '[ no options ]';
@@ -248,8 +248,7 @@ abstract class Evidence_Hub_Shortcode {
 		</script>
 		<?php
 		else:
-			header( 'X-Evidence-Hub-Shortcode: '. $this->shortcode );
-			@header( 'X-Evidence-Hub-Shortcode-Opt: '. json_encode( $this->options ));
+			header( 'X-Evidence-Hub-Shortcode: '. $this->shortcode .'; input='. $js_options );
 		endif;
 	}
 
