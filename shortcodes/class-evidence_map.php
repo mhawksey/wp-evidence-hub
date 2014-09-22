@@ -152,7 +152,15 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
         <!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">-->
 		
           <div id="evidence-map">
-                <div id="loading">
+
+<!--[if lte IE 8]>
+            <div class="oer-chart-no-js">
+              <p>Unfortunately, the chart won't display in older browsers. Please
+                href="http://whatbrowser.org/">try a different browser</a>.</p>
+            </div>
+<![endif]-->
+
+                <div id="loading" class="oer-chart-loading">
                     Loading...
                 </div>
 
