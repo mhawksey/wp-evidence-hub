@@ -1,5 +1,13 @@
 // JavaScript Document
+
+/*global san: false, d3: false, SANKEY_MARGIN: false */
+
 function renderSankey(country_slug, hyp_id){
+
+	if (!window.d3) {
+		return;
+	}
+
 	var hyp_query = (hyp_id) ? '&hyp_id='+hyp_id : '';
 	d3.json(MyAjax.apiurl.replace('%s', 'hub.get_sankey_data') + 'country_slug=' + country_slug + hyp_query, function (graph) {
 

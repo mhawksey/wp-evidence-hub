@@ -49,7 +49,13 @@ class Evidence_Hub_Shortcode_Hypothesis_Sankey extends Evidence_Hub_Shortcode {
 			var SANKEY_MARGIN = {top: 1, right: 1, bottom: 1, left: 1},
 			SANKEY_WIDTH = document.getElementById("sankey-display").offsetWidth,
 			SANKEY_HEIGHT = 400;
-			
+
+		(function () {
+			/*global san: false, d3: false, renderSankey: false */
+			if (!window.d3) {
+				return;
+			}
+
 			var svg = d3.select('#sankey-display').append('svg');
 			san = svg
 				.attr("height" , SANKEY_HEIGHT)
@@ -59,6 +65,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Sankey extends Evidence_Hub_Shortcode {
 				.attr('id', 'sandisplay');
 			
 			renderSankey('<?php echo $slug ?>', '<?php echo $hyp_id; ?>');
+		})();
 		</script>
         <?php
 		return ob_get_clean();

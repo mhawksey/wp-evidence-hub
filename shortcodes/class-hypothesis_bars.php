@@ -51,6 +51,7 @@ class Evidence_Hub_Shortcode_HypBar extends Evidence_Hub_Shortcode {
 		} 
 		// dump html ?>
 		<script>
+			/*global bar_data: false, hyp_w: false, hyp_h: false */
 			var bar_data = <?php print_r(json_encode($output)); ?>,
 			hyp_w = document.getElementById("content").offsetWidth,
 			hyp_h = parseInt(hyp_w*9/16);
