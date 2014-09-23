@@ -187,7 +187,7 @@ abstract class Evidence_Hub_Shortcode {
 			apiurl: '<?php $this->print_api_url() ?>',
 			ajaxurl: getPath('<?php echo admin_url() ?>admin-ajax.php'),
 			svg_logo:  <?php $this->json_option( 'wp_evidence_hub_svg_logo', 'images/oer-evidence-hub-logo.svg' )?>,
-			svg_scale: <?php $this->json_option( 'wp_evidence_hub_svg_logo_scale', array( 0.7, 0.7 ))?>
+			svg_scale: <?php echo $this->get_option( 'wp_evidence_hub_svg_logo_scale', '[ 0.7, 0.7 ]' );  #$this->json_option(... array(0.7, 0.7)) ?>
 		};
 		function getPath(url) {
 			var a = document.createElement('a');
@@ -241,7 +241,7 @@ abstract class Evidence_Hub_Shortcode {
 	/** Put Evidence Hub shortcodes used on a page in the Javascript console [Bug: #9].
 	*/
 	protected function debug_shortcode( $options = NULL ) {
-		$js_options = $options ? json_encode( $options ) : '[ no options ]';
+		$js_options = json_encode( $options ? $options : '[no options]' );
 		if (headers_sent()): ?>
 		<script>
 		window.console && console.log('X-WP-Shortcode: "<?php echo $this->shortcode .'"\', '. $js_options ?>);
