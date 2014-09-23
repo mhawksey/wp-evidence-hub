@@ -231,7 +231,7 @@ abstract class Evidence_Hub_Shortcode {
 <!--[if lte IE 8]>
 	<div class="oer-chart-no-js">
 		<p>Unfortunately, the <?php echo $is_map ? 'map' : 'chart' ?> won't display in older browsers. Please
-			href="http://whatbrowser.org/">try a different browser</a>.</p>
+		<a href="http://whatbrowser.org/">try a different browser</a>.</p>
 	</div>
 <![endif]-->
 	<div id="loading" class="oer-chart-loading"> Loading... </div>

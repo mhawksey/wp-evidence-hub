@@ -189,7 +189,7 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
 		<script>
 		var element = document.getElementById('evidence-map');
 
-		document.getElementById('evidence-map-fullscreen').addEventListener('click', function() {
+		jQuery('#evidence-map-fullscreen').on('click', function () {
 			if (BigScreen.enabled) {
 				BigScreen.request(element, onEnterEvidenceMap, onExitEvidenceMap);
 				// You could also use .toggle(element, onEnter, onExit, onError)
@@ -197,7 +197,7 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
 			else {
 				// fallback for browsers that don't support full screen
 			}
-		}, false);
+		});
 		
 			// called when the first element enters full screen
 		
