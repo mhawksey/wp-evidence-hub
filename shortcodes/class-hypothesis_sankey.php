@@ -42,23 +42,20 @@ class Evidence_Hub_Shortcode_Hypothesis_Sankey extends Evidence_Hub_Shortcode {
 		<script src="<?php echo plugins_url( 'js/sankey.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
         <script src="<?php echo plugins_url( 'js/sankey-main.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
         <div>Evidence flow - <span id="sankey-display-title">World</span></div>
-        <div id="sankey-display"></div>
+        <div id="sankey-display"><?php $this->print_chart_loading_no_support_message()?></div>
         <script> 
-			function getPath(url) {
-				var a = document.createElement('a');
-				a.href = url;
-				return a.pathname.charAt(0) != '/' ? '/' + a.pathname : a.pathname;
-			}
-			var MyAjax = {
-				pluginurl: getPath('<?php echo EVIDENCE_HUB_URL; ?>'),
-				apiurl: '<?php $this->print_api_url() ?>',
-				ajaxurl: getPath('<?php echo admin_url();?>admin-ajax.php')
-			};
+			<?php $this->print_myajax_config_javascript() ?>
 			var graph = {};
 			var SANKEY_MARGIN = {top: 1, right: 1, bottom: 1, left: 1},
 			SANKEY_WIDTH = document.getElementById("sankey-display").offsetWidth,
 			SANKEY_HEIGHT = 400;
-			
+
+		(function () {
+			/*global san: false, d3: false, renderSankey: false */
+			if (!window.d3) {
+				return;
+			}
+
 			var svg = d3.select('#sankey-display').append('svg');
 			san = svg
 				.attr("height" , SANKEY_HEIGHT)
@@ -68,6 +65,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Sankey extends Evidence_Hub_Shortcode {
 				.attr('id', 'sandisplay');
 			
 			renderSankey('<?php echo $slug ?>', '<?php echo $hyp_id; ?>');
+		})();
 		</script>
         <?php
 		return ob_get_clean();

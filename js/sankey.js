@@ -1,4 +1,11 @@
 // JavaScript Document
+
+(function () {
+
+  if (!window.d3) {
+    return;
+  }
+
 d3.sankey = function() {
   var sankey = {},
       nodeWidth = 24,
@@ -292,3 +299,5 @@ d3.sankey = function() {
  
   return sankey;
 };
+
+})();

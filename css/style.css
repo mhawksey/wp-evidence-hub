@@ -124,6 +124,23 @@ text-align:left;
 #evidence-map img{
 	box-shadow:none;	
 }
+
+/* Internet Explorer <= 8 message (MSIE8) [Bug: #8].
+*/
+.oer-chart-no-js {
+	text-align: center;
+	font-size: 1.2em;
+	border: 1px solid orange;
+	background: #fff6f6;
+	padding: 2px;
+	margin: 1em 0;
+}
+.ie8 #evidence-map #loading,
+.ie8 .oer-chart-loading,
+.oer-chart-loading.hide {
+       display: none;
+}
+
 .postrank-list{
 	font-size:80%
 }

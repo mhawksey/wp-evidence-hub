@@ -115,17 +115,8 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
 		// finally echo all the HTML/JS required
 		?>
         <script type="application/javascript">
-				/* <![CDATA[ */
-		var MyAjax = {
-			pluginurl: getPath('<?php echo EVIDENCE_HUB_URL; ?>'),
-			apiurl: '<?php $this->print_api_url() ?>',
-			ajaxurl: getPath('<?php echo admin_url();?>admin-ajax.php')
-		};
-		function getPath(url) {
-			var a = document.createElement('a');
-			a.href = url;
-			return a.pathname.charAt(0) != '/' ? '/' + a.pathname : a.pathname;
-		}
+		/* <![CDATA[ */
+		<?php $this->print_myajax_config_javascript() ?>
 		var data = <?php echo json_encode($data);?>;
 		/* ]]> */
 		</script>
@@ -140,6 +131,7 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
         
         <link rel="stylesheet" href="<?php echo plugins_url( 'lib/map/css/skeleton.css', EVIDENCE_HUB_REGISTER_FILE )?>" />
         <link rel="stylesheet" href="<?php echo plugins_url( 'lib/map/css/styles.css', EVIDENCE_HUB_REGISTER_FILE )?>" />
+		<?php $this->print_custom_svg_style() ?>
         <!--[if gte IE 7]>
            <style>svg { height: 450px }</style>
         <![endif]-->
@@ -160,9 +152,7 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
         <!--<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">-->
 		
           <div id="evidence-map">
-                <div id="loading">
-                    Loading...
-                </div>
+            <?php $this->print_chart_loading_no_support_message( $is_map = TRUE ) //[Bug: #8] ?>
 
             <header>
                 <h1>OER Research Hub - Evidence Map</h1>

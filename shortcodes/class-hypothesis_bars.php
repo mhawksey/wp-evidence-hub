@@ -50,13 +50,14 @@ class Evidence_Hub_Shortcode_HypBar extends Evidence_Hub_Shortcode {
 						'barPos' => count(Evidence_Hub::filterOptions($hposts, 'polarity_slug', 'pos')));					
 		} 
 		// dump html ?>
-		<script type="text/javascript">
+		<script>
+			/*global bar_data: false, hyp_w: false, hyp_h: false */
 			var bar_data = <?php print_r(json_encode($output)); ?>,
 			hyp_w = document.getElementById("content").offsetWidth,
 			hyp_h = parseInt(hyp_w*9/16);
 		</script>
 		<script src="<?php echo plugins_url( 'js/hyp_bars.js' , EVIDENCE_HUB_REGISTER_FILE );?>"></script>
-		<div id="vis"></div>
+		<div id="vis"><?php $this->print_chart_loading_no_support_message() ?></div>
         <?php
 		return ob_get_clean();
 	}

@@ -43,6 +43,7 @@ abstract class Evidence_Hub_Shortcode {
 	public function shortcode($options) {
 		$this->options = shortcode_atts($this->defaults, $options);	
 		$this->prep_options();
+		$this->debug_shortcode( $options );
 		if (!$content = $this->get_cache()) {
 			$content = $this->content();
 			if (!isset($this->options['do_cache'])) {
@@ -174,13 +175,81 @@ abstract class Evidence_Hub_Shortcode {
 	}
 	abstract function content();
 
-	/**
-	* Output the site's API URL to the `MyAjax` Javascript config. object.
+
+	// Ajax configuration, SVG logo etc. --------------------------------------
+
+	/** Print the `MyAjax` Javascript configuration object.
+	*   Include SVG logo path... [Bug: #6]
 	*/
+	protected function print_myajax_config_javascript() { ?>
+		var MyAjax = {
+			pluginurl: getPath('<?php echo EVIDENCE_HUB_URL; ?>'),
+			apiurl: '<?php $this->print_api_url() ?>',
+			ajaxurl: getPath('<?php echo admin_url() ?>admin-ajax.php'),
+			svg_logo:  <?php $this->json_option( 'wp_evidence_hub_svg_logo', 'images/oer-evidence-hub-logo.svg' )?>,
+			svg_scale: <?php $this->json_option( 'wp_evidence_hub_svg_logo_scale', array( 0.7, 0.7 ))?>
+		};
+		function getPath(url) {
+			var a = document.createElement('a');
+			a.href = url;
+			return a.pathname.charAt(0) != '/' ? '/' + a.pathname : a.pathname;
+		}
+<?php
+	}
+
+	/** Print custom SVG CSS styles [Bug: #6].
+	*/
+	protected function print_custom_svg_style() { ?>
+		<style id="custom-svg-style">
+		<?php echo $this->get_option('wp_evidence_hub_svg_style') ?>
+		</style>
+<?php
+	}
+
+	/** Output the site's API URL to the `MyAjax` Javascript object [Bug: #4]. */
 	protected function print_api_url() {
 		$is_permalink = get_option( 'permalink_structure' );
 		echo site_url() .'/'.
 			($is_permalink ? get_option( 'json_api_base', 'api' ) .'/%s/?' : '?json=%s&' );
+	}
+
+	/** Get a WP configuration option from a PHP define() or the database. */
+	protected function get_option( $option, $default = NULL ) {
+		$KEY = strtoupper( $option );
+		return defined( $KEY ) ? constant( $KEY ) : get_option( $option, $default );
+	}
+
+	/** Print a JSON-encoded config. option */
+	protected function json_option( $option, $default = NULL ) {
+		echo json_encode($this->get_option( $option, $default ));
+	}
+
+
+	/** Output a message for Internet Explorer <= 8. And a "Loading..." message [Bug: #8].
+	*/
+	protected function print_chart_loading_no_support_message( $is_map = FALSE ) { ?>
+<!--[if lte IE 8]>
+	<div class="oer-chart-no-js">
+		<p>Unfortunately, the <?php echo $is_map ? 'map' : 'chart' ?> won't display in older browsers. Please
+			href="http://whatbrowser.org/">try a different browser</a>.</p>
+	</div>
+<![endif]-->
+	<div id="loading" class="oer-chart-loading"> Loading... </div>
+<?php
+	}
+
+	/** Put Evidence Hub shortcodes used on a page in the Javascript console [Bug: #9].
+	*/
+	protected function debug_shortcode( $options = NULL ) {
+		$js_options = $options ? json_encode( $options ) : '[ no options ]';
+		if (headers_sent()): ?>
+		<script>
+		window.console && console.log('X-WP-Shortcode: "<?php echo $this->shortcode .'"\', '. $js_options ?>);
+		</script>
+		<?php
+		else:
+			header( 'X-Evidence-Hub-Shortcode: '. $this->shortcode .'; input='. $js_options );
+		endif;
 	}
 
 	// Caching ----------------------------------------------------------------

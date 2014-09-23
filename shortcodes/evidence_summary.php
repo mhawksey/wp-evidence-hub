@@ -65,7 +65,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
                     Evidence 
                 <?php } else echo $title; ?>
             </<?php echo $title_tag; ?>>
-         <div id="sankey-chart"></div>
+         <div id="sankey-chart"><?php $this->print_chart_loading_no_support_message() ?></div>
 		<?php
 		$args = array('post_type' => 'evidence', // my custom post type
     				   'posts_per_page' => -1,
@@ -164,7 +164,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
                 width = document.getElementById("content").offsetWidth - margin.left - margin.right,
                 height = 400 - margin.top - margin.bottom;
             </script>
-            <link rel="stylesheet" type="text/css" href="<?php echo plugins_url( 'lib/map/css/styles.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
+            <link rel="stylesheet" href="<?php echo plugins_url( 'lib/map/css/styles.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
             <script src="<?php echo plugins_url( 'js/sankey.js' , EVIDENCE_HUB_REGISTER_FILE )?>"></script>
             <script src="<?php echo plugins_url( 'js/sankey-control.js' , EVIDENCE_HUB_REGISTER_FILE )?>"></script>
         <?php endif; // end of sankey if single and no evidence.

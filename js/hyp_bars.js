@@ -2,10 +2,16 @@
 
 // Opposing bar charts
 // http://jsfiddle.net/cuckovic/hwDt3/
-/* edit these settings freely */  
-window.onload=function(){ 
-	
-	
+/* edit these settings freely */
+
+/*global d3: false, hyp_w: false, hyp_h: false, bar_data: false */
+
+window.onload = function () {
+
+	if (!window.d3) {
+		return;
+	}
+
 	var topMargin = 20,
 		labelSpace = 70,
 		innerMargin = hyp_w/2+labelSpace,

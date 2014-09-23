@@ -48,15 +48,7 @@ class Evidence_Hub_Shortcode_Evidence_Entry extends Evidence_Hub_Shortcode {
 			endif;
 			?>
 			<script> 
-			function getPath(url) {
-				var a = document.createElement('a');
-				a.href = url;
-				return a.pathname.charAt(0) != '/' ? '/' + a.pathname : a.pathname;
-			}
-			var MyAjax = {
-				apiurl: '<?php $this->print_api_url() ?>',
-				ajaxurl: getPath('<?php echo admin_url();?>admin-ajax.php')
-			};
+			<?php $this->print_myajax_config_javascript() ?>
 			jQuery.noConflict();
 			 
 			jQuery( document ).ready(function( $ ) {
