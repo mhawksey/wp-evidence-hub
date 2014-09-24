@@ -256,6 +256,41 @@ abstract class Evidence_Hub_Shortcode {
 <?php
 	}
 
+	/** Output the markup and Javascript for a fullscreen button [Bug: #8].
+	*/
+	protected function print_fullscreen_button_html_javascript() { ?>
+		<div id="fullscreen-button"><a href="#" id="evidence-map-fullscreen">Full Screen</a></div>
+		<script src="<?php echo plugins_url( 'lib/map/lib/bigscreen.min.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
+		<script>
+		var element = document.getElementById('evidence-map');
+		jQuery('#evidence-map-fullscreen').on('click', function () {
+		//document.getElementById('evidence-map-fullscreen').addEventListener('click', function() {
+			if (BigScreen.enabled) {
+				BigScreen.request(element, onEnterEvidenceMap, onExitEvidenceMap);
+				// You could also use .toggle(element, onEnter, onExit, onError)
+			}
+			else {
+				// fallback for browsers that don't support full screen
+			}
+		//}, false);
+		});
+
+		// called when the first element enters full screen
+
+		function onEnterEvidenceMap(){
+			jQuery('#evidence-map').css('height','100%');
+			jQuery('#map').css('height', jQuery('#evidence-map').height());
+			map.invalidateSize();
+		}
+		function onExitEvidenceMap(){
+			jQuery('#evidence-map').css('height','');
+			jQuery('#map').css('height', parseInt(jQuery('#evidence-map').width()*9/16));
+			map.invalidateSize();
+		}
+		</script>
+<?php
+	}
+
 	/** Put Evidence Hub shortcodes used on a page in the Javascript console [Bug: #9].
 	*/
 	protected function debug_shortcode( $options = NULL ) {

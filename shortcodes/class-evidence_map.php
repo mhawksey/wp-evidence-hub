@@ -184,34 +184,8 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
                 
             });
         </script>
-        <div id="fullscreen-button"><a href="#" id="evidence-map-fullscreen">Full Screen</a></div>
-		<script src="<?php echo plugins_url( 'lib/map/lib/bigscreen.min.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
-		<script>
-		var element = document.getElementById('evidence-map');
+        <?php $this->print_fullscreen_button_html_javascript() ?>
 
-		jQuery('#evidence-map-fullscreen').on('click', function () {
-			if (BigScreen.enabled) {
-				BigScreen.request(element, onEnterEvidenceMap, onExitEvidenceMap);
-				// You could also use .toggle(element, onEnter, onExit, onError)
-			}
-			else {
-				// fallback for browsers that don't support full screen
-			}
-		});
-		
-			// called when the first element enters full screen
-		
-		function onEnterEvidenceMap(){
-			jQuery('#impressum').show();
-			jQuery('#evidence-map').css('height','100%');
-			jQuery('#ui').show();
-		}
-		function onExitEvidenceMap(){
-			jQuery('#impressum').hide();
-			jQuery('#evidence-map').css('height','');
-			jQuery('#ui').hide();
-		}
-		</script>
 		<?php
 		return ob_get_clean();
 	}
