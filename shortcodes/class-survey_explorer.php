@@ -572,7 +572,7 @@ class Evidence_Hub_Shortcode_Survey_Explorer extends Evidence_Hub_Shortcode {
         </div>
       </div>
       <div id="tabs-2">
-        <div id="map"></div>
+        <div id="map"><?php $this->print_chart_loading_no_support_message( /*$is_map = TRUE -- Mixed! */ ) ?></div>
       </div>
       <div id="tabs-3">
         <div id="querymap"></div>

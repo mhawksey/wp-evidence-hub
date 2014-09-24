@@ -67,7 +67,7 @@ class Evidence_Hub_Shortcode_Policy_GeoMap extends Evidence_Hub_Shortcode {
         <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
         <div id="evidence-map">
            <?php $post = NULL; include(sprintf("%s/post-types/custom_post_metaboxes.php", EVIDENCE_HUB_PATH));?>
-           <div id="map"></div>    
+           <div id="map"><?php $this->print_chart_loading_no_support_message( $is_map = TRUE ) ?></div>
         </div>
         <div id="fullscreen-button"><a href="#" id="evidence-map-fullscreen">Full Screen</a></div>
         <script type="application/javascript">
