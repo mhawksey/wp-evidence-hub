@@ -203,15 +203,16 @@ if(!class_exists('Evidence_Hub'))
 		
 		
 		/**
-    	* Debug function to check wp_query. Add ?q to url to use.
+		* Debug function to check wp_query. Add ?debug to URL to use.
 		*
 		* @since 0.1.1
     	*/
 		public function show_current_query() {
 			global $wp_query;
-			if ( !isset( $_GET['q'] ) )
+			if (!isset($_GET[ 'debug' ])) { //WAS: 'q'.
 				return;
-			echo '<textarea cols="50" rows="10">';
+			}
+			echo '<textarea id="debug-query" cols="50" rows="10">';
 			print_r( $wp_query );
 			echo '</textarea>';
 		}

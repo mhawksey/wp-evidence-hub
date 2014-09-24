@@ -184,10 +184,10 @@ abstract class Evidence_Hub_Shortcode {
 	protected function print_myajax_config_javascript() { ?>
 		var MyAjax = {
 			pluginurl: getPath('<?php echo EVIDENCE_HUB_URL; ?>'),
-			apiurl: '<?php $this->print_api_url() ?>',
+			apiurl: '<?php echo $this->get_api_url() ?>',
 			ajaxurl: getPath('<?php echo admin_url() ?>admin-ajax.php'),
 			svg_logo:  <?php $this->json_option( 'wp_evidence_hub_svg_logo', 'images/oer-evidence-hub-logo.svg' )?>,
-			svg_scale: <?php $this->json_option( 'wp_evidence_hub_svg_logo_scale', array( 0.7, 0.7 ))?>
+			svg_scale: <?php echo $this->get_option( 'wp_evidence_hub_svg_logo_scale', '[ 0.7, 0.7 ]' );  #$this->json_option(... array(0.7, 0.7)) ?>
 		};
 		function getPath(url) {
 			var a = document.createElement('a');
@@ -206,11 +206,18 @@ abstract class Evidence_Hub_Shortcode {
 <?php
 	}
 
-	/** Output the site's API URL to the `MyAjax` Javascript object [Bug: #4]. */
-	protected function print_api_url() {
+	/** Output the site's API URL to the `MyAjax` Javascript object [Bug: #4].
+	 * @param string $method API method, eg. 'hub.get_geojson'.
+	 * @return string URL.
+	 */
+	protected function get_api_url( $method = NULL) {
 		$is_permalink = get_option( 'permalink_structure' );
-		echo site_url() .'/'.
+		$url = site_url() .'/'.
 			($is_permalink ? get_option( 'json_api_base', 'api' ) .'/%s/?' : '?json=%s&' );
+		if ($method) {
+			return str_replace( '%s', $method, $url );
+		}
+		return $url;
 	}
 
 	/** Get a WP configuration option from a PHP define() or the database. */
@@ -224,6 +231,17 @@ abstract class Evidence_Hub_Shortcode {
 		echo json_encode($this->get_option( $option, $default ));
 	}
 
+	/** Safely output a local URL/file containing JSON [Bug: #13].
+	 * @param string $url
+	 */
+	protected function print_json_file( $url ) {
+		$result = print_r(file_get_contents( $url ), $return = TRUE);
+		$test = json_decode( $result );
+		if (!$test || !$result || preg_match( '/^</', $result )) {
+			$result = "'ERROR, not JSON: $url'; window.console && console.log('Error, not JSON', '$url');";
+		}
+		echo $result;
+	}
 
 	/** Output a message for Internet Explorer <= 8. And a "Loading..." message [Bug: #8].
 	*/
@@ -231,17 +249,53 @@ abstract class Evidence_Hub_Shortcode {
 <!--[if lte IE 8]>
 	<div class="oer-chart-no-js">
 		<p>Unfortunately, the <?php echo $is_map ? 'map' : 'chart' ?> won't display in older browsers. Please
-			href="http://whatbrowser.org/">try a different browser</a>.</p>
+		<a href="http://whatbrowser.org/">try a different browser</a>.</p>
 	</div>
 <![endif]-->
 	<div id="loading" class="oer-chart-loading"> Loading... </div>
 <?php
 	}
 
+	/** Output the markup and Javascript for a fullscreen button [Bug: #8].
+	*/
+	protected function print_fullscreen_button_html_javascript() { ?>
+	<!--[if lte IE 10]>
+		<style> #fullscreen-button { display:none; } </style>
+	<![endif]-->
+		<div id="fullscreen-button"><a href="#" id="evidence-map-fullscreen">Full Screen</a></div>
+		<script src="<?php echo plugins_url( 'lib/map/lib/bigscreen.min.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
+		<script>
+		var element = document.getElementById('evidence-map');
+		jQuery('#evidence-map-fullscreen').on('click', function () {
+			if (BigScreen.enabled) {
+				BigScreen.request(element, onEnterEvidenceMap, onExitEvidenceMap);
+				// You could also use .toggle(element, onEnter, onExit, onError)
+			}
+			else {
+				// fallback for browsers that don't support full screen
+			}
+		});
+
+		// called when the first element enters full screen
+
+		function onEnterEvidenceMap(){
+			jQuery('#evidence-map').css('height', '100%');
+			jQuery('#map').css('height', jQuery('#evidence-map').height());
+			map.invalidateSize();
+		}
+		function onExitEvidenceMap(){
+			jQuery('#evidence-map').css('height', '');
+			jQuery('#map').css('height', parseInt(jQuery('#evidence-map').width() * 9/16));
+			map.invalidateSize();
+		}
+		</script>
+<?php
+	}
+
 	/** Put Evidence Hub shortcodes used on a page in the Javascript console [Bug: #9].
 	*/
 	protected function debug_shortcode( $options = NULL ) {
-		$js_options = $options ? json_encode( $options ) : '[ no options ]';
+		$js_options = json_encode( $options ? $options : '[no options]' );
 		if (headers_sent()): ?>
 		<script>
 		window.console && console.log('X-WP-Shortcode: "<?php echo $this->shortcode .'"\', '. $js_options ?>);
