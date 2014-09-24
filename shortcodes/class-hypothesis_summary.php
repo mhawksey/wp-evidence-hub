@@ -38,8 +38,8 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 					$included_page = get_page( get_option('hypothesis_template_page') ); 
 					
 					
-					$content = '<script type="text/javascript" src="//www.google.com/jsapi"></script>'
-							 . '<script type="text/javascript">'
+					$content = '<script src="//www.google.com/jsapi"></script>'
+							 . '<script>'
               				 . "		google.load('visualization', '1', {packages: ['corechart', 'geochart', 'table']});"
             				 . '</script>'
 							 . $this->get_google_visualisation_data(get_the_ID())
@@ -137,7 +137,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 			}
 			
 			?>
-            <script type="text/javascript">
+            <script>
 				var dt_balance = <?php print_r(json_encode($dt)); ?>;
 				var dt_totals = <?php print_r(json_encode($bal)); ?>;
 				var dt_country = <?php print_r(json_encode($dt_country)); ?>;

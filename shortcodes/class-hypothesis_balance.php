@@ -81,7 +81,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Balance extends Evidence_Hub_Shortcode {
       </svg>
   </div>
 </div>
-<script type="text/javascript">
+<script>
         jQuery(document).ready(function ($) {
             $(window).resize(function(){
                 drawBalanceVisualization();

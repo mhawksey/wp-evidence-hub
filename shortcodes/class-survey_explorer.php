@@ -29,11 +29,11 @@ class Evidence_Hub_Shortcode_Survey_Explorer extends Evidence_Hub_Shortcode {
 		extract($this->options); ?>
 <link rel="stylesheet" href="<?php echo plugins_url( 'js/markercluster/MarkerCluster.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
 <link rel="stylesheet" href="<?php echo plugins_url( 'js/markercluster/MarkerCluster.Default.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
-<script src="<?php echo plugins_url( 'js/markercluster/leaflet.markercluster-src.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
-<script type="text/javascript">
-      google.load('visualization', '1.1', {packages: ['corechart','charteditor']});
-    </script>
-<script type="text/javascript">
+<script src="<?php echo plugins_url( 'js/markercluster/leaflet.markercluster-src.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
+<script>
+      google.load('visualization', '1.1', { packages: [ 'corechart', 'charteditor' ] });
+</script>
+<script>
 	var $jq = jQuery.noConflict();
 	// set some globals
 	var headings,demos;

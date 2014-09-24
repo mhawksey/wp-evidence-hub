@@ -114,7 +114,7 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
 		$data = array("2013" => $year);
 		// finally echo all the HTML/JS required
 		?>
-        <script type="application/javascript">
+        <script>
 		/* <![CDATA[ */
 		<?php $this->print_myajax_config_javascript() ?>
 		var data = <?php echo json_encode($data);?>;
@@ -176,12 +176,11 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
                </small>    
             </div>
 		  </div>
-        
+
         <script>
             window.addEvent('domready', function() {
                 init();
                 //constructControlPanel('Global Oil Production & Consumption');
-                
             });
         </script>
         <?php $this->print_fullscreen_button_html_javascript() ?>

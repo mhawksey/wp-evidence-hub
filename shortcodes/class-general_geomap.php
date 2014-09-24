@@ -116,8 +116,8 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
             <div id="map"><?php $this->print_chart_loading_no_support_message( $is_map = TRUE ) ?></div>
             <?php $post = NULL; include(sprintf("%s/post-types/custom_post_metaboxes.php", EVIDENCE_HUB_PATH));?>
          </div>
-         <script type="application/javascript">
-		 /* <![CDATA[ */	
+         <script>
+		 /* <![CDATA[ */
 			var json = <?php $this->print_json_file($this->get_api_url( 'hub.get_geojson' ) .'count=-1&type='. strtolower($type)) ?>;	
 			var hubPoints = json['geoJSON'] || null;
 			var pluginurl = '<?php echo EVIDENCE_HUB_URL; ?>';
@@ -127,8 +127,8 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 		</script>
         <link rel="stylesheet" href="<?php echo plugins_url( 'js/markercluster/MarkerCluster.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
         <link rel="stylesheet" href="<?php echo plugins_url( 'js/markercluster/MarkerCluster.Default.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
-        <script src="<?php echo plugins_url( 'js/markercluster/leaflet.markercluster-src.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
-		<script src="<?php echo plugins_url( 'js/leaflet-map.js' , EVIDENCE_HUB_REGISTER_FILE )?>" type="text/javascript" charset="utf-8"></script>
+        <script src="<?php echo plugins_url( 'js/markercluster/leaflet.markercluster-src.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
+		<script src="<?php echo plugins_url( 'js/leaflet-map.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
 
 		<?php $this->print_fullscreen_button_html_javascript() ?>
 		<script>
@@ -142,12 +142,12 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 		// <<html dump	
 		return ob_get_clean();
 	}
-	
+
 	function renderGoogleTable() { ?>
-		<script type="text/javascript">
-          google.load('visualization', '1.1', {packages: ['controls']});
+        <script>
+          google.load('visualization', '1.1', { packages: [ 'controls' ] });
         </script>
-        <script type="text/javascript">
+        <script>
 		var data, table;
 		var pickers = {};;
 		var c = [];
@@ -155,7 +155,7 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 			options: {
 				position: 'bottomleft'
 			},
-		
+
 			onAdd: function (map) {
 				// create the control container with a particular class name
 				var controlDiv = L.DomUtil.create('div', 'summary-table-block');
@@ -217,7 +217,7 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 						  'cssClassNames': cssClassNames},
 			  'view': {'columns': [c['desc']]}
 			});
-			
+
 			google.visualization.events.addListener(table, 'ready', onReady);
 			google.visualization.events.addListener(stringFilter, 'statechange', function () {
 				var state = stringFilter.getState();
@@ -271,7 +271,6 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 			});   
 		  }
 		  google.setOnLoadCallback(drawVisualization);
-		  
 	  </script>
  <?php }
 }
