@@ -72,7 +72,7 @@ class Evidence_Hub_Shortcode_Policy_GeoMap extends Evidence_Hub_Shortcode {
         <div id="fullscreen-button"><a href="#" id="evidence-map-fullscreen">Full Screen</a></div>
         <script type="application/javascript">
         /* <![CDATA[ */	
-            var json = <?php print_r(file_get_contents(site_url().'/'.get_option('json_api_base', 'api').'/hub/get_geojson/?count=-1&type=policy')); ?>;	
+            var json = <?php $this->print_json_file($this->get_api_url( 'hub.get_geojson' ) .'count=-1&type=policy') ?>;
             var hubPoints = json['geoJSON'] || null;
             var pluginurl = '<?php echo EVIDENCE_HUB_URL; ?>';
             jQuery('#map').css('height', parseInt(jQuery('#evidence-map').width()*9/16));		
