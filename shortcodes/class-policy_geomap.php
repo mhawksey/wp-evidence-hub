@@ -59,11 +59,6 @@ class Evidence_Hub_Shortcode_Policy_GeoMap extends Evidence_Hub_Shortcode {
         <!--[if lte IE 8]>
         <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css" />
         <![endif]-->
-        <!--[if lte IE 10]>
-        <style>
-        #fullscreen-button { display:none; };
-        </style>
-        <![endif]-->
         <script src="http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js"></script>
         <div id="evidence-map">
            <?php $post = NULL; include(sprintf("%s/post-types/custom_post_metaboxes.php", EVIDENCE_HUB_PATH));?>

@@ -141,9 +141,6 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
         <!--[if lte IE 10]>
-        <style>
-        #fullscreen-button { display:none; };
-        </style>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
 

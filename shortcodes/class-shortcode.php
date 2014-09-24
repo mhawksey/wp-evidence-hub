@@ -259,6 +259,9 @@ abstract class Evidence_Hub_Shortcode {
 	/** Output the markup and Javascript for a fullscreen button [Bug: #8].
 	*/
 	protected function print_fullscreen_button_html_javascript() { ?>
+	<!--[if lte IE 10]>
+		<style> #fullscreen-button { display:none; } </style>
+	<![endif]-->
 		<div id="fullscreen-button"><a href="#" id="evidence-map-fullscreen">Full Screen</a></div>
 		<script src="<?php echo plugins_url( 'lib/map/lib/bigscreen.min.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
 		<script>
@@ -276,13 +279,13 @@ abstract class Evidence_Hub_Shortcode {
 		// called when the first element enters full screen
 
 		function onEnterEvidenceMap(){
-			jQuery('#evidence-map').css('height','100%');
+			jQuery('#evidence-map').css('height', '100%');
 			jQuery('#map').css('height', jQuery('#evidence-map').height());
 			map.invalidateSize();
 		}
 		function onExitEvidenceMap(){
-			jQuery('#evidence-map').css('height','');
-			jQuery('#map').css('height', parseInt(jQuery('#evidence-map').width()*9/16));
+			jQuery('#evidence-map').css('height', '');
+			jQuery('#map').css('height', parseInt(jQuery('#evidence-map').width() * 9/16));
 			map.invalidateSize();
 		}
 		</script>
