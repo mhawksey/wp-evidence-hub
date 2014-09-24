@@ -1,7 +1,16 @@
-//<script>
+/*!
+  Javascript for the survey data explorer shortcode.
+
+  WordPress shortcode: 'survey_explorer'
+*/
+
+/*global jQuery: false, document: false, google: false, L: false, alert: false, console: false */
+
+(function () {
+
 	var $jq = jQuery.noConflict();
 	// set some globals
-	var headings,demos;
+	var headings, demos;
 	var colNames = {};
 	var globalColIdx = {};
 	var data = {};
@@ -12,23 +21,26 @@
 	
 	var isFirstTime = true;
 	var fetch = 'world';
-    var headings, mapData;
+	var mapData;
 	var table, barChartDiff, pieChartDiff, chart_editor, mainMap, mapMarker, mapUS, map, markers, mapQuery;
 	var qVal, offset, nIntervId;
-	
-	
+
+	// Missing globals? (see: 'mapUS' above)
+	var editorChart, usMap, usMapData;
+
+
 	// initialise the chart editor
 	var editor = new google.visualization.ChartEditor();
 	var optionsMain = { 
 			region: fetch,
-			datalessRegionColor: '#FFFFFF',
+			datalessRegionColor: '#FFFFFF'
 			//colorAxis: {colors: ['white', '#3366cc']}
 		};
 	var optionsUS = {
 			region: 'US',
 			dataMode: 'regions',
 			resolution: 'provinces',
-			datalessRegionColor: '#FFFFFF',
+			datalessRegionColor: '#FFFFFF'
 			//colorAxis: {colors: ['white', '#3366cc']}
 		};
 	
@@ -92,6 +104,7 @@
 	
 	// function to build question select options
 	function handleHeadingQueryResponse(response) {
+		var i;
 		// Browser alert if error in query
 		if (response.isError()) {
 			alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
@@ -103,7 +116,7 @@
 		
 		// loop through and build helper object with question, question responses and question type
 		for (i=0; i < headingRows; i++){
-			if (colNames[headings.getValue(i,0)] == undefined){
+			if (colNames[headings.getValue(i,0)] === undefined){
 			  colNames[headings.getValue(i,0)] = [{v:"'"+headings.getValue(i,1).replace("'", "''")+"'", o: headings.getValue(i,2)}];
 			} else {
 			  colNames[headings.getValue(i,0)].push({v:"'"+headings.getValue(i,1).replace("'", "'''")+"'", o: headings.getValue(i,2)});
@@ -127,6 +140,7 @@
 	
 	// function to handle data filters
 	function handleDemoQueryResponse(response) {
+	  var i;
 	  if (response.isError()) {
         alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
         return;
@@ -196,14 +210,14 @@
 	// add radio/check to table chart
 	function filterCheckbox(dt, r){
 		var checked = ""; // code to keep selection
-		if (selectedValues[dt.getColumnLabel(0)+"-"+dt.getValue(r, 0)] != undefined){
+		if (selectedValues[dt.getColumnLabel(0) + "-" + dt.getValue(r, 0)] !== undefined) {
 			checked = 'checked';	
 		}
 		return '<div class="filter-check"><input type="radio" tabindex="-1" name="'+dt.getColumnLabel(0)+'" value="'+dt.getValue(r, 0)+'" '+checked+'/></div>';
 	}
 	// if no values let the user know (rather than having blank cell
 	function filterBlank(dt, r){
-		if(dt.getValue(r, 0) ==""){
+		if(dt.getValue(r, 0) === ""){
 			return '<em>no value</em>';	
 		}
 		return dt.getValue(r, 0);
@@ -238,7 +252,7 @@
 	function setQuestionQuery(){
 		// if the number of filters used equals the number ready proceed
 		console.log(filtersReady+':'+filtersAdded);
-		if (filtersReady == filtersAdded) {
+		if (filtersReady === filtersAdded) {
 			clearInterval(nIntervId); // clear the polling
 			var fetchWhere = "";
 			markers.clearLayers(); // clear existing markers from map
@@ -278,7 +292,7 @@
 			}
 			// Now handle geo queries. Because Fusion Tables has no OR operator and some of the question types span multiple columns we cheat and just take first column
 			// we still respect any data filters
-			if (fetch == 'US'){
+			if (fetch === 'US'){
 				mapUS = new google.visualization.Query(url);
 				mapUS.setQuery("SELECT region_code, COUNT() FROM "+ tableId + " WHERE " + colNames[qVal][0].v +" NOT EQUAL TO '' AND country_name = 'United States' " +  fetchWhere + " GROUP BY region_code");
 				mapUS.send(handleUSMapResponse);
@@ -318,6 +332,7 @@
     }
 	
 	function handleLikertResponse(response) {
+      var i;
       if (response.isError()) {
         //alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
         return;
@@ -325,27 +340,28 @@
       var col = response.getDataTable();
 	  data[fetch].addRow();
 	  var colRow = col.getNumberOfRows();
-	  var rowIndex = data[fetch].getNumberOfRows()-1;
+	  var rowIndex = data[fetch].getNumberOfRows() - 1;
 	  data[fetch].setCell(rowIndex, 0, col.getColumnLabel(0)); 
 	  for (i=0; i < colRow; i++){
-		if (globalColIdx[col.getValue(i,0)] == undefined){
-			globalColIdx[col.getValue(i,0)] = i+1;
-			data[fetch].addColumn('number',col.getValue(i,0))	
+		if (globalColIdx[col.getValue(i, 0)] === undefined){
+			globalColIdx[col.getValue(i, 0)] = i + 1;
+			data[fetch].addColumn('number', col.getValue(i, 0));
 		} 
-		data[fetch].setCell(rowIndex, globalColIdx[col.getValue(i,0)], col.getValue(i,1));
+		data[fetch].setCell(rowIndex, globalColIdx[col.getValue(i, 0)], col.getValue(i,1));
 	  }
 	  sendAndDraw();
     }
 	
 	// markers for leaflet map
 	function handleMapResponse(response) {
-      if (response.isError()) {
+      var i, marker;
+	  if (response.isError()) {
         //alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
         return;
       }
 		mapData = response.getDataTable();
-		for (var i = 0; i < mapData.getNumberOfRows(); i++) {
-			var marker = L.marker(L.latLng(mapData.getValue(i,0), mapData.getValue(i,1)));
+		for (i = 0; i < mapData.getNumberOfRows(); i++) {
+			marker = L.marker(L.latLng(mapData.getValue(i,0), mapData.getValue(i,1)));
 			markers.addLayer(marker);
 		}
 		map.addLayer(markers);
@@ -383,7 +399,7 @@
 	* 
 	*/
 	function handleRegionClick(event) {
-       if (event.region != fetch){
+       if (event.region !== fetch){
 		   fetch = event.region;
 		   setQuestion();
 	   } else {
@@ -392,7 +408,7 @@
 	  		$jq('#querymap_us').hide();
 			sendAndDraw();
 	   }
-	   if (event.region=='US'){
+	   if (event.region === 'US'){
 		   	$jq('#querymap').hide();
 	  		$jq('#querymap_us').show();
 	   }
@@ -494,8 +510,8 @@
 			filterGroup.remove();
 			setQuestion();
 		});
-	});
-	$jq( document ).ready(function( $ ) {
+	//});
+	//$jq( document ).ready(function( $ ) {
 		$jq(window).resize(function(){
 			sendAndDraw();
 			mainMap.draw(mapData, optionsMain);
@@ -505,4 +521,7 @@
 		$jq('#map').css('height', h);
 		$jq( ".modal" ).hide();	
 	});
-//</script>
+
+})();
+
+//End.
