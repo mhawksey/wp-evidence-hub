@@ -137,7 +137,12 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 				echo '<h4>'.$polarity->name.' Evidence ('.count($pposts).')</h4>'; //html
 				echo '<ul>'; //html
 				if (empty($nodeList[$polarity->name])){
-					$nodes[] = array("name" => $polarity->name, "url" => $base_link."evidence/polarity/".$polarity->slug, "id" => $polarity->slug, "type" => "polarity", "fill" => json_decode($polarity->description)->fill);
+					$nodes[] = array( "name" => $polarity->name,
+						"url" => $base_link."evidence/polarity/".$polarity->slug,
+						"id" => $polarity->slug,
+						"type" => "polarity",
+						"fill" => $this->json_get($polarity->description, 'fill'),
+					);  //Was: json_decode($polarity->description)->fill ,
 					$nodeList[$polarity->name] = 1;
 				}
 				$bal[$polarity->name] = array("total" => count($pposts), "sectors" => array());
@@ -147,7 +152,12 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 				foreach($sectors as $sector){	
 					$sposts = Evidence_Hub::filterOptions($pposts, 'sector_slug', $sector->slug);
 					if (empty($nodeList[$sector->name])){
-						$nodes[] = array("name" => $sector->name, "url" => $base_link."sector/".$sector->slug, "id" => $sector->slug, "type" => "sector", "fill" => json_decode($sector->description)->fill);
+						$nodes[] = array( "name" => $sector->name,
+							"url" => $base_link."sector/".$sector->slug, 
+							"id" => $sector->slug,
+							"type" => "sector",
+							"fill" => json_get($sector->description, 'fill'),
+						);  //Was: json_decode($sector->description)->fill ,
 						$nodeList[$sector->name] = 1;
 					}
 					$bal[$polarity->name]['sectors'][$sector->name] = count($sposts);
@@ -188,5 +198,14 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
         <script src="<?php echo plugins_url( 'js/sankey-control.js' , EVIDENCE_HUB_REGISTER_FILE )?>"></script>
     <?php 
     }
+
+	/** Safely get json-decoded properties [Bug #18].
+	*/
+	protected static function json_get( $json, $prop ) {
+		$obj = json_decode( $json );
+		return isset($obj->{ $prop }) ? $obj->{ $prop } :
+			(is_string( $obj ) ? $obj . '<!--no_fill-->' : '<!--no_fill_2-->');
+	}
+
 
 } // end of class
