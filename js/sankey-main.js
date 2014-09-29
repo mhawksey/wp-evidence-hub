@@ -1,6 +1,6 @@
 // JavaScript Document
 
-/*global san: false, d3: false, SANKEY_MARGIN: false */
+/*global san: false, d3: false, MyAjax: false, SANKEY_MARGIN: false */
 
 function renderSankey(country_slug, hyp_id) {
 
@@ -8,12 +8,16 @@ function renderSankey(country_slug, hyp_id) {
 		return;
 	}
 
-	var hyp_query = (hyp_id) ? '&hyp_id=' + hyp_id : '';
-	d3.json(MyAjax.apiurl.replace('%s', 'hub.get_sankey_data') + 'country_slug=' + country_slug + hyp_query, function (graph) {
+	var
+		W = window,
+		hyp_query = hyp_id ? ('&hyp_id=' + hyp_id) : '';
+
+	d3.json(W.MyAjax.apiurl.replace('%s', 'hub.get_sankey_data') + 'country_slug=' + country_slug + hyp_query,
+		function (graph) {
 
 		var margin = SANKEY_MARGIN,
-		width = SANKEY_WIDTH - margin.left - margin.right,
-		height = SANKEY_HEIGHT - margin.top - margin.bottom;
+		width = W.SANKEY_WIDTH - margin.left - margin.right,
+		height = W.SANKEY_HEIGHT - margin.top - margin.bottom;
 		
 		var units = "connections";
  
@@ -57,7 +61,7 @@ function renderSankey(country_slug, hyp_id) {
 			.append("svg:a")
 			  .attr("xlink:href", function(d) { 
 			  					console.log(d);
-			  					var ev = (d.source.type == 'hypothesis') ? '/evidence' : '';
+								var ev = (d.source.type === 'hypothesis') ? '/evidence' : '';
 								return d.source.url+ev+'/'+d.target.type+'/'+d.target.id; })
 			  .attr("class", "linkpath")
 			  .sort(function(a, b) { return b.dy - a.dy; });
@@ -96,9 +100,10 @@ function renderSankey(country_slug, hyp_id) {
 			  .append("rect")
 			  .attr("height", function(d) { return d.dy; })
 			  .attr("width", sankey.nodeWidth())
-			  .attr("class", function(d) { return d.id ;})
-			  .style("fill", function(d) { 
-				  return d.color = d.fill || color(d.name.replace(/ .*/, "")); })
+			  .attr("class", function(d) { return d.id; })
+			  .style("fill", function(d) {
+				  //return d.color = d.fill || color(d.name.replace(/ .*/, "")); })
+				  return d.color = d.fill || color(d.name.replace(new RegExp(" .*"), "")); })
 			  .style("stroke", function(d) { 
 				  return d3.rgb(d.color).darker(2); })
 			.append("title")
@@ -111,7 +116,7 @@ function renderSankey(country_slug, hyp_id) {
 			  .attr("y", function(d) { return d.dy / 2; })
 			  .attr("dy", ".35em")
 			  .attr("text-anchor", "end")
-			  .attr("class", function(d) { if (d.value === 0 ) return "hide"; })
+			  .attr("class", function(d) { if (d.value === 0) { return "hide"; } })
 			  .attr("transform", null)
 			  .text(function(d) { return d.name; })
 			.filter(function(d) { return d.x < width / 2; })
@@ -125,10 +130,10 @@ function renderSankey(country_slug, hyp_id) {
 			.attr("text-anchor", "start")  
 			.style("font-size", "12px") 
 			.style("font-style", "italic")
-			.text("Evidence Flow - "+ graph.title);
+			.text("Evidence Flow - " + graph.title);
 		}
 
-		window.jQuery && jQuery(".oer-chart-loading").hide();
+		W.jQuery && W.jQuery(".oer-chart-loading").hide();
 	})
 	.header("Content-type", "application/x-www-form-urlencoded");
 }
