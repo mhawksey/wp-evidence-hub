@@ -2,13 +2,13 @@
 
 /*global san: false, d3: false, SANKEY_MARGIN: false */
 
-function renderSankey(country_slug, hyp_id){
+function renderSankey(country_slug, hyp_id) {
 
 	if (!window.d3) {
 		return;
 	}
 
-	var hyp_query = (hyp_id) ? '&hyp_id='+hyp_id : '';
+	var hyp_query = (hyp_id) ? '&hyp_id=' + hyp_id : '';
 	d3.json(MyAjax.apiurl.replace('%s', 'hub.get_sankey_data') + 'country_slug=' + country_slug + hyp_query, function (graph) {
 
 		var margin = SANKEY_MARGIN,
@@ -104,7 +104,7 @@ function renderSankey(country_slug, hyp_id){
 			.append("title")
 			  .text(function(d) { 
 				  return d.name + "\n" + format(d.value); });
-			
+
 			// add in the title for the nodes
 			node.append("text")
 			  .attr("x", -6)
@@ -117,7 +117,7 @@ function renderSankey(country_slug, hyp_id){
 			.filter(function(d) { return d.x < width / 2; })
 			  .attr("x", 6 + sankey.nodeWidth())
 			  .attr("text-anchor", "start");
-			  
+
 		  var title = san.append("text")
 			.attr("class", "santitle")
 			.attr("x", 0)             
@@ -126,11 +126,9 @@ function renderSankey(country_slug, hyp_id){
 			.style("font-size", "12px") 
 			.style("font-style", "italic")
 			.text("Evidence Flow - "+ graph.title);
-			
-			
 		}
 
-					
+		window.jQuery && jQuery(".oer-chart-loading").hide();
 	})
-    .header("Content-type", "application/x-www-form-urlencoded");
-}	
+	.header("Content-type", "application/x-www-form-urlencoded");
+}
