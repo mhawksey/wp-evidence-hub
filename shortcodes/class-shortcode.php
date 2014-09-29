@@ -306,6 +306,13 @@ abstract class Evidence_Hub_Shortcode {
 		endif;
 	}
 
+	/** Quick and dirty variable 'dump' within a HTML comment.
+	*/
+	protected function debug( $obj, $label = NULL ) {
+		echo "\n<!--$label:"; var_dump( $obj ); echo "-->\n";
+	}
+
+
 	// Caching ----------------------------------------------------------------
 
 	// TODO: doesn't $wpdb need to be globalized in this function?
