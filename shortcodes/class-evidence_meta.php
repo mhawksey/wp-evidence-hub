@@ -42,6 +42,10 @@ class Evidence_Hub_Shortcode_Evidence_Meta extends Evidence_Hub_Shortcode {
 	*/	
 	function add_to_page($content) {
 		if (in_array(get_post_type(), self::$post_types_with_shortcode)) {
+			// Add a URL field based on configuration [LACE] [Bug: #21].
+			if ($this->get_option( 'wp_evidence_hub_url' )) {
+				$this->defaults[ 'footer_terms' ] = 'citation,url';
+			}
 			$content = do_shortcode('[evidence_meta location="header"]').$content.do_shortcode('[evidence_meta location="footer"]');
 			if (function_exists('the_ratings')){
 				$content .= '<div id="postvoting">'.the_ratings('div', get_the_ID(), false).'</div>';
