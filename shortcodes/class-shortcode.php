@@ -143,10 +143,12 @@ abstract class Evidence_Hub_Shortcode {
 		} elseif($type == "type" ) {
 			return __(sprintf('<span class="meta_label">Type</span>: <a href="%s">%s</a>', get_post_type_archive_link($post[$type]), ucwords($post[$type])));
 		// special case for links	
-		} elseif(isset($post[$type]) && ($type=="citation" || $type=="resource_link" || 'url' == $type)) {
+		} elseif(isset($post[$type]) && ('citation' == $type || 'resource_link' == $type || 'url' == $type)) {
 			// if valid link wrap in href
 			if (filter_var($post[$type], FILTER_VALIDATE_URL) === FALSE) {
-				return __(sprintf('<span class="meta_label">%s</span>: %s', ucwords(str_replace("_", " ",$type)),$post[$type]));
+				return "<span class='$type'>" .
+				__(sprintf('<span class="meta_label">%s</span>: %s', ucwords(str_replace("_", " ",$type)),$post[$type]))
+				. '</span>';
 			} else {
 				return "<span class='$type'>" .
 				__(sprintf('<span class="meta_label">%s</span>: <a href="%s">%s</a>', ucwords(str_replace("_", " ",$type)),$post[$type],$post[$type]))
