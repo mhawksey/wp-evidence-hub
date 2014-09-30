@@ -159,7 +159,7 @@ class Evidence_Template extends Evidence_Hub_CustomPostType {
 		 ));
 
 		// Add a URL field based on configuration [LACE] [Bug: #21].
-		if ($this->get_option( 'wp_evidence_hub_url' )) {
+		if ($this->get_option( 'wp_evidence_hub_url_field' )) {
 			$this->options = array_merge($this->options, array(
 				'url' => array(
 					'type' => 'text',

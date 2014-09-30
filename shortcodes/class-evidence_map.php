@@ -131,7 +131,7 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
         
         <link rel="stylesheet" href="<?php echo plugins_url( 'lib/map/css/skeleton.css', EVIDENCE_HUB_REGISTER_FILE )?>" />
         <link rel="stylesheet" href="<?php echo plugins_url( 'lib/map/css/styles.css', EVIDENCE_HUB_REGISTER_FILE )?>" />
-		<?php $this->print_custom_svg_style() ?>
+        <?php $this->print_custom_svg_style() ?>
         <!--[if gte IE 7]>
            <style>svg { height: 450px }</style>
         <![endif]-->
