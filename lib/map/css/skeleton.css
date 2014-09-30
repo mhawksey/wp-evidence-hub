@@ -232,7 +232,7 @@
       zoom: 1; }
 
     /* You can also use a <br class="clear" /> to clear columns */
-    .clear {
+    .x-skeleton-clear /*NDF: 2014-09-30, WAS: .clear [Bug: #20]*/ {
       clear: both;
       display: block;
       overflow: hidden;
