@@ -117,7 +117,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 					$sposts = Evidence_Hub::filterOptions($pposts, 'sector_slug', $sector->slug);
 					$dt['cols'][] = array('label' => $sector->name, 'type'=> 'number');
 					$dt['rows'][0]['c'][] = array('v' => ($polarity->slug == 'pos') ? count($sposts) : -count($sposts), 'f' => (string)count($sposts) );
-					$series[] = array('color'=> json_decode($sector->description)->fill);
+					$series[] = array( 'color' => self::json_get( $sector->description, 'fill' ));  //Was: json_decode($sector->description)->fill;
 				}
 				
 			}

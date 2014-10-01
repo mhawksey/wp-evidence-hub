@@ -152,8 +152,8 @@ class JSON_API_Hub_Controller {
 							"url" => $base_link."/evidence/polarity/".$polarity->slug,
 							"id" => $polarity->slug,
 							"type" => "polarity",
-							"fill" => json_decode($polarity->description)->fill
-					);
+							"fill" => self::json_get( $polarity->description, 'fill' ),
+					);  //Was: json_decode($polarity->description)->fill ,
 					$nodeList[$polarity->name] = 1;
 				}
 				if (count($pposts) > 0) {
@@ -166,8 +166,8 @@ class JSON_API_Hub_Controller {
 								"name" => $sector->name,
 								"url" => $base_link."/evidence/sector/".$sector->slug,
 								"id" => $sector->slug, "type" => "sector",
-								"fill" => json_decode($sector->description)->fill
-						);
+								"fill" => self::json_get( $sector->description, 'fill' ),
+						);  //Was: json_decode($sector->description)->fill ,
 						$nodeList[$sector->name] = 1;
 					}
 					if (count($sposts) > 0) {
@@ -359,6 +359,16 @@ class JSON_API_Hub_Controller {
 			return $children;
 		}*/
 	}
+
+
+	/** Safely get json-decoded properties, eg. SVG fill colour [Bug #18].
+	*/
+	protected static function json_get( $json, $prop, $default = '' ) {
+		$obj = json_decode( $json );
+		return isset($obj->{ $prop }) ? $obj->{ $prop } :
+			(is_string( $obj ) ? $obj . $default : $default);  //'<!--no_fill_2-->');
+	}
+
 }
 
 //End. ?->
