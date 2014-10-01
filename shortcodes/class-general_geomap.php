@@ -16,7 +16,9 @@
 new Evidence_Hub_Shortcode_GeoMap();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
-	var $shortcode = 'geomap';
+
+	const SHORTCODE = 'geomap';
+
 	var $defaults = array(
 		'title' => false,
 		'no_evidence_message' => "There is no map yet to display",
@@ -33,7 +35,7 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 	* @since 0.1.1
 	* @return string.
 	*/
-	function content() {
+	protected function content() {
 		ob_start();
 		extract($this->options);
 		$errors = array();	

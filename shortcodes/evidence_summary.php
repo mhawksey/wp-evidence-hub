@@ -6,7 +6,9 @@
 new Evidence_Hub_Shortcode_Evidence_Summary();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/shortcode.php'.
 class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
-	var $shortcode = 'evidence_summary';
+
+	const SHORTCODE = 'evidence_summary';
+
 	var $defaults = array(
 		'post_id' => false,
 		'post_ids' => false,
@@ -22,7 +24,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 
 	static $post_types_with_evidence = array('hypothesis');
 	
-	function add_to_page($content) {
+	protected function add_to_page($content) {
 		if (in_array(get_post_type(), self::$post_types_with_evidence)) {
 			if (is_single()) {
 				$content = preg_replace('/(<span id=\"more-[0-9]*\"><\/span>)/', '$1'.do_shortcode('[evidence_summary]').'<h3>Hypothesis Details</h3>', $content, 1); 
@@ -53,7 +55,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
     /**
      * @return string
      */
-	function content() {
+	protected function content() {
 		ob_start();
 		extract($this->options);
 		$post_id = implode(",", $this->options['post_ids']);
@@ -104,7 +106,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
      * @param array [in/out]
      * @return array Get array of links.
      */
-    function print_get_nodes_links($evidence, &$nodes, $post_id) {
+    protected function print_get_nodes_links($evidence, &$nodes, $post_id) {
         $base_link = get_permalink();
         $links = array();
         $nodesList = array();
@@ -167,7 +169,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
     /**
      * @return NULL
      */
-    function print_sankey_javascript($sankey, $nodes, $links) {
+    protected function print_sankey_javascript($sankey, $nodes, $links) {
         $graph = array('nodes' => $nodes, 'links' => $links); ?>
 		<?php if ($sankey == 1): // <-- start of sankey if single ?>
             <script>

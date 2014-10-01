@@ -38,7 +38,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 	*
 	* @since 0.1.1 
 	*/
-	function add_to_page($content) {
+	protected function add_to_page($content) {
 		if (in_array(get_post_type(), self::$post_types_with_shortcode)) {
 			if (is_single()) {
 				$content = preg_replace('/(<span id=\"more-[0-9]*\"><\/span>)/', '$1'.do_shortcode('[evidence_summary]').'<h3>Hypothesis Details</h3>', $content, 1); 

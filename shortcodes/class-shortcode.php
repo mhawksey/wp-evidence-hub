@@ -61,7 +61,7 @@ abstract class Evidence_Hub_Shortcode {
 	}
 
 	/**
-	* Intercepts content rendering and adds shortcode as required.
+	* WP Hook filter. Intercepts content rendering and adds shortcode as required.
 	*
 	* @since 0.1.1 
 	*/
@@ -76,7 +76,7 @@ abstract class Evidence_Hub_Shortcode {
 	*
 	* @since 0.1.1 
 	*/
-	public function add_to_page($content) {
+	protected function add_to_page($content) {
 		return $content;
 	}
 	
