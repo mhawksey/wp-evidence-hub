@@ -18,7 +18,9 @@
 new Evidence_Hub_Shortcode_Hypothesis_Sankey();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_Hypothesis_Sankey extends Evidence_Hub_Shortcode {
-	var $shortcode = 'hypothesis_sankey';
+
+	const SHORTCODE = 'hypothesis_sankey';
+
 	var $defaults = array('slug' => 'World');
 
 	static $post_types_with_sessions = NULL;
@@ -30,7 +32,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Sankey extends Evidence_Hub_Shortcode {
 	* @since 0.1.1
 	* @return string.
 	*/
-	function content() {
+	protected function content() {
 		ob_start();
 		extract($this->options); 
 		$hyp_id = "";

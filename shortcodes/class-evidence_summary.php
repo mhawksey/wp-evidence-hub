@@ -21,7 +21,9 @@
 new Evidence_Hub_Shortcode_Evidence_Summary();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
-	public $shortcode = 'evidence_summary';
+
+	const SHORTCODE = 'evidence_summary';
+
 	public $defaults = array(
 		'title' => false,
 		'display_sankey' => true,
@@ -56,7 +58,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 	* @since 0.1.1
 	* @return string.
 	*/
-	function content() {
+	protected function content() {
 		ob_start();
 		extract($this->options);
 		$post_id = get_the_ID();
@@ -120,7 +122,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 	* @param string $post_id of hypothesis
 	* @return array Get array of links.
 	*/
-    function print_get_nodes_links($evidence, &$nodes, &$links, &$bal, $post_id) {
+    protected function print_get_nodes_links($evidence, &$nodes, &$links, &$bal, $post_id) {
         $base_link = get_permalink();
         //$links = array();
         $nodesList = array();
@@ -186,7 +188,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 	* @param array $graph of sankey data.
 	* @return NULL.
 	*/
-    function print_sankey_javascript($graph) { ?>
+    protected function print_sankey_javascript($graph) { ?>
 		<script>
         var graph = <?php print_r(json_encode($graph)); ?>;
         var margin = {top: 1, right: 1, bottom: 1, left: 1},
