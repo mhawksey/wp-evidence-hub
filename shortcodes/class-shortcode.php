@@ -224,6 +224,14 @@ abstract class Evidence_Hub_Shortcode {
 		return $url;
 	}
 
+	/** Safely get json-decoded properties, eg. SVG fill colour [Bug #18].
+	*/
+	protected static function json_get( $json, $prop, $default = '' ) {
+		$obj = json_decode( $json );
+		return isset($obj->{ $prop }) ? $obj->{ $prop } :
+			(is_string( $obj ) ? $obj . $default : $default);  //'<!--no_fill_2-->');
+	}
+
 	/** Get a WP configuration option from a PHP define() or the database. */
 	protected function get_option( $option, $default = NULL ) {
 		$KEY = strtoupper( $option );
@@ -245,6 +253,12 @@ abstract class Evidence_Hub_Shortcode {
 			$result = "'ERROR, not JSON: $url'; window.console && console.log('Error, not JSON', '$url');";
 		}
 		echo $result;
+	}
+
+	/** Output JSON data containing, eg. dashes as '&8211;' [Bug: #23].
+	*/
+	protected function print_json_data( $obj ) {
+		echo str_replace( '&#8211;', '—', html_entity_decode(json_encode( $obj ), ENT_NOQUOTES ));
 	}
 
 	/** Output a message for Internet Explorer <= 8. And a "Loading..." message [Bug: #8].
