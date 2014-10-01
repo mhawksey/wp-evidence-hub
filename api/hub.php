@@ -138,11 +138,22 @@ class JSON_API_Hub_Controller {
 			$hposts_title = get_the_title($hypothesis);
 			$base_link = ($country_slug != 'World') ? (site_url().'/country/'.$country_slug) : site_url();
 			$hyp_link = $base_link . '/hypothesis/'.$hypothesis.'/'.basename(get_permalink($hypothesis));
-			$nodes[] = array("name" => $hposts_title, "url" => $hyp_link, "id" => $hypothesis, "type" => "hypothesis" );
+			$nodes[] = array(
+					"name" => $hposts_title,
+					"url" => $hyp_link,
+					"id" => $hypothesis,
+					"type" => "hypothesis"
+			);
 			foreach ($polarities as $polarity){
 				$pposts = Evidence_Hub::filterOptions($hposts, 'polarity_slug', $polarity->slug);
 				if (empty($nodeList[$polarity->name])){
-					$nodes[] = array("name" => $polarity->name, "url" => $base_link."/evidence/polarity/".$polarity->slug, "id" => $polarity->slug, "type" => "polarity", "fill" => json_decode($polarity->description)->fill);
+					$nodes[] = array(
+							"name" => $polarity->name,
+							"url" => $base_link."/evidence/polarity/".$polarity->slug,
+							"id" => $polarity->slug,
+							"type" => "polarity",
+							"fill" => json_decode($polarity->description)->fill
+					);
 					$nodeList[$polarity->name] = 1;
 				}
 				if (count($pposts) > 0) {
@@ -151,7 +162,12 @@ class JSON_API_Hub_Controller {
 				foreach($sectors as $sector){
 					$sposts = Evidence_Hub::filterOptions($pposts, 'sector_slug', $sector->slug);
 					if (empty($nodeList[$sector->name])){
-						$nodes[] = array("name" => $sector->name, "url" => $base_link."/evidence/sector/".$sector->slug, "id" => $sector->slug, "type" => "sector", "fill" => json_decode($sector->description)->fill);
+						$nodes[] = array(
+								"name" => $sector->name,
+								"url" => $base_link."/evidence/sector/".$sector->slug,
+								"id" => $sector->slug, "type" => "sector",
+								"fill" => json_decode($sector->description)->fill
+						);
 						$nodeList[$sector->name] = 1;
 					}
 					if (count($sposts) > 0) {
@@ -344,4 +360,5 @@ class JSON_API_Hub_Controller {
 		}*/
 	}
 }
-?>
+
+//End. ?->
