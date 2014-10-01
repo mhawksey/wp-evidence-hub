@@ -134,4 +134,6 @@ window.onload = function () {
 		.transition()
 		  .attr("x", function(d) { return innerMargin - total(d.barNeg) - 2 * labelSpace; });
 	}
+
+	window.jQuery && jQuery('.oer-chart-loading').hide();
 }

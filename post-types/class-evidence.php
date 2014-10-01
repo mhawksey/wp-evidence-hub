@@ -157,6 +157,20 @@ class Evidence_Template extends Evidence_Hub_CustomPostType {
 				'label' => 'Citation'
 				)
 		 ));
+
+		// Add a URL field based on configuration [LACE] [Bug: #21].
+		if ($this->get_option( 'wp_evidence_hub_url_field' )) {
+			$this->options = array_merge($this->options, array(
+				'url' => array(
+					'type' => 'text',
+					'lookup' => true,
+					'save_as' => 'post_meta',
+					'position' => 'bottom',
+					'label' => 'URL'
+				)
+			));
+		}
+
 		 Evidence_Hub::$post_type_fields[$this->post_type] = $this->options;
 	}
 		
