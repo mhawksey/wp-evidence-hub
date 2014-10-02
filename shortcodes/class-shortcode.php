@@ -24,11 +24,7 @@ abstract class Evidence_Hub_Shortcode {
 	* @since 0.1.1
 	*/
 	public function __construct() {
-		// Play safe for now! [Bug: #24]
-		//$shortcode = defined( 'static::SHORTCODE' ) ? static::SHORTCODE : $this->shortcode;
-		$shortcode = property_exists( $this, 'shortcode' ) ? $this->shortcode : static::SHORTCODE;
-
-		add_shortcode( $shortcode, array( &$this, 'shortcode' ));
+		add_shortcode( $this->get_shortcode(), array( &$this, 'shortcode' ));
 		add_filter('the_content', array(&$this, 'pre_add_to_page'));
 
 		add_action('save_post', array(&$this, 'save_post'));
@@ -39,6 +35,13 @@ abstract class Evidence_Hub_Shortcode {
 		
 		global $wpdb;
 		$wpdb->evidence_hub_shortcode_cache = $wpdb->prefix.'evidence_hub_shortcode_cache';
+	}
+
+
+	protected function get_shortcode() {
+		// Play safe for now! [Bug: #24]
+		//return defined( 'static::SHORTCODE' ) ? static::SHORTCODE : $this->shortcode;
+		return property_exists( $this, 'shortcode' ) ? $this->shortcode : static::SHORTCODE;
 	}
 
 	/**
@@ -97,7 +100,7 @@ abstract class Evidence_Hub_Shortcode {
 	  			$this->meta_bar($post, $footer_terms);
 			}
 		
-		if (count($errors)) return "[Shortcode errors (".$this->shortcode."): ".implode(', ', $errors)."]";	
+		if (count($errors)) return "[Shortcode errors (". $this->get_shortcode() ."): ".implode(', ', $errors)."]";	
 		return ob_get_clean();
 	}
 	
@@ -324,7 +327,7 @@ abstract class Evidence_Hub_Shortcode {
 	/** Put Evidence Hub shortcodes used on a page in the Javascript console [Bug: #9].
 	*/
 	protected function debug_shortcode( $options = NULL ) {
-		$shortcode = property_exists( $this, 'shortcode' ) ? $this->shortcode : static::SHORTCODE;
+		$shortcode = $this->get_shortcode();
 		$js_options = json_encode( $options ? $options : '[no options]' );
 
 		if (headers_sent()): ?>
@@ -411,7 +414,7 @@ abstract class Evidence_Hub_Shortcode {
 			from $wpdb->evidence_hub_shortcode_cache
 			where shortcode = %s
 			and options = %s",
-			$this->shortcode,
+			$this->get_shortcode(),
 			serialize($this->options)
 		));
 	}
@@ -428,7 +431,7 @@ abstract class Evidence_Hub_Shortcode {
 		global $wpdb;
 		$wpdb->insert($wpdb->evidence_hub_shortcode_cache, array(
 			'created' => current_time('mysql'),
-			'shortcode' => $this->shortcode,
+			'shortcode' => $this->get_shortcode(),
 			'options' => serialize($this->options),
 			'content' => $content,
 		));
