@@ -16,7 +16,9 @@
 new Evidence_Hub_Shortcode_Hypothesis_Summary();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
-	var $shortcode = 'hypothesis_summary';
+
+	const SHORTCODE = 'hypothesis_summary';
+
 	public $defaults = array(
 		'title' => false,
 		'display_sankey' => true,
@@ -31,7 +33,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 	*
 	* @since 0.1.1 
 	*/
-	function add_to_page($content) {
+	protected function add_to_page($content) {
 		if (in_array(get_post_type(), self::$post_types_with_shortcode)) {
 			if (get_option('hypothesis_template_page')){
 				if (is_single()) {
@@ -60,7 +62,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 		return $content;
 	}
 
-	function content(){
+	protected function content(){
 	}
 	
 	function get_google_visualisation_data($id){
@@ -117,7 +119,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 					$sposts = Evidence_Hub::filterOptions($pposts, 'sector_slug', $sector->slug);
 					$dt['cols'][] = array('label' => $sector->name, 'type'=> 'number');
 					$dt['rows'][0]['c'][] = array('v' => ($polarity->slug == 'pos') ? count($sposts) : -count($sposts), 'f' => (string)count($sposts) );
-					$series[] = array('color'=> json_decode($sector->description)->fill);
+					$series[] = array( 'color' => self::json_get( $sector->description, 'fill' ));  //Was: json_decode($sector->description)->fill;
 				}
 				
 			}

@@ -15,7 +15,9 @@
 new Evidence_Hub_Shortcode_Evidence_Entry();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_Evidence_Entry extends Evidence_Hub_Shortcode {
-	public $shortcode = 'evidence_entry';
+
+	const SHORTCODE = 'evidence_entry';
+
 	public $options = array('do_cache' => false);
 	
 	
@@ -24,7 +26,7 @@ class Evidence_Hub_Shortcode_Evidence_Entry extends Evidence_Hub_Shortcode {
 	*
 	* @since 0.1.1
 	*/
-	function content() {
+	protected function content() {
 		ob_start();
 		extract($this->options);
 		

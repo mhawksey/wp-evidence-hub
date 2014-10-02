@@ -124,7 +124,7 @@ class JSON_API_Hub_Controller {
 		if ($country_slug != "World"){
 			foreach ($posts as $post){
 				$markers[] = array("id" => $post['ID'],
-								   "name" => get_the_title($post['ID']),
+								   "name" => self::_decode(get_the_title($post[ 'ID' ])),
 								   "url" => get_permalink($post['ID']),
 								   "lat" => get_post_meta($post['ID'], '_pronamic_google_maps_latitude', true ),
 								   "lng" => get_post_meta($post['ID'], '_pronamic_google_maps_longitude', true ),
@@ -138,24 +138,49 @@ class JSON_API_Hub_Controller {
 			$hposts_title = get_the_title($hypothesis);
 			$base_link = ($country_slug != 'World') ? (site_url().'/country/'.$country_slug) : site_url();
 			$hyp_link = $base_link . '/hypothesis/'.$hypothesis.'/'.basename(get_permalink($hypothesis));
-			$nodes[] = array("name" => $hposts_title, "url" => $hyp_link, "id" => $hypothesis, "type" => "hypothesis" );
+			$nodes[] = array(
+					"name" => self::_decode( $hposts_title ),
+					"url" => $hyp_link,
+					"id" => $hypothesis,
+					"type" => "hypothesis"
+			);
 			foreach ($polarities as $polarity){
 				$pposts = Evidence_Hub::filterOptions($hposts, 'polarity_slug', $polarity->slug);
 				if (empty($nodeList[$polarity->name])){
-					$nodes[] = array("name" => $polarity->name, "url" => $base_link."/evidence/polarity/".$polarity->slug, "id" => $polarity->slug, "type" => "polarity", "fill" => json_decode($polarity->description)->fill);
+					$nodes[] = array(
+							"name" => self::_decode( $polarity->name ),
+							"url" => $base_link."/evidence/polarity/".$polarity->slug,
+							"id" => $polarity->slug,
+							"type" => "polarity",
+							"fill" => self::json_get( $polarity->description, 'fill' ),
+					);  //Was: json_decode($polarity->description)->fill ,
 					$nodeList[$polarity->name] = 1;
 				}
 				if (count($pposts) > 0) {
-					$links[] = array("source" => $hposts_title, "target" => $polarity->name, "value" => count($pposts));
+					$links[] = array(
+							"source" => self::_decode( $hposts_title ),
+							"target" => $polarity->name,
+							"value" => count($pposts),
+					);
 				}
 				foreach($sectors as $sector){
 					$sposts = Evidence_Hub::filterOptions($pposts, 'sector_slug', $sector->slug);
 					if (empty($nodeList[$sector->name])){
-						$nodes[] = array("name" => $sector->name, "url" => $base_link."/evidence/sector/".$sector->slug, "id" => $sector->slug, "type" => "sector", "fill" => json_decode($sector->description)->fill);
+						$nodes[] = array(
+								"name" => self::_decode( $sector->name ),
+								"url" => $base_link."/evidence/sector/".$sector->slug,
+								"id" => $sector->slug,
+								"type" => "sector",
+								"fill" => self::json_get( $sector->description, 'fill' ),
+						);  //Was: json_decode($sector->description)->fill ,
 						$nodeList[$sector->name] = 1;
 					}
 					if (count($sposts) > 0) {
-						$links[] = array("source" => $polarity->name, "target" => $sector->name, "value" => count($sposts));	
+						$links[] = array(
+								"source" => self::_decode( $polarity->name ),
+								"target" => $sector->name,
+								"value" => count($sposts),
+						);
 					}
 				}
 			}
@@ -343,5 +368,20 @@ class JSON_API_Hub_Controller {
 			return $children;
 		}*/
 	}
+
+
+	protected static function _decode( $str ) {
+		return str_replace( '&#8211;', '—', $str );  //html_entity_decode( $str ));
+	}
+
+	/** Safely get json-decoded properties, eg. SVG fill colour [Bug #18].
+	*/
+	protected static function json_get( $json, $prop, $default = '' ) {
+		$obj = json_decode( $json );
+		return isset($obj->{ $prop }) ? $obj->{ $prop } :
+			(is_string( $obj ) ? $obj . $default : $default);  //'<!--no_fill_2-->');
+	}
+
 }
-?>
+
+//End. ?->

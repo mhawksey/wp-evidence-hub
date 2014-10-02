@@ -17,17 +17,20 @@
 new Evidence_Hub_Shortcode_GetPostMeta();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_GetPostMeta extends Evidence_Hub_Shortcode {
-	var $shortcode = 'get_post_meta';
+
+	const SHORTCODE = 'get_post_meta';
+
 	public $defaults = array('meta_key' => false,
 							 'single' => true);
 	static $post_types_with_shortcode = array('hypothesis');
+
 	/**
 	* Generate post content. 
 	*
 	* @since 0.1.1
 	* @return string.
 	*/
-	function content() {
+	protected function content() {
 		ob_start();
 		extract($this->options); 
 		$output;
@@ -40,7 +43,7 @@ class Evidence_Hub_Shortcode_GetPostMeta extends Evidence_Hub_Shortcode {
 				echo 'No key questions have been identified yet';	
 			}
 		} else {
-			echo '<p>No key provided in $shortcode</p>';	
+			printf( '<p>No key provided in %s</p>', self::SHORTCODE );	
 		}
 		return ob_get_clean();
 	} // end of function content

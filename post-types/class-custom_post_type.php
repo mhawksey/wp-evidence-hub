@@ -193,4 +193,14 @@ class Evidence_Hub_CustomPostType {
 	public function column($column, $post_id) {
 		
 	}
+
+	/**
+	* Get a WP configuration option from a PHP define() or the database.
+	* @return string
+	*/
+	protected function get_option( $option, $default = NULL ) {
+		$KEY = strtoupper( $option );
+		return defined( $KEY ) ? constant( $KEY ) : get_option( $option, $default );
+	}
+
 }

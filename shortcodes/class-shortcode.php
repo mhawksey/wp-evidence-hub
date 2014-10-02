@@ -11,7 +11,10 @@
  */
  
 abstract class Evidence_Hub_Shortcode {
-	var $shortcode = 'evidence_hub_shortcode';
+
+	const SHORTCODE = 'evidence_hub_shortcode';
+	//var $shortcode = 'evidence_hub_shortcode';
+
 	var $defaults = array('do_cache' => true);
 	var $options = array();
 	
@@ -21,7 +24,11 @@ abstract class Evidence_Hub_Shortcode {
 	* @since 0.1.1
 	*/
 	public function __construct() {
-		add_shortcode($this->shortcode, array(&$this, 'shortcode'));
+		// Play safe for now! [Bug: #24]
+		//$shortcode = defined( 'static::SHORTCODE' ) ? static::SHORTCODE : $this->shortcode;
+		$shortcode = property_exists( $this, 'shortcode' ) ? $this->shortcode : static::SHORTCODE;
+
+		add_shortcode( $shortcode, array( &$this, 'shortcode' ));
 		add_filter('the_content', array(&$this, 'pre_add_to_page'));
 
 		add_action('save_post', array(&$this, 'save_post'));
@@ -54,7 +61,7 @@ abstract class Evidence_Hub_Shortcode {
 	}
 
 	/**
-	* Intercepts content rendering and adds shortcode as required.
+	* WP Hook filter. Intercepts content rendering and adds shortcode as required.
 	*
 	* @since 0.1.1 
 	*/
@@ -69,7 +76,7 @@ abstract class Evidence_Hub_Shortcode {
 	*
 	* @since 0.1.1 
 	*/
-	public function add_to_page($content) {
+	protected function add_to_page($content) {
 		return $content;
 	}
 	
@@ -143,12 +150,16 @@ abstract class Evidence_Hub_Shortcode {
 		} elseif($type == "type" ) {
 			return __(sprintf('<span class="meta_label">Type</span>: <a href="%s">%s</a>', get_post_type_archive_link($post[$type]), ucwords($post[$type])));
 		// special case for links	
-		} elseif(isset($post[$type]) && ($type=="citation" || $type=="resource_link")) {
+		} elseif(isset($post[$type]) && ('citation' == $type || 'resource_link' == $type || 'url' == $type)) {
 			// if valid link wrap in href
 			if (filter_var($post[$type], FILTER_VALIDATE_URL) === FALSE) {
-				return __(sprintf('<span class="meta_label">%s</span>: %s', ucwords(str_replace("_", " ",$type)),$post[$type]));
+				return "<span class='$type'>" .
+				__(sprintf('<span class="meta_label">%s</span>: %s', ucwords(str_replace("_", " ",$type)),$post[$type]))
+				. '</span>';
 			} else {
-				return __(sprintf('<span class="meta_label">%s</span>: <a href="%s">%s</a>', ucwords(str_replace("_", " ",$type)),$post[$type],$post[$type]));
+				return "<span class='$type'>" .
+				__(sprintf('<span class="meta_label">%s</span>: <a href="%s">%s</a>', ucwords(str_replace("_", " ",$type)),$post[$type],$post[$type]))
+				. '</span>';
 			}
 		// final case all other custom fields
 		} elseif (isset($post[$type])) {
@@ -162,7 +173,7 @@ abstract class Evidence_Hub_Shortcode {
 	*
 	* @since 0.1.1
 	*/
-	function prep_options() {
+	protected function prep_options() {
 		foreach ($this->options as $key => $value) {
 			if (is_string($value)) {
 				if ($value == 'true') $this->options[$key] = true;
@@ -173,7 +184,11 @@ abstract class Evidence_Hub_Shortcode {
 			$this->options['post_id'] = $GLOBALS['post']->ID;
 		}
 	}
-	abstract function content();
+
+	/**
+	* @return string
+	*/
+	abstract protected function content();
 
 
 	// Ajax configuration, SVG logo etc. --------------------------------------
@@ -220,6 +235,14 @@ abstract class Evidence_Hub_Shortcode {
 		return $url;
 	}
 
+	/** Safely get json-decoded properties, eg. SVG fill colour [Bug #18].
+	*/
+	protected static function json_get( $json, $prop, $default = '' ) {
+		$obj = json_decode( $json );
+		return isset($obj->{ $prop }) ? $obj->{ $prop } :
+			(is_string( $obj ) ? $obj . $default : $default);  //'<!--no_fill_2-->');
+	}
+
 	/** Get a WP configuration option from a PHP define() or the database. */
 	protected function get_option( $option, $default = NULL ) {
 		$KEY = strtoupper( $option );
@@ -241,6 +264,12 @@ abstract class Evidence_Hub_Shortcode {
 			$result = "'ERROR, not JSON: $url'; window.console && console.log('Error, not JSON', '$url');";
 		}
 		echo $result;
+	}
+
+	/** Output JSON data containing, eg. dashes as '&8211;' [Bug: #23].
+	*/
+	protected function print_json_data( $obj ) {
+		echo str_replace( '&#8211;', '—', html_entity_decode(json_encode( $obj ), ENT_NOQUOTES ));
 	}
 
 	/** Output a message for Internet Explorer <= 8. And a "Loading..." message [Bug: #8].
@@ -295,14 +324,16 @@ abstract class Evidence_Hub_Shortcode {
 	/** Put Evidence Hub shortcodes used on a page in the Javascript console [Bug: #9].
 	*/
 	protected function debug_shortcode( $options = NULL ) {
+		$shortcode = property_exists( $this, 'shortcode' ) ? $this->shortcode : static::SHORTCODE;
 		$js_options = json_encode( $options ? $options : '[no options]' );
+
 		if (headers_sent()): ?>
 		<script>
-		window.console && console.log('X-WP-Shortcode: "<?php echo $this->shortcode .'"\', '. $js_options ?>);
+		window.console && console.log('X-WP-Shortcode: "<?php echo $shortcode .'"\', '. $js_options ?>);
 		</script>
 		<?php
 		else:
-			header( 'X-Evidence-Hub-Shortcode: '. $this->shortcode .'; input='. $js_options );
+			header( 'X-Evidence-Hub-Shortcode: '. $shortcode .'; input='. $js_options );
 		endif;
 	}
 
@@ -371,7 +402,7 @@ abstract class Evidence_Hub_Shortcode {
 	*
 	* @since 0.1.1
 	*/		
-	public function get_cache() {
+	protected function get_cache() {
 		if (!get_option('evidence_hub_caching')) return false;
 		
 		global $wpdb;
@@ -391,7 +422,7 @@ abstract class Evidence_Hub_Shortcode {
 	* @since 0.1.1
 	* @param string $content
 	*/	
-	public function cache($content) {
+	protected function cache($content) {
 		if (!get_option('evidence_hub_caching')) return false;
 		
 		global $wpdb;

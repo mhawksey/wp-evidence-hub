@@ -19,7 +19,9 @@
 new Evidence_Hub_Shortcode_Evidence_Map();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
-	public $shortcode = 'evidence_map';
+
+	const SHORTCODE = 'evidence_map';
+
 	public $defaults = array(
 		'title' => false,
 		'no_evidence_message' => "There is no evidence map yet to display",
@@ -34,7 +36,7 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
 	* @since 0.1.1
 	* @return string.
 	*/
-	function content() {
+	protected function content() {
 		ob_start();
 		extract($this->options);
 		$errors = array();
@@ -131,7 +133,7 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
         
         <link rel="stylesheet" href="<?php echo plugins_url( 'lib/map/css/skeleton.css', EVIDENCE_HUB_REGISTER_FILE )?>" />
         <link rel="stylesheet" href="<?php echo plugins_url( 'lib/map/css/styles.css', EVIDENCE_HUB_REGISTER_FILE )?>" />
-		<?php $this->print_custom_svg_style() ?>
+        <?php $this->print_custom_svg_style() ?>
         <!--[if gte IE 7]>
            <style>svg { height: 450px }</style>
         <![endif]-->

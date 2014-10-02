@@ -21,7 +21,9 @@
 new Evidence_Hub_Shortcode_Evidence_Summary();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
-	public $shortcode = 'evidence_summary';
+
+	const SHORTCODE = 'evidence_summary';
+
 	public $defaults = array(
 		'title' => false,
 		'display_sankey' => true,
@@ -36,7 +38,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 	*
 	* @since 0.1.1 
 	*/
-	function add_to_page($content) {
+	protected function add_to_page($content) {
 		if (in_array(get_post_type(), self::$post_types_with_shortcode)) {
 			if (is_single()) {
 				$content = preg_replace('/(<span id=\"more-[0-9]*\"><\/span>)/', '$1'.do_shortcode('[evidence_summary]').'<h3>Hypothesis Details</h3>', $content, 1); 
@@ -56,7 +58,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 	* @since 0.1.1
 	* @return string.
 	*/
-	function content() {
+	protected function content() {
 		ob_start();
 		extract($this->options);
 		$post_id = get_the_ID();
@@ -120,7 +122,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 	* @param string $post_id of hypothesis
 	* @return array Get array of links.
 	*/
-    function print_get_nodes_links($evidence, &$nodes, &$links, &$bal, $post_id) {
+    protected function print_get_nodes_links($evidence, &$nodes, &$links, &$bal, $post_id) {
         $base_link = get_permalink();
         //$links = array();
         $nodesList = array();
@@ -141,7 +143,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 						"url" => $base_link."evidence/polarity/".$polarity->slug,
 						"id" => $polarity->slug,
 						"type" => "polarity",
-						"fill" => $this->json_get($polarity->description, 'fill'),
+						"fill" => self::json_get( $polarity->description, 'fill' ),
 					);  //Was: json_decode($polarity->description)->fill ,
 					$nodeList[$polarity->name] = 1;
 				}
@@ -156,7 +158,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 							"url" => $base_link."sector/".$sector->slug, 
 							"id" => $sector->slug,
 							"type" => "sector",
-							"fill" => json_get($sector->description, 'fill'),
+							"fill" => self::json_get( $sector->description, 'fill' ),
 						);  //Was: json_decode($sector->description)->fill ,
 						$nodeList[$sector->name] = 1;
 					}
@@ -186,7 +188,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 	* @param array $graph of sankey data.
 	* @return NULL.
 	*/
-    function print_sankey_javascript($graph) { ?>
+    protected function print_sankey_javascript($graph) { ?>
 		<script>
         var graph = <?php print_r(json_encode($graph)); ?>;
         var margin = {top: 1, right: 1, bottom: 1, left: 1},
@@ -198,14 +200,5 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
         <script src="<?php echo plugins_url( 'js/sankey-control.js' , EVIDENCE_HUB_REGISTER_FILE )?>"></script>
     <?php 
     }
-
-	/** Safely get json-decoded properties [Bug #18].
-	*/
-	protected static function json_get( $json, $prop ) {
-		$obj = json_decode( $json );
-		return isset($obj->{ $prop }) ? $obj->{ $prop } :
-			(is_string( $obj ) ? $obj . '<!--no_fill-->' : '<!--no_fill_2-->');
-	}
-
 
 } // end of class

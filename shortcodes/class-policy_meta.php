@@ -22,7 +22,9 @@
 new Evidence_Hub_Shortcode_Policy_Meta();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_Policy_Meta extends Evidence_Hub_Shortcode {
-	var $shortcode = 'policy_meta';
+
+	const SHORTCODE = 'policy_meta';
+
 	var $defaults = array(
 		'title' => false,
 		'location' => false,
@@ -39,7 +41,7 @@ class Evidence_Hub_Shortcode_Policy_Meta extends Evidence_Hub_Shortcode {
 	*
 	* @since 0.1.1 
 	*/	
-	function add_to_page($content) {
+	protected function add_to_page($content) {
 		if (in_array(get_post_type(), self::$post_types_with_shortcode)) {
 			$content = (($this->defaults['header_terms']) ? do_shortcode('[policy_meta location="header"]') : '').$content.(($this->defaults['footer_terms']) ? do_shortcode('[policy_meta location="footer"]') : '');
 			if (function_exists('the_ratings')){
@@ -55,7 +57,7 @@ class Evidence_Hub_Shortcode_Policy_Meta extends Evidence_Hub_Shortcode {
 	* @since 0.1.1
 	* @return string.
 	*/
-	function content() {
+	protected function content() {
 		return $this->make_meta_bar(self::$post_types_with_shortcode);
 	}
 }
