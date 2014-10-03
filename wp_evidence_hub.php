@@ -492,11 +492,8 @@ if(!class_exists('Evidence_Hub'))
 			global $wp_version;
 			
 			$scripts = array( 'jquery', 'jquery-ui-autocomplete', 'jquery-ui-datepicker','jquery-ui-tabs');
-  			if ($typenow=='evidence') {
-				wp_enqueue_style( 'leafletcss', 'http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css' );
-				wp_enqueue_style( 'leafletcss-ie8', "http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css", array( 'leafletcss' )  );
-    			$wp_styles->add_data( 'leafletcss-ie8', 'conditional', 'IE 8' );
-				wp_enqueue_script( 'leafletjs', 'http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js' );
+  			if ($typenow == 'evidence') {
+				$this->enqueue_leaflet_scripts();
 			} 
 			if ($typenow=='location') {
 				$scripts[] = 'pronamic_google_maps_admin';
@@ -529,7 +526,21 @@ if(!class_exists('Evidence_Hub'))
 				wp_enqueue_style('dashicons');
 			}
 		}
-		
+
+		/**
+		* Ensure only one version of Leaflet.JS is included [Bug: #25]
+		*/
+		protected function enqueue_leaflet_scripts() {
+			global $wp_styles;
+
+			$version = '0.7.3';  //TODO: $this->get_option( 'wp_evidence_hub_leaflet_version', '0.7.3' );  //Was: 0.6.4 & 0.7!
+
+			wp_enqueue_style( 'leafletcss', 'http://cdn.leafletjs.com/leaflet-'. $version .'/leaflet.css' );
+			wp_enqueue_style( 'leafletcss-ie8', 'http://cdn.leafletjs.com/leaflet-'. $version .'/leaflet.ie.css', array( 'leafletcss' )  );
+			$wp_styles->add_data( 'leafletcss-ie8', 'conditional', 'IE 8' );
+			wp_enqueue_script( 'leafletjs', 'http://cdn.leafletjs.com/leaflet-'. $version .'/leaflet.js' );
+		}
+
 		/**
     	* Load additional CSS/JS to wp_head in frontend.
 		*
@@ -550,10 +561,7 @@ if(!class_exists('Evidence_Hub'))
 			wp_register_script( 'd3js', plugins_url( 'lib/map/lib/d3.v3.min.js' , EVIDENCE_HUB_REGISTER_FILE), array( 'jquery' )  );
 			wp_enqueue_script( 'd3js' );
 			
-			wp_enqueue_style( 'leafletcss', 'http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.css' );
-			wp_enqueue_style( 'leafletcss-ie8', "http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.ie.css", array( 'leafletcss' )  );
-			$wp_styles->add_data( 'leafletcss-ie8', 'conditional', 'IE 8' );
-			wp_enqueue_script( 'leafletjs', 'http://cdn.leafletjs.com/leaflet-0.6.4/leaflet.js' );
+			$this->enqueue_leaflet_scripts();
 			
 			wp_register_script( 'evidence_hub_script', plugins_url( 'js/script.js' , EVIDENCE_HUB_REGISTER_FILE), $scripts  );
 			wp_enqueue_script( 'evidence_hub_script' );
