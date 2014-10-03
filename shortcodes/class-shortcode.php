@@ -277,10 +277,18 @@ abstract class Evidence_Hub_Shortcode {
 
 	/** Output a message for Internet Explorer <= 8. And a "Loading..." message [Bug: #8].
 	*/
-	protected function print_chart_loading_no_support_message( $is_map = FALSE ) { ?>
+	protected function print_chart_loading_no_support_message( $is_map = FALSE, $is_partial = FALSE ) {
+		if ($is_partial) {
+			$message = 'Unfortunately, not all functionality will work in older browsers.';
+		} elseif ($is_map) {
+			$message = 'Unfortunately, the map won\'t display in older browsers.';
+		} else {
+			$message = 'Unfortunately, the chart won\'t display in older browsers.';
+		}
+		?>
 <!--[if lte IE 8]>
 	<div class="oer-chart-no-js">
-		<p>Unfortunately, the <?php echo $is_map ? 'map' : 'chart' ?> won't display in older browsers. Please
+		<p><?php echo $message ?> Please
 		<a href="http://whatbrowser.org/">try a different browser</a>.</p>
 	</div>
 <![endif]-->
