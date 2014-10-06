@@ -185,6 +185,7 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 			  'containerId': 'control1',
 			  'options': {
 				'filterColumnIndex': c['name'],
+				'matchType': 'any',
 				'ui': {'label': 'Search',}
 			  }
 			});
