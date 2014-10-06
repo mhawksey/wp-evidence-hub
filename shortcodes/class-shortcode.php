@@ -24,11 +24,7 @@ abstract class Evidence_Hub_Shortcode {
 	* @since 0.1.1
 	*/
 	public function __construct() {
-		// Play safe for now! [Bug: #24]
-		//$shortcode = defined( 'static::SHORTCODE' ) ? static::SHORTCODE : $this->shortcode;
-		$shortcode = property_exists( $this, 'shortcode' ) ? $this->shortcode : static::SHORTCODE;
-
-		add_shortcode( $shortcode, array( &$this, 'shortcode' ));
+		add_shortcode( $this->get_shortcode(), array( &$this, 'shortcode' ));
 		add_filter('the_content', array(&$this, 'pre_add_to_page'));
 
 		add_action('save_post', array(&$this, 'save_post'));
@@ -39,6 +35,13 @@ abstract class Evidence_Hub_Shortcode {
 		
 		global $wpdb;
 		$wpdb->evidence_hub_shortcode_cache = $wpdb->prefix.'evidence_hub_shortcode_cache';
+	}
+
+
+	protected function get_shortcode() {
+		// Play safe for now! [Bug: #24]
+		//return defined( 'static::SHORTCODE' ) ? static::SHORTCODE : $this->shortcode;
+		return property_exists( $this, 'shortcode' ) ? $this->shortcode : static::SHORTCODE;
 	}
 
 	/**
@@ -97,7 +100,7 @@ abstract class Evidence_Hub_Shortcode {
 	  			$this->meta_bar($post, $footer_terms);
 			}
 		
-		if (count($errors)) return "[Shortcode errors (".$this->shortcode."): ".implode(', ', $errors)."]";	
+		if (count($errors)) return "[Shortcode errors (". $this->get_shortcode() ."): ".implode(', ', $errors)."]";	
 		return ob_get_clean();
 	}
 	
@@ -274,10 +277,18 @@ abstract class Evidence_Hub_Shortcode {
 
 	/** Output a message for Internet Explorer <= 8. And a "Loading..." message [Bug: #8].
 	*/
-	protected function print_chart_loading_no_support_message( $is_map = FALSE ) { ?>
+	protected function print_chart_loading_no_support_message( $is_map = FALSE, $is_partial = FALSE ) {
+		if ($is_partial) {
+			$message = 'Unfortunately, not all functionality will work in older browsers.';
+		} elseif ($is_map) {
+			$message = 'Unfortunately, the map won\'t display in older browsers.';
+		} else {
+			$message = 'Unfortunately, the chart won\'t display in older browsers.';
+		}
+		?>
 <!--[if lte IE 8]>
 	<div class="oer-chart-no-js">
-		<p>Unfortunately, the <?php echo $is_map ? 'map' : 'chart' ?> won't display in older browsers. Please
+		<p><?php echo $message ?> Please
 		<a href="http://whatbrowser.org/">try a different browser</a>.</p>
 	</div>
 <![endif]-->
@@ -324,7 +335,7 @@ abstract class Evidence_Hub_Shortcode {
 	/** Put Evidence Hub shortcodes used on a page in the Javascript console [Bug: #9].
 	*/
 	protected function debug_shortcode( $options = NULL ) {
-		$shortcode = property_exists( $this, 'shortcode' ) ? $this->shortcode : static::SHORTCODE;
+		$shortcode = $this->get_shortcode();
 		$js_options = json_encode( $options ? $options : '[no options]' );
 
 		if (headers_sent()): ?>
@@ -411,7 +422,7 @@ abstract class Evidence_Hub_Shortcode {
 			from $wpdb->evidence_hub_shortcode_cache
 			where shortcode = %s
 			and options = %s",
-			$this->shortcode,
+			$this->get_shortcode(),
 			serialize($this->options)
 		));
 	}
@@ -428,7 +439,7 @@ abstract class Evidence_Hub_Shortcode {
 		global $wpdb;
 		$wpdb->insert($wpdb->evidence_hub_shortcode_cache, array(
 			'created' => current_time('mysql'),
-			'shortcode' => $this->shortcode,
+			'shortcode' => $this->get_shortcode(),
 			'options' => serialize($this->options),
 			'content' => $content,
 		));
