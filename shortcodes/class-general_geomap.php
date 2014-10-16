@@ -112,12 +112,10 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 		 ));
 		//html dump>>
 		?>
-		<?php /* Ensure only one version of Leaflet.JS is included [Bug: #25]
-        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css" />
-         <script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js"></script>
-		*/ ?>
+
+		<?php $this->print_chart_loading_no_support_message( $is_map = TRUE, $partial = TRUE ) ?>
          <div id="evidence-map">
-            <div id="map"><?php $this->print_chart_loading_no_support_message( $is_map = TRUE ) ?></div>
+            <div id="map"><?php //$this->print_chart_loading_no_support_message( $is_map = TRUE ) ?></div>
             <?php $post = NULL; include(sprintf("%s/post-types/custom_post_metaboxes.php", EVIDENCE_HUB_PATH));?>
          </div>
          <script>
@@ -187,6 +185,7 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 			  'containerId': 'control1',
 			  'options': {
 				'filterColumnIndex': c['name'],
+				'matchType': 'any',
 				'ui': {'label': 'Search',}
 			  }
 			});
@@ -255,6 +254,8 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 				return false;
 			});
 			document.getElementById('result-count').innerHTML = table.getDataTable().getNumberOfRows();
+
+			jQuery(".oer-chart-loading").hide();
 		  }
 
 		  function picker(type){
