@@ -256,7 +256,7 @@ if(!class_exists('Evidence_Hub'))
 			$this->do_rewrites();
 			
 
-			
+
 			// register custom post type taxonomies
 			// register post type taxonomies for hypothesis
 			$args = $this->get_taxonomy_args("RAG Status","RAG Status");
@@ -353,6 +353,7 @@ if(!class_exists('Evidence_Hub'))
 		public function evidence_hub_queryvars( $qvars ) {
 		  $qvars[] = 'hyp_id';
 		  $qvars[] = 'bookmarklet';
+
 		  return $qvars;
 		}
 		
@@ -364,6 +365,19 @@ if(!class_exists('Evidence_Hub'))
 		* @return array $query.
     	*/
 		public function evidence_hub_query($query) {	
+
+		  // Include evidence content in tag archives [Bug: #28]
+		  if (is_category() || is_tag()) {
+		    $post_type = get_query_var( 'post_type' );
+		    if ($post_type) {
+		      $post_type = $post_type;
+		    } else {
+		      $post_type = array('post', 'evidence'); // replace cpt to your custom post type
+		    }
+		    $query->set('post_type', $post_type);
+		    //return $query;
+		  }
+
 			if (isset( $query->query_vars['hyp_id']) ) {
 				$meta_query = array();
 				$meta_query[] = array(
