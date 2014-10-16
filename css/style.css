@@ -1,4 +1,10 @@
 /* CSS Document */
+
+.nav-menu /*#menu-item-105*/ .sub-menu {
+  x-border: 1px solid red;
+  z-index: 1000000;
+}
+
 #evidence-balance, #evidence-meta {
 padding: 10px;
 -moz-border-radius: 5px;
@@ -1588,3 +1594,10 @@ speak: none;
 .entry-content img{
 	border:none!important;
 	box-shadow:none!important;
+}
+
+
+/* #menu-item-105 [Bug: #29] */
+.nav-menu .sub-menu {
+	z-index: 1000000;
+}
