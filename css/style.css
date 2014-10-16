@@ -1,10 +1,5 @@
 /* CSS Document */
 
-.nav-menu /*#menu-item-105*/ .sub-menu {
-  x-border: 1px solid red;
-  z-index: 1000000;
-}
-
 #evidence-balance, #evidence-meta {
 padding: 10px;
 -moz-border-radius: 5px;
