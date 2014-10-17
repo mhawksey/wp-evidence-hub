@@ -31,9 +31,13 @@ define('EVIDENCE_HUB_PATH', dirname(__FILE__));
 define('EVIDENCE_HUB_URL', plugin_dir_url(preg_replace('@\/var\/www\/[^\/]+@', '', __FILE__)));
 define('EVIDENCE_HUB_REGISTER_FILE', preg_replace('@\/var\/www\/[^\/]+@', '', __FILE__));
 
+
+require_once 'php/evidence_hub_base.php';
+
+
 if(!class_exists('Evidence_Hub'))
 {
-	class Evidence_Hub {
+	class Evidence_Hub extends Evidence_Hub_Base {
 		static $post_types = array(); // used in shortcode caching
 		static $post_type_fields = array(); // used to collect field types for frontend data entry 
 		static $options = array();
@@ -48,54 +52,49 @@ if(!class_exists('Evidence_Hub'))
 			Evidence_Hub::$options['custom_head_foot'] = get_option('display_custom_head_foot');
 			Evidence_Hub::$options['postrating'] = get_option('display_postrating');
 			Evidence_Hub::$options['facetious'] = get_option('display_facetious');
+
 			// Register custom post types
-			require_once(sprintf("%s/post-types/class-custom_post_type.php", EVIDENCE_HUB_PATH));
-			// Register custom post types - hypothesis
-			require_once(sprintf("%s/post-types/class-hypothesis.php", EVIDENCE_HUB_PATH));
-			// Register custom post types - evidence
-			require_once(sprintf("%s/post-types/class-evidence.php", EVIDENCE_HUB_PATH));		
-			// Register custom post types - project
-			require_once(sprintf("%s/post-types/class-project.php", EVIDENCE_HUB_PATH));
-			// Register custom post types - policy
-			require_once(sprintf("%s/post-types/class-policy.php", EVIDENCE_HUB_PATH));
-			// Register custom post types - suggestion
-			require_once(sprintf("%s/post-types/class-suggestion.php", EVIDENCE_HUB_PATH));
-			
+			$this->_require(array(
+				'post-types/class-custom_post_type.php',
+				'post-types/class-hypothesis.php',
+				'post-types/class-evidence.php',
+				'post-types/class-project.php',
+				'post-types/class-policy.php',
+				'post-types/class-suggestion.php',
+			));
+
 			// include shortcodes
-			require_once(sprintf("%s/shortcodes/class-shortcode.php", EVIDENCE_HUB_PATH));
-			
-			require_once(sprintf("%s/shortcodes/class-bookmarklet.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/class-evidence_entry.php", EVIDENCE_HUB_PATH));
-			
-			require_once(sprintf("%s/shortcodes/class-general_getpostmeta.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/class-general_getpoststagged.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/class-general_geomap.php", EVIDENCE_HUB_PATH));
-			
-			require_once(sprintf("%s/shortcodes/class-survey_explorer.php", EVIDENCE_HUB_PATH));
-			
-			require_once(sprintf("%s/shortcodes/class-evidence_map.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/class-evidence_meta.php", EVIDENCE_HUB_PATH));
-			
-			require_once(sprintf("%s/shortcodes/class-hypothesis_summary.php", EVIDENCE_HUB_PATH));			 
-			require_once(sprintf("%s/shortcodes/class-hypothesis_archive.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/class-hypothesis_balance.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/class-hypothesis_breakdown.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/class-hypothesis_geosummary.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/class-hypothesis_bars.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/class-hypothesis_sankey.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/class-hypothesis_ratings.php", EVIDENCE_HUB_PATH));
-			
-			require_once(sprintf("%s/shortcodes/class-policy_geomap.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/class-policy_meta.php", EVIDENCE_HUB_PATH));
-			require_once(sprintf("%s/shortcodes/class-project_meta.php", EVIDENCE_HUB_PATH));
-			
+			$this->_require(array(
+				'shortcodes/class-shortcode.php',
+				'shortcodes/class-bookmarklet.php',
+				'shortcodes/class-evidence_entry.php',
+				'shortcodes/class-general_getpostmeta.php',
+				'shortcodes/class-general_getpoststagged.php',
+				'shortcodes/class-general_geomap.php',
+				'shortcodes/class-survey_explorer.php',
+				'shortcodes/class-evidence_map.php',
+				'shortcodes/class-evidence_meta.php',
+				'shortcodes/class-hypothesis_summary.php',
+				'shortcodes/class-hypothesis_archive.php',
+				'shortcodes/class-hypothesis_balance.php',
+				'shortcodes/class-hypothesis_breakdown.php',
+				'shortcodes/class-hypothesis_geosummary.php',
+				'shortcodes/class-hypothesis_bars.php',
+				'shortcodes/class-hypothesis_sankey.php',
+				'shortcodes/class-hypothesis_ratings.php',
+				'shortcodes/class-policy_geomap.php',
+				'shortcodes/class-policy_meta.php',
+				'shortcodes/class-project_meta.php',
+			));
+
 			// Initialize Pronamics Google Maps library
 			if (!class_exists('Pronamic_Google_Maps_Maps')){
-			   require_once(sprintf("%s/lib/pronamic-google-maps/pronamic-google-maps.php", EVIDENCE_HUB_PATH));
+				$this->_require(
+					'lib/pronamic-google-maps/pronamic-google-maps.php' );
 			}
 			// Initialize JSON API library
 			if (!class_exists('JSON_API')){
-			   require_once(sprintf("%s/lib/json-api/json-api.php", EVIDENCE_HUB_PATH));
+				$this->_require( 'lib/json-api/json-api.php' );
 			}
 			// add custom JSON API controllers
 			add_filter('json_api_controllers', array(&$this,'add_hub_controller'));
@@ -103,27 +102,25 @@ if(!class_exists('Evidence_Hub'))
 			
 			if (Evidence_Hub::$options['postrating'] === 'yes'){
 				// ratings
-				require_once(sprintf("%s/lib/wp-postratings/wp-postratings.php", EVIDENCE_HUB_PATH));
+				$this->_require( 'lib/wp-postratings/wp-postratings.php' );
 			}
 
-			if (Evidence_Hub::$options['facetious'] === 'yes'){
+			if ( Evidence_Hub::$options['facetious'] === 'yes'
+				&& !class_exists( 'Facetious' )) {
 				// Initialize Facetious library
-				if (!class_exists('Facetious')){
-					require_once(sprintf("%s/lib/facetious/facetious.php", EVIDENCE_HUB_PATH));
-				}
+				$this->_require( 'lib/facetious/facetious.php' );
 			}
 			
-			if (Evidence_Hub::$options['cookies'] === 'yes'){
+			if ( Evidence_Hub::$options['cookies'] === 'yes'
+				&& !class_exists( 'Cookie_Notice' )) {
 				// Initialize Cookie Notice library
-				if (!class_exists('Cookie_Notice')){
-					require_once(sprintf("%s/lib/cookie-notice/cookie-notice.php", EVIDENCE_HUB_PATH));
-				}
+				$this->_require( 'lib/cookie-notice/cookie-notice.php' );
 			}
-			if (Evidence_Hub::$options['custom_head_foot'] === 'yes'){
+			if ( Evidence_Hub::$options['custom_head_foot'] === 'yes'
+				&& !class_exists( 'CustomHeadersAndFooters' )) {
 				// Initialize Custom Headers and Footers
-				if ( !class_exists( 'CustomHeadersAndFooters' ) ) {
-					require_once(sprintf("%s/lib/custom-headers-and-footers/custom-headers-and-footers.php", EVIDENCE_HUB_PATH));
-				}
+				$this->_require(
+				'lib/custom-headers-and-footers/custom-headers-and-footers.php' );
 			}
 			
 			// Initialize Settings pages in wp-admin
