@@ -41,7 +41,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 					$included_page = get_page( $template_id );
 
 					$content = <<<EOT
-				<script src="//www.google.com/jsapi"></script>'
+				<script src="//www.google.com/jsapi"></script>
 				<script>
 				google.load('visualization', '1', {packages: ['corechart', 'geochart', 'table']});
 				</script>
