@@ -545,7 +545,7 @@ function autocomplete_eh_change_project(id, label){
 		$('#evidence_hub_options .date').datepicker({dateFormat : 'dd/mm/yy'});
 		
 		$("#evidence_hub_hypothesis_id").change(function() {
-			if ($("#evidence_hub_hypothesis_id option:selected").text().indexOf("–") === -1 ){
+			if ($("#evidence_hub_hypothesis_id option:selected").text() === "" ){
 				$("input#evidence_hub_polarity").each(function(){
 					$(this).prop('checked', false);
 					$(this).attr("disabled", true);
