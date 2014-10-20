@@ -10,7 +10,7 @@
  * @subpackage Evidence_Hub_Shortcode
  */
  
-abstract class Evidence_Hub_Shortcode {
+abstract class Evidence_Hub_Shortcode extends Evidence_Hub_Base {
 
 	const SHORTCODE = 'evidence_hub_shortcode';
 	//var $shortcode = 'evidence_hub_shortcode';
@@ -348,11 +348,10 @@ abstract class Evidence_Hub_Shortcode {
 		endif;
 	}
 
-	/** Quick and dirty variable 'dump' within a HTML comment.
-	*/
-	protected function debug( $obj, $label = NULL ) {
-		echo "\n<!--$label:"; var_dump( $obj ); echo "-->\n";
-	}
+	/* See: `Evidence_Hub_Base` class
+	*
+	protected function debug( $obj .. ) { .. } */
+
 
 
 	// Caching ----------------------------------------------------------------
