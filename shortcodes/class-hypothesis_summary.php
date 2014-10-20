@@ -39,19 +39,24 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 			if ($template_id) {
 				if (is_single()) {
 					$included_page = get_page( $template_id );
-					
-					
-					$content = '<script src="//www.google.com/jsapi"></script>'
-							 . '<script>'
-              				 . "		google.load('visualization', '1', {packages: ['corechart', 'geochart', 'table']});"
-            				 . '</script>'
-							 . $this->get_google_visualisation_data(get_the_ID())
-                             . $this->safe_excerpt() .$included_page->post_content;
-				} 
+
+					$content = <<<EOT
+				<script src="//www.google.com/jsapi"></script>'
+				<script>
+				google.load('visualization', '1', {packages: ['corechart', 'geochart', 'table']});
+				</script>
+EOT;
+					$content .= $this->get_google_visualisation_data(get_the_ID())
+						. $this->safe_excerpt()
+						. $included_page->post_content;
+				}
 			} else {
-				require_once(sprintf("%s/shortcodes/class-evidence_summary.php", EVIDENCE_HUB_PATH));
+				$this->_require( 'shortcodes/class-evidence_summary.php' );
 				if (is_single()) {
-					$content = preg_replace('/(<span id=\"more-[0-9]*\"><\/span>)/', '$1'.do_shortcode('[evidence_summary]').'<h3>Hypothesis Details</h3>', $content, 1); 
+					$content = preg_replace(
+						'/(<span id=\"more-[0-9]*\"><\/span>)/',
+						'$1' . do_shortcode( '[evidence_summary]' ) . '<h3>Hypothesis Details</h3>',
+						$content, 1 );
 				} else {
 					$content .= do_shortcode('[evidence_summary display_sankey=0]');
 				}
@@ -67,12 +72,12 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 	*   and the generated excerpt contains shortcodes.. [Bug: #31][Bug: #33]
 	*/
 	protected function safe_excerpt() {
-		global $post;
 		/*BUG still! $text = get_the_excerpt();
 		$text = strip_shortcodes( $text );
 		$this->debug(array( 'excerpt' => $text ));
 		return $text; */
-		if ('' == $post->post_excerpt) {
+		if ( !has_excerpt() ) {
+			global $post;
 			$this->debug(array( __FUNCTION__, $post ));
 			return '<p class="ev-hub-error no-excerpt">'.
 				'No explicit excerpt found in post &mdash; please correct me!' . '</p>';
