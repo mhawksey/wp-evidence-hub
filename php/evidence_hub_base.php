@@ -4,7 +4,11 @@
 * wrappers around common WordPress functions.
 */
 
+
 class Evidence_Hub_Base {
+
+	protected $_messages = array();
+
 
 	/** Require a PHP script or array of scripts.
 	*/
@@ -32,7 +36,21 @@ class Evidence_Hub_Base {
 				add_action( $hook[ 0 ], array( &$this, $function), $priority );
 			}
 		}
-    }
+	}
+
+
+	/** Utilities.
+	*/
+	protected function debug( $text ) {
+		return $this->message( $text, 'debug' );
+	}
+
+	protected function message( $text, $type = 'ok' ) {
+		$message_r = array( 'type' => $type, 'msg' => $text );
+		$this->_messages[] = $message_r;
+		@header('X-Wp-Evidence-Hub-'. sprintf( '%02d',
+			count($this->_messages)) .': '. json_encode( $message_r ));
+	}
 
 }
 

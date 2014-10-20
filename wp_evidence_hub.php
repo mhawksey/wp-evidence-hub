@@ -159,15 +159,17 @@ if(!class_exists('Evidence_Hub'))
 			add_action( 'wp_head', array(&$this, 'show_current_query') );
 			add_filter( 'tiny_mce_before_init', array(&$this, 'idle_function_to_tinymce') );
 			add_filter( 'wp_default_editor', array(&$this, 'force_default_editor') );
-			if (get_option('hypothesis_template_page')){ 
+			$template_id = get_option( 'hypothesis_template_page' );
+			if ($template_id) {
 				add_filter( 'single_template', array(&$this, 'get_custom_post_type_template') );
 			}
+			$this->debug(array( 'hypothesis_template_page' => $template_id ));
 
 		} // END public function __construct
 		
 		/**
-		* Custom page tempalte 
-		
+		* Custom page template
+		*
 		* @since 0.1.1
 		*
 		* @param object Existing template.
@@ -175,13 +177,19 @@ if(!class_exists('Evidence_Hub'))
 		*/
 		function get_custom_post_type_template($single_template) {
 			global $post;
-			
-			if ($post->post_type == 'hypothesis' && get_option('hypothesis_template_page') !="") {
+
+			$page_id = intval(get_option( 'hypothesis_template_page' ));
+
+			if ($post->post_type == 'hypothesis' && $page_id) {
 				global $content_width;
 				$content_width = 960;
-				$single_template = get_stylesheet_directory().'/'.get_post_meta( get_option('hypothesis_template_page'), '_wp_page_template', true );
-				add_filter( 'body_class', array(&$this, 'evidence_hub_body_class') );
+				$wp_template = get_post_meta( $page_id, '_wp_page_template', true );
+				if ($wp_template) {
+					$single_template = get_stylesheet_directory() .'/'. $wp_template;
+					add_filter( 'body_class', array(&$this, 'evidence_hub_body_class') );
+				}
 			}
+			$this->debug(array( 'single_template' => $single_template ));
 			return $single_template;
 		}
 		
