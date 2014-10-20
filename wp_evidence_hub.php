@@ -48,10 +48,10 @@ if(!class_exists('Evidence_Hub'))
 		*/
 		public function __construct() {			
 			add_action('init', array(&$this, 'init'));
-			Evidence_Hub::$options['cookies'] = get_option('display_cookie_notice');
-			Evidence_Hub::$options['custom_head_foot'] = get_option('display_custom_head_foot');
-			Evidence_Hub::$options['postrating'] = get_option('display_postrating');
-			Evidence_Hub::$options['facetious'] = get_option('display_facetious');
+			self::$options['cookies'] = get_option('display_cookie_notice');
+			self::$options['custom_head_foot'] = get_option('display_custom_head_foot');
+			self::$options['postrating'] = get_option('display_postrating');
+			self::$options['facetious'] = get_option('display_facetious');
 
 			// Register custom post types
 			$this->_require(array(
@@ -100,23 +100,23 @@ if(!class_exists('Evidence_Hub'))
 			add_filter('json_api_controllers', array(&$this,'add_hub_controller'));
 			add_filter('json_api_hub_controller_path', array(&$this,'set_hub_controller_path'));
 			
-			if (Evidence_Hub::$options['postrating'] === 'yes'){
+			if (self::$options['postrating'] === 'yes') {
 				// ratings
 				$this->_require( 'lib/wp-postratings/wp-postratings.php' );
 			}
 
-			if ( Evidence_Hub::$options['facetious'] === 'yes'
+			if ( self::$options['facetious'] === 'yes'
 				&& !class_exists( 'Facetious' )) {
 				// Initialize Facetious library
 				$this->_require( 'lib/facetious/facetious.php' );
 			}
 			
-			if ( Evidence_Hub::$options['cookies'] === 'yes'
+			if ( self::$options['cookies'] === 'yes'
 				&& !class_exists( 'Cookie_Notice' )) {
 				// Initialize Cookie Notice library
 				$this->_require( 'lib/cookie-notice/cookie-notice.php' );
 			}
-			if ( Evidence_Hub::$options['custom_head_foot'] === 'yes'
+			if ( self::$options['custom_head_foot'] === 'yes'
 				&& !class_exists( 'CustomHeadersAndFooters' )) {
 				// Initialize Custom Headers and Footers
 				$this->_require(
@@ -124,9 +124,8 @@ if(!class_exists('Evidence_Hub'))
 			}
 			
 			// Initialize Settings pages in wp-admin
-            require_once(sprintf("%s/settings/settings.php", EVIDENCE_HUB_PATH)); //TODO Tidy
+			$this->_require(array( 'settings/settings.php', 'settings/cache.php' )); //TODO Tidy
             $Evidence_Hub_Settings = new Evidence_Hub_Settings();
-			require_once(sprintf("%s/settings/cache.php", EVIDENCE_HUB_PATH)); //TODO Tidy
 			$Evidence_Hub_Settings_Cache = new Evidence_Hub_Settings_Cache();
 			
 			// register custom query handling
