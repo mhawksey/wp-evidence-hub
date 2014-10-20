@@ -27,7 +27,14 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 	);
 
 	static $post_types_with_shortcode = array('hypothesis');
-	
+
+	public function __construct() {
+		parent::__construct();
+		// Apply specific filters [Bug: #31].
+		add_filter( 'hypothesis_excerpt', 'strip_shortcodes' );
+		add_filter( 'hypothesis_excerpt', 'wpautop' );
+	}
+
 	/**
 	* Adds shortcode content to named post post types. 
 	*
@@ -41,10 +48,10 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 					$included_page = get_page( $template_id );
 
 					$content = <<<EOT
-				<script src="//www.google.com/jsapi"></script>
-				<script>
-				google.load('visualization', '1', {packages: ['corechart', 'geochart', 'table']});
-				</script>
+			<script src="//www.google.com/jsapi"></script>
+			<script>
+			google.load('visualization', '1', {packages: ['corechart', 'geochart', 'table']});
+			</script>
 EOT;
 					$content .= $this->get_google_visualisation_data(get_the_ID())
 						. $this->safe_excerpt()
@@ -72,23 +79,19 @@ EOT;
 	*   and the generated excerpt contains shortcodes.. [Bug: #31][Bug: #33]
 	*/
 	protected function safe_excerpt() {
-		/*BUG still! $text = get_the_excerpt();
-		$text = strip_shortcodes( $text );
-		$this->debug(array( 'excerpt' => $text ));
-		return $text; */
+		global $post;
 		if ( !has_excerpt() ) {
-			global $post;
 			$this->debug(array( __FUNCTION__, $post ));
 			return '<p class="ev-hub-error no-excerpt">'.
 				'No explicit excerpt found in post &mdash; please correct me!' . '</p>';
 		}
-		return strip_shortcodes( $post->post_excerpt );
+		return apply_filters( 'hypothesis_excerpt', $post->post_excerpt );
 	}
 
 	protected function content(){
 	}
-	
-	function get_google_visualisation_data($id){
+
+	protected function get_google_visualisation_data($id){
 		ob_start();
 		extract($this->options);
 
