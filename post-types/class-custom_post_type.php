@@ -91,7 +91,7 @@ class Evidence_Hub_CustomPostType {
 					$return_url = get_admin_url() . 'edit.php?post_type=' . $_REQUEST[$field_name];
 				}
 				
-				if ($option['save_as'] == 'term'){
+				if (isset($option['save_as']) && $option['save_as'] == 'term'){
 					$foundterm = false;
 					if (!is_array($_REQUEST[$field_name])){ // handle if single term
 						$term = term_exists($_REQUEST[$field_name], $field_name); // find if terms exists on list
