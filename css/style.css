@@ -1596,3 +1596,12 @@ speak: none;
 .nav-menu .sub-menu {
 	z-index: 1000000;
 }
+
+/* No excerpt [Bug: #31][Bug: #33] */
+.ev-hub-error, .no-excerpt {
+	text-align: center;
+	border: 1px solid #f60;  /* #c55 */
+	background: #fffdfa;
+	color: #530;  /* #522 */
+	padding: 5px;
+}

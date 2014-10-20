@@ -41,7 +41,13 @@ class Evidence_Hub_Base {
 
 	/** Utilities.
 	*/
-	protected function debug( $text ) {
+
+	/** Quick and dirty variable 'dump' within a HTML comment.
+	*/
+	protected function debug( $text, $label = NULL ) {
+		if (headers_sent()) {
+			echo "\n<!--$label:"; var_dump( $text ); echo "-->\n";
+		}
 		return $this->message( $text, 'debug' );
 	}
 
