@@ -1,6 +1,6 @@
 <?php
 
-class Evidence_Hub_CustomPostType {
+class Evidence_Hub_CustomPostType extends Evidence_Hub_Base {
 	public $post_type = "custom_post_type";
 	public $archive_slug = false; // use pluralized string if you want an archive page
 	public $singular = "Item";

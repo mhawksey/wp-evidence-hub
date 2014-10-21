@@ -239,6 +239,7 @@ abstract class Evidence_Hub_Shortcode extends Evidence_Hub_Base {
 	}
 
 	/** Safely get json-decoded properties, eg. SVG fill colour [Bug #18].
+	* `sector.taxonomy = "evidence_hub_sector"`
 	*/
 	protected static function json_get( $json, $prop, $default = '', $is_sector_fill = TRUE ) {
 		static $error_count = 0;
@@ -251,12 +252,6 @@ abstract class Evidence_Hub_Shortcode extends Evidence_Hub_Base {
 		}
 		$error_count++;
 		return is_string( $obj ) ? $obj . $default : $default;
-	}
-
-	/** Get a WP configuration option from a PHP define() or the database. */
-	protected function get_option( $option, $default = NULL ) {
-		$KEY = strtoupper( $option );
-		return defined( $KEY ) ? constant( $KEY ) : get_option( $option, $default );
 	}
 
 	/** Print a JSON-encoded config. option */

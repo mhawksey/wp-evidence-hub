@@ -22,6 +22,18 @@ class Evidence_Template extends Evidence_Hub_CustomPostType {
 	* @since 0.1.1
 	*/
 	public function create_post_type() {
+
+		$do_rewrite = ! $this->get_option( 'evidence_post_type_no_rewrite' );
+		if ($do_rewrite) {
+			$rewrite = array(
+				'slug' => $this->archive_slug,
+				'with_front' => false,
+			);
+		} else {
+			$rewrite = FALSE;
+		}
+		$this->debug(array( __FUNCTION__, 'rewrite', $rewrite ));
+
 		register_post_type($this->post_type,
 			array(
 				'labels' => array(
@@ -56,10 +68,10 @@ class Evidence_Template extends Evidence_Hub_CustomPostType {
 				),
 				'map_meta_cap' => true,
 				'has_archive' => true,
-				'rewrite' => array(
+				'rewrite' => $rewrite, /*WAS: array(
 					'slug' => $this->archive_slug,
 					'with_front' => false,
-				),
+				),*/
 				'menu_position' => 30,
 				'menu_icon' => EVIDENCE_HUB_URL.'images/icons/evidence.png',
 			)
