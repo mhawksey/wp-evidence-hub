@@ -1605,3 +1605,9 @@ speak: none;
 	color: #530;  /* #522 */
 	padding: 5px;
 }
+
+/* Hypothesis map [Bug: #35] */
+#country-vis-map > div, #country-vis-map svg {
+       min-height: 140px;
+       max-height: 320px;
+}
