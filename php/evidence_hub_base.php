@@ -42,6 +42,13 @@ class Evidence_Hub_Base {
 	/** Utilities.
 	*/
 
+	protected static function error( $obj ) {
+		if (headers_sent()): ?>
+		<script>window.console && console.log(<?php echo json_encode($obj)?>)</script>
+<?php
+		endif;
+	}
+
 	/** Quick and dirty variable 'dump' within a HTML comment.
 	*/
 	protected function debug( $text, $label = NULL ) {

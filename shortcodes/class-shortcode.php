@@ -240,10 +240,17 @@ abstract class Evidence_Hub_Shortcode extends Evidence_Hub_Base {
 
 	/** Safely get json-decoded properties, eg. SVG fill colour [Bug #18].
 	*/
-	protected static function json_get( $json, $prop, $default = '' ) {
+	protected static function json_get( $json, $prop, $default = '', $is_sector_fill = TRUE ) {
+		static $error_count = 0;
 		$obj = json_decode( $json );
-		return isset($obj->{ $prop }) ? $obj->{ $prop } :
-			(is_string( $obj ) ? $obj . $default : $default);  //'<!--no_fill_2-->');
+		if (isset($obj->{ $prop })) {
+			return $obj->{ $prop };
+		}
+		elseif ($is_sector_fill && $error_count < 1) {
+			static::error("ERROR. Missing SVG fill in 'sector' tax. description!");
+		}
+		$error_count++;
+		return is_string( $obj ) ? $obj . $default : $default;
 	}
 
 	/** Get a WP configuration option from a PHP define() or the database. */
