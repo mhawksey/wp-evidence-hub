@@ -146,7 +146,8 @@ EOT;
 					$sposts = Evidence_Hub::filterOptions($pposts, 'sector_slug', $sector->slug);
 					$dt['cols'][] = array('label' => $sector->name, 'type'=> 'number');
 					$dt['rows'][0]['c'][] = array('v' => ($polarity->slug == 'pos') ? count($sposts) : -count($sposts), 'f' => (string)count($sposts) );
-					$series[] = array( 'color' => self::json_get( $sector->description, 'fill' ));  //Was: json_decode($sector->description)->fill;
+					$series[] = array( 'label' => $sector->name,
+						'color' => self::json_get( $sector->description, 'fill' ));  //Was: json_decode($sector->description)->fill;
 				}
 				
 			}
