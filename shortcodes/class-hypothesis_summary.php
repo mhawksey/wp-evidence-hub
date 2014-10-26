@@ -27,7 +27,14 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 	);
 
 	static $post_types_with_shortcode = array('hypothesis');
-	
+
+	public function __construct() {
+		parent::__construct();
+		// Apply specific filters [Bug: #31].
+		add_filter( 'hypothesis_excerpt', 'strip_shortcodes' );
+		add_filter( 'hypothesis_excerpt', 'wpautop' );
+	}
+
 	/**
 	* Adds shortcode content to named post post types. 
 	*
@@ -35,22 +42,28 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 	*/
 	protected function add_to_page($content) {
 		if (in_array(get_post_type(), self::$post_types_with_shortcode)) {
-			if (get_option('hypothesis_template_page')){
+			$template_id = get_option( 'hypothesis_template_page' );
+			if ($template_id) {
 				if (is_single()) {
-					$included_page = get_page( get_option('hypothesis_template_page') ); 
-					
-					
-					$content = '<script src="//www.google.com/jsapi"></script>'
-							 . '<script>'
-              				 . "		google.load('visualization', '1', {packages: ['corechart', 'geochart', 'table']});"
-            				 . '</script>'
-							 . $this->get_google_visualisation_data(get_the_ID())
-                             .   the_excerpt() .$included_page->post_content;
-				} 
+					$included_page = get_page( $template_id );
+
+					$content = <<<EOT
+			<script src="//www.google.com/jsapi"></script>
+			<script>
+			google.load('visualization', '1', {packages: ['corechart', 'geochart', 'table']});
+			</script>
+EOT;
+					$content .= $this->get_google_visualisation_data(get_the_ID())
+						. $this->safe_excerpt()
+						. $included_page->post_content;
+				}
 			} else {
-				require_once(sprintf("%s/shortcodes/class-evidence_summary.php", EVIDENCE_HUB_PATH));
+				$this->_require( 'shortcodes/class-evidence_summary.php' );
 				if (is_single()) {
-					$content = preg_replace('/(<span id=\"more-[0-9]*\"><\/span>)/', '$1'.do_shortcode('[evidence_summary]').'<h3>Hypothesis Details</h3>', $content, 1); 
+					$content = preg_replace(
+						'/(<span id=\"more-[0-9]*\"><\/span>)/',
+						'$1' . do_shortcode( '[evidence_summary]' ) . '<h3>Hypothesis Details</h3>',
+						$content, 1 );
 				} else {
 					$content .= do_shortcode('[evidence_summary display_sankey=0]');
 				}
@@ -62,10 +75,23 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 		return $content;
 	}
 
+	/** NOT just `the_excerpt()` - risk of recursion, if no explicit
+	*   and the generated excerpt contains shortcodes.. [Bug: #31][Bug: #33]
+	*/
+	protected function safe_excerpt() {
+		global $post;
+		if ( !has_excerpt() ) {
+			$this->debug(array( __FUNCTION__, $post ));
+			return '<p class="ev-hub-error no-excerpt">'.
+				'No explicit excerpt found in post &mdash; please correct me!' . '</p>';
+		}
+		return apply_filters( 'hypothesis_excerpt', $post->post_excerpt );
+	}
+
 	protected function content(){
 	}
-	
-	function get_google_visualisation_data($id){
+
+	protected function get_google_visualisation_data($id){
 		ob_start();
 		extract($this->options);
 
@@ -81,6 +107,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 										'compare' => '='
 									)
 								)); // show all posts);
+
 		// add custom terms and fields
 		$evidence = Evidence_Hub::add_terms(get_posts($args));
 		// if evidence do something with it 
@@ -110,16 +137,17 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 				$pposts = Evidence_Hub::filterOptions($evidence, 'polarity_slug', $polarity->slug);
 				$bal[$polarity->slug] = count($pposts);
 				foreach($pposts as $post){
-					//if (isset($country_bal[$post['country_slug']])){
+					if (isset($country_bal[$post['country_slug']][$polarity->slug])){
 						$country_bal[$post['country_slug']][$polarity->slug] ++;
 						$country_bal[$post['country_slug']]['total'] ++;
-					//}
+					}
 				}
 				foreach($sectors as $sector){	
 					$sposts = Evidence_Hub::filterOptions($pposts, 'sector_slug', $sector->slug);
 					$dt['cols'][] = array('label' => $sector->name, 'type'=> 'number');
 					$dt['rows'][0]['c'][] = array('v' => ($polarity->slug == 'pos') ? count($sposts) : -count($sposts), 'f' => (string)count($sposts) );
-					$series[] = array( 'color' => self::json_get( $sector->description, 'fill' ));  //Was: json_decode($sector->description)->fill;
+					$series[] = array( 'label' => $sector->name,
+						'color' => self::json_get( $sector->description, 'fill' ));  //Was: json_decode($sector->description)->fill;
 				}
 				
 			}
@@ -158,8 +186,8 @@ class Evidence_Hub_Shortcode_Hypothesis_Summary extends Evidence_Hub_Shortcode {
 }
             </script>
             <?php
-        else: 
-			echo "<p>$no_evidence_message</p>"; //html
+        else:
+			echo '<p class="no-ev">' . $this->defaults[ 'no_evidence_message' ] .'</p>'; //html
 		endif; // end of if !empty($evidence)
 		return ob_get_clean();
 	}

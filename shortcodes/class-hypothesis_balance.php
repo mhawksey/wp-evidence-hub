@@ -17,16 +17,19 @@
 new Evidence_Hub_Shortcode_Hypothesis_Balance();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_Hypothesis_Balance extends Evidence_Hub_Shortcode {
-	var $shortcode = 'hypothesis_balance';
+
+	const SHORTCODE = 'hypothesis_balance';
+
 	public $defaults = array('post_id' => false);
 	static $post_types_with_shortcode = array('hypothesis');
+
 	/**
 	* Generate post content. 
 	*
 	* @since 0.1.1
 	* @return string.
 	*/
-	function content() {
+	protected function content() {
 		ob_start();
 		extract($this->options); ?>
 
@@ -81,8 +84,22 @@ class Evidence_Hub_Shortcode_Hypothesis_Balance extends Evidence_Hub_Shortcode {
       </svg>
   </div>
 </div>
+
+<?php
+		$this->print_balance_visualization_javascript();
+		return ob_get_clean();
+	}
+
+
+	/** Javascript function: draw Balance Visualization.
+	*/
+	protected function print_balance_visualization_javascript() { ?>
 <script>
-        jQuery(document).ready(function ($) {
+        jQuery(function ($) {
+            if (!window.dt_totals || !dt_totals) {
+                window.console && console.log("WARNING. No evidence found! (dt_totals)");
+            }
+
             $(window).resize(function(){
                 drawBalanceVisualization();
             });
@@ -113,7 +130,6 @@ class Evidence_Hub_Shortcode_Hypothesis_Balance extends Evidence_Hub_Shortcode {
           google.setOnLoadCallback(drawBalanceVisualization);
         </script>
 <?php
-		return ob_get_clean();
-	} // end of function content
+	}
 
 } // end of class

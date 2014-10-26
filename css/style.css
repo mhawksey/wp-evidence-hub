@@ -1,4 +1,5 @@
 /* CSS Document */
+
 #evidence-balance, #evidence-meta {
 padding: 10px;
 -moz-border-radius: 5px;
@@ -1588,3 +1589,25 @@ speak: none;
 .entry-content img{
 	border:none!important;
 	box-shadow:none!important;
+}
+
+
+/* #menu-item-105 [Bug: #29] */
+.nav-menu .sub-menu {
+	z-index: 1000000;
+}
+
+/* No excerpt [Bug: #31][Bug: #33] */
+.ev-hub-error, .no-excerpt {
+	text-align: center;
+	border: 1px solid #f60;  /* #c55 */
+	background: #fffdfa;
+	color: #530;  /* #522 */
+	padding: 5px;
+}
+
+/* Hypothesis map [Bug: #35] */
+#country-vis-map > div, #country-vis-map svg {
+       min-height: 140px;
+       max-height: 320px;
+}

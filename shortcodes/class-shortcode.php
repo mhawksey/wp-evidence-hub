@@ -10,7 +10,7 @@
  * @subpackage Evidence_Hub_Shortcode
  */
  
-abstract class Evidence_Hub_Shortcode {
+abstract class Evidence_Hub_Shortcode extends Evidence_Hub_Base {
 
 	const SHORTCODE = 'evidence_hub_shortcode';
 	//var $shortcode = 'evidence_hub_shortcode';
@@ -239,17 +239,19 @@ abstract class Evidence_Hub_Shortcode {
 	}
 
 	/** Safely get json-decoded properties, eg. SVG fill colour [Bug #18].
+	* `sector.taxonomy = "evidence_hub_sector"`
 	*/
-	protected static function json_get( $json, $prop, $default = '' ) {
+	protected static function json_get( $json, $prop, $default = '', $is_sector_fill = TRUE ) {
+		static $error_count = 0;
 		$obj = json_decode( $json );
-		return isset($obj->{ $prop }) ? $obj->{ $prop } :
-			(is_string( $obj ) ? $obj . $default : $default);  //'<!--no_fill_2-->');
-	}
-
-	/** Get a WP configuration option from a PHP define() or the database. */
-	protected function get_option( $option, $default = NULL ) {
-		$KEY = strtoupper( $option );
-		return defined( $KEY ) ? constant( $KEY ) : get_option( $option, $default );
+		if (isset($obj->{ $prop })) {
+			return $obj->{ $prop };
+		}
+		elseif ($is_sector_fill && $error_count < 1) {
+			static::error("ERROR. Missing SVG fill in 'sector' tax. description!");
+		}
+		$error_count++;
+		return is_string( $obj ) ? $obj . $default : $default;
 	}
 
 	/** Print a JSON-encoded config. option */
@@ -348,11 +350,10 @@ abstract class Evidence_Hub_Shortcode {
 		endif;
 	}
 
-	/** Quick and dirty variable 'dump' within a HTML comment.
-	*/
-	protected function debug( $obj, $label = NULL ) {
-		echo "\n<!--$label:"; var_dump( $obj ); echo "-->\n";
-	}
+	/* See: `Evidence_Hub_Base` class
+	*
+	protected function debug( $obj .. ) { .. } */
+
 
 
 	// Caching ----------------------------------------------------------------
