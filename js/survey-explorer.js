@@ -16,18 +16,22 @@
 	var data = {};
 	var filtered = {};
 	var selectedValues = [];
+	var qOption = [];
+	var qGroup = {};
 	var filtersAdded = 0;
 	var filtersReady = 0;
 	
 	var isFirstTime = true;
 	var fetch = 'world';
 	var mapData;
-	var table, barChartDiff, pieChartDiff, chart_editor, mainMap, mapMarker, mapUS, map, markers, mapQuery;
+	var table, barChartDiff, pieChartDiff, chart_editor, mainMap, mapMarker, mapUS, map, markers, mapQuery, dQuery;
 	var qVal, offset, nIntervId;
-
-	// Missing globals? (see: 'mapUS' above)
-	var editorChart, usMap, usMapData;
-
+	
+	var groupLookup = groupLookup || [];
+	groupLookup["profiles"] = "Learning & Teaching Profiles";
+    groupLookup["behaviours"] = "OER Behaviours";
+    groupLookup["challenges"] = "Challenges &amp; Solutions";
+    groupLookup["impact"] = "OER Impact";
 
 	// initialise the chart editor
 	var editor = new google.visualization.ChartEditor();
@@ -46,7 +50,16 @@
 	
 	// data url for Google Fusion Tables
 	var url = 'http://www.google.com/fusiontables/gvizdata?tq=';
-	var tableId = '1lfXxk0jLtB5uudZCWQsSsh7nBNpYTvuLpWGzcLen'; // FusionTable ID with all the survey data
+	var tableId = explorer_options.table_data; // FusionTable ID with all the survey data
+	var qTableId = explorer_options.table_headings; // FusionTable ID with all the survey data
+	
+	// http://stackoverflow.com/a/901144/1027723
+	function getParameterByName(name) {
+		name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+			results = regex.exec(location.search);
+		return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
 	
 	// function to initalise UI
 	function init() {
@@ -63,7 +76,12 @@
 		  dataTable: new google.visualization.DataTable(),
 		  chartType: 'BarChart',
 		  containerId: 'chart_editor',
-		  options: {chartArea:{ }}});
+		  options: {chartArea:{ left:100,
+						 			 right: 50,
+						 			 bottom: 0,
+						 			 top:10,
+									 width:"100%",
+									 height:"100%"}}});
 		
 		  
 		// Prep the leafletjs map
@@ -84,62 +102,93 @@
 		// Data table with summary of charted data
 		table = new google.visualization.Table(document.getElementById('querytable'));
 		google.visualization.events.addListener(table, 'ready', function() { $jq( ".modal" ).hide();});
-				
+		console.log("Building filters..");
 		// Prep query for Fusion Table with the question groups
-		var hFrom = 'FROM 166qDEJGvifnMWGXEppfOH4_AEYxr0zutfS2WxWOt WHERE List = 1 ';
-		var hCols = 'Prompt, Response_Code, Option_Values';
+		var hFrom = "FROM "+qTableId+" WHERE Grouping NOT EQUAL TO '' ";
+		var hCols = "Grouping, Question, Column_Name, Option_Values, Question_Option";
 		var hQuery = new google.visualization.Query(url);
 		hQuery.setQuery('SELECT '+hCols+' '+ hFrom);
+		console.log('SELECT '+hCols+' '+ hFrom);
 		
 		// Prep query for Fustion Table with questions used for filtering the data
-		var dFrom = 'FROM 166qDEJGvifnMWGXEppfOH4_AEYxr0zutfS2WxWOt WHERE List = 2 ';
-		var dCols = 'Prompt, Response_Code';
-		var dQuery = new google.visualization.Query(url);
+		var dFrom = "FROM "+qTableId+" WHERE Filter NOT EQUAL TO '' ";
+		var dCols = 'Question_Option, Column_Name';
+		dQuery = new google.visualization.Query(url);
 		dQuery.setQuery('SELECT '+dCols+' '+ dFrom);
-		
+		console.log("Sending filter query..");
 		// fire queries for question select and data filters
 		hQuery.send(handleHeadingQueryResponse);
-		dQuery.send(handleDemoQueryResponse);
+		//dQuery.send(handleDemoQueryResponse);
     }
 	
 	// function to build question select options
 	function handleHeadingQueryResponse(response) {
+		console.log("Have headings..");
 		var i;
 		// Browser alert if error in query
 		if (response.isError()) {
 			alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
 			return;
 		}
+		
 		// DataTable with the questions and question response groups
 		headings = response.getDataTable();
 		var headingRows = headings.getNumberOfRows();
 		
 		// loop through and build helper object with question, question responses and question type
 		for (i=0; i < headingRows; i++){
-			if (colNames[headings.getValue(i,0)] === undefined){
-			  colNames[headings.getValue(i,0)] = [{v:"'"+headings.getValue(i,1).replace("'", "''")+"'", o: headings.getValue(i,2)}];
-			} else {
-			  colNames[headings.getValue(i,0)].push({v:"'"+headings.getValue(i,1).replace("'", "'''")+"'", o: headings.getValue(i,2)});
+			var qGrpIdx = headings.getValue(i,0);
+			var qIdx = headings.getValue(i,1);
+			var arr = {v:"'"+headings.getValue(i,2).replace("'", "''")+"'", 
+					   o: headings.getValue(i,3)};
+			if (qGroup[qGrpIdx] === undefined){
+			  qGroup[qGrpIdx] = [];
 			}
+			if (colNames[qIdx] === undefined){
+			  colNames[qIdx] = [arr];
+			  qGroup[qGrpIdx].push(qIdx);
+			} else {
+			  colNames[qIdx].push(arr);
+			}			
+			qOption[headings.getValue(i,2)] = headings.getValue(i,4);
+			//qGroup[headings.getValue(i,0)] = headings.getValue(i,4);
 		}
 		// use object to build question select option list
-		$jq.each(colNames, function(key, value) {
-		  $jq('#col_names').append($jq("<option/>", {
-				value: key,
-				text: key
-		  }));
+		$jq.each(qGroup, function (index) {
+            var optgroup = $jq('<optgroup>');
+            optgroup.attr('label',groupLookup[index]||index);
+			//console.log(index);
+             $jq.each(qGroup[index], function (i) {
+                var option = $jq("<option></option>");
+                option.val(qGroup[index][i]);
+                option.text(qGroup[index][i]);
+                optgroup.append(option);
+             });
+             $jq("#col_names").append(optgroup);
+
 		});
-		// convert basic select/option list into more UI friendly select (mainly done to allow wrapping of long question text)
-		$jq("#col_names").minimalect({
-							onchange: function(value, text) {
-								setQuestion();
-							},
-							placeholder: 'Select a question'});
-		$jq("#col_names").val("How long have you been teaching?").trigger("change"); // set default question
+		
+		$jq("#col_names").select2({
+			placeholder: "Select a question",
+		});
+		$jq("#col_names").on('change', function(e) {
+			setQuestion(e.val);
+		});
+		var question = getParameterByName('question')-1;
+		var group = getParameterByName('group');
+		if (question && group) {
+			$jq("#col_names").select2("val", qGroup[group][question]); //set the value
+		} else {
+			$jq("#col_names").select2("val", qGroup['profiles'][0]); //set the value
+		}
+		setQuestion();
+		dQuery.send(handleDemoQueryResponse);
 	}
 	
 	// function to handle data filters
 	function handleDemoQueryResponse(response) {
+	  console.log("Have demo..");
+	  	
 	  var i;
 	  if (response.isError()) {
         alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
@@ -149,27 +198,21 @@
 	  var demosRows = demos.getNumberOfRows();
 	  // build the filter select/option list
 	  for (i=0; i < demosRows; i++){
-		  $jq('#filter-select').append($jq("<option/>", {
-				value: demos.getValue(i,1),
-				text: demos.getValue(i,0)
-		  }));
+		  filtersAdded ++;
+		  addFilter(demos.getValue(i,1), demos.getValue(i,0));
 	  }
-	  // convert to nice UI
-	  $jq("#filter-select").minimalect({
-		  					onchange: function (value, text){ addFilter(value); },
-							placeholder: 'Add filter'});
 	}
 	
 	// for each filter build a table of options for the current question
-	function addFilter(value){
-		//var qVal = $jq("#col_names").val(); // current question
+	function addFilter(value, name){
+		qVal = $jq("#col_names").val(); // current question
 		
 		// disable option from select when filter is added 
 		$jq("#filter-select option[value='"+value+"']").prop("disabled",true);
 		$jq('#add-filter [data-value="'+value+'"]').attr("data-disabled", "true");
 		
 		// prep filter holder
-		$jq("#data-filters").append('<div class="group" id="'+value+'"><h3><div><a href="#" class="close-filter">X</a></div>'+value+'</h3><div class="filter-table" id="f'+value+'" style="height:370px"></div></div>');
+		$jq("#data-filters").append('<div class="group" id="'+value+'"><h3><div class="filter_icon"></div>'+name+'</h3><div class="filter-table" id="f'+value+'" style="height:200px"></div></div>');
 	  	$jq("#data-filters").accordion( "refresh" );
 		$jq("#data-filters").accordion( {active: $jq("#data-filters h3").length - 1});
 		
@@ -218,17 +261,32 @@
 	// if no values let the user know (rather than having blank cell
 	function filterBlank(dt, r){
 		if(dt.getValue(r, 0) === ""){
-			return '<em>no value</em>';	
+			return '<em>No Response/Not Asked</em>';	
 		}
 		return dt.getValue(r, 0);
 	}
 	
 	// handles change of question
-	function setQuestion(skipFilterUpdate){
+	function setQuestion(optQVal, skipFilterUpdate){
+		// http://stackoverflow.com/a/19279268/1027723
+		if (history.pushState) {
+			$jq.each(qGroup, function (index) {
+				 $jq.each(qGroup[index], function (i) {
+					
+					if (qGroup[index][i] == $jq("#col_names").val()){
+						var query = '?group='+index+'&question='+(parseInt(i)+1);
+						var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + query;
+						window.history.pushState({path:newurl},'',newurl);
+						
+					}
+				 });
+			});
+		}
+		$jq('#modal_msg').text('');
 		$jq( ".modal" ).show(); // load spinner
 		filtersReady = 0;
 		filtersAdded = 0;
-		qVal = $jq("#col_names").val(); // current question
+		console.log("Current question "+$jq("#col_names").val() );
 
 		// preserve checked responses in filters
 		selectedValues = [];
@@ -245,15 +303,19 @@
 				filterQuery.send(handleFilterQueryResponse);
 			});
 		}
+		console.log(nIntervId);
 		nIntervId = setInterval(setQuestionQuery, 500); // because filters are handled async we need to poll before we draw the charts
 	}
 	
 	// builds all the queries for the questions to be displayed 
-	function setQuestionQuery(){
+	function setQuestionQuery(optVal){
 		// if the number of filters used equals the number ready proceed
+		var qVal = $jq("#col_names").val();
 		console.log(filtersReady+':'+filtersAdded);
 		if (filtersReady === filtersAdded) {
 			clearInterval(nIntervId); // clear the polling
+			console.log("chart ready");
+			
 			var fetchWhere = "";
 			markers.clearLayers(); // clear existing markers from map
 			offset = 0; // because quering Fusion Tables with gViz limits to 500 rows set this up for some potential paging
@@ -327,9 +389,17 @@
         return;
       }
       var col = response.getDataTable();
-	  data[fetch].addRow([col.getColumnLabel(0),col.getValue(0,1)]);
-	  sendAndDraw();
+	  if (col.getNumberOfRows() > 0){
+	  	data[fetch].addRow([qOption[col.getColumnLabel(0)],col.getValue(0,1)]);
+	  	sendAndDraw();
+	  } else {
+		notEnoughData()  
+	  }
     }
+	
+	function notEnoughData() {
+		$jq('#modal_msg').text('Not enough data to draw graph');
+	}
 	
 	function handleLikertResponse(response) {
       var i;
@@ -341,10 +411,10 @@
 	  data[fetch].addRow();
 	  var colRow = col.getNumberOfRows();
 	  var rowIndex = data[fetch].getNumberOfRows() - 1;
-	  data[fetch].setCell(rowIndex, 0, col.getColumnLabel(0)); 
+	  data[fetch].setCell(rowIndex, 0, qOption[col.getColumnLabel(0)]); 
 	  for (i=0; i < colRow; i++){
 		if (globalColIdx[col.getValue(i, 0)] === undefined){
-			globalColIdx[col.getValue(i, 0)] = i + 1;
+			globalColIdx[col.getValue(i, 0)] = Object.keys(globalColIdx).length+ 1;
 			data[fetch].addColumn('number', col.getValue(i, 0));
 		} 
 		data[fetch].setCell(rowIndex, globalColIdx[col.getValue(i, 0)], col.getValue(i,1));
@@ -399,6 +469,7 @@
 	* 
 	*/
 	function handleRegionClick(event) {
+		console.log(event.region);
        if (event.region !== fetch){
 		   fetch = event.region;
 		   setQuestion();
@@ -464,7 +535,7 @@
 	  editorChart.setDataTable(data[fetch]);
 	  editorChart.setOptions({ animation:{ duration: 1000,
 					  			     	  easing: 'out', }, 
-							   title: qVal});
+							   title: $jq("#col_names").val()});
 	  
 	  // existing chart wrapper object use it
 	  if (aChart){
@@ -493,15 +564,23 @@
 				sendAndDraw(editor.getChartWrapper(editorChart));
 			}
 		});
-		
+		$jq('#editor_button').live("click", function(e) {
+			e.preventDefault();
+			openEditor();
+		});
 		// rendering radio buttons as checkboxes 
-		$jq('.filter-check input[type="radio"]').live("change click", function(e) {
+		$jq('.filter-check input[type="radio"]').live("change", function(e) {
 			this.checked = !this.checked;
 		});
 		$jq('.filter-check input[type="radio"]').live("click", function(e) {
-			setQuestion(true);
-		});
-		
+			this.checked = !this.checked;
+			setQuestion($jq('#col_names').val(), true);
+			if(!$jq(this).is(":checked")){
+				$jq('#'+this.name+' h3 .filter_icon').removeClass('on');
+			} else {
+				$jq('#'+this.name+' h3 .filter_icon').addClass('on');
+			};
+		});	
 		// close filter button removes it from the DOM and re-enables option
 		$jq('.close-filter').live("click", function(e) {
 			var filterGroup = $jq(this).closest('.group');
@@ -510,8 +589,12 @@
 			filterGroup.remove();
 			setQuestion();
 		});
-	//});
-	//$jq( document ).ready(function( $ ) {
+		$jq('#csv').live("click", function(e) {
+			e.preventDefault();
+			var csv_data = google.visualization.dataTableToCsv(data[fetch]);
+			saveTextAs(csv_data, "survey_data.csv");
+			//$jq('#csv a').attr('href', 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv_data));
+		});
 		$jq(window).resize(function(){
 			sendAndDraw();
 			mainMap.draw(mapData, optionsMain);
@@ -521,7 +604,6 @@
 		$jq('#map').css('height', h);
 		$jq( ".modal" ).hide();	
 	});
-
 })();
 
 //End.

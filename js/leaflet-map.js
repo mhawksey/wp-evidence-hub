@@ -65,6 +65,7 @@ var formattedText = function (d){
 	tSector = (d.sector) ? '<div class="poptc h">Sector:</div><div class="poptc v">'+toProperCase((typeof d.sector === "string") ? d.sector : d.sector.join(", "))+'</div>' : '',
 	tPol = (d.polarity) ? '<div class="poptc h">Polarity:</div><div class="poptc v">'+toVeCase(d.polarity)+'</div>' : '';
 	tLoc = (d.locale) ? '<div class="poptc h">Locale:</div><div class="poptc v">'+toProperCase(d.locale)+'</div>' : '';
+	tUrl = (d.url) ? '<a href="'+d.url+'" class="geo_pop">Read more..</a>' : '';
 	return '<a href="'+d.url+'"><strong>'+d.name+'</strong></a>' +
 			'<div class="popt">' +
 			  '<div class="poptr">' + tType +'</div>' +
@@ -73,14 +74,15 @@ var formattedText = function (d){
 			  '<div class="poptr">' + tSector +'</div>' + 
 			  '<div class="poptr">' + tLoc +'</div>' + 
 			'</div>' +
-			'<div class="poptr">' + d.desc +'</div>';
+			'<div class="poptr">' + d.desc +' '+tUrl+'</div>';
 }
 
-var markers = L.markerClusterGroup({ spiderfyOnMaxZoom: true, showCoverageOnHover: false, zoomToBoundsOnClick: false, disableClusteringAtZoom: 4});
+//var markers = L.markerClusterGroup({ spiderfyOnMaxZoom: true, showCoverageOnHover: false, zoomToBoundsOnClick: false, disableClusteringAtZoom: 4});
+var markers = L.markerClusterGroup({ spiderfyOnMaxZoom: true, showCoverageOnHover: false, zoomToBoundsOnClick: false});
 // add markers from geoJson written to page (doing it this way becase hubPoints will be cached)		
 	
 var markerArray = [];
-var tableArray = [];
+//var tableArray = [];
 var markerMap = {};
 var row = [];
 var switches = [];
@@ -89,15 +91,12 @@ jQuery('#evidence-map select').each(function(i,v) {
 	row.push(v.id.substring(13));
 });
 
-generateTable();
+/*generateTable();
 
 function generateTable(){
 	var d = json['geoJSON'] || null;
 	var row = ["id", "type", "name", "desc", "url", "sector", "polarity", "project", "hypothesis_id", "hypothesis", "locale"];
 	if (d){
-		/*for (var k in d[0].properties) {
-			row.push(k);
-		}*/
 		tableArray.push(row);
 		for (var i=0,  tI=d.length; i < tI; i++) {
 			var row = [];
@@ -111,7 +110,7 @@ function generateTable(){
 			tableArray.push(row);
 		}
 	}
-}
+}*/
 
 
 renderLayer(switches);
@@ -236,6 +235,16 @@ function importNode(node, allChildren, doc) {
         }
     }
 }
+function customPop(url) {
+	var D=500,A=600,C=screen.height,B=screen.width,H=Math.round((B/2)-(D/2)),G=0,F=document,E;
+	if(C>A){G=Math.round((C/2)-(A/2))}
+	shareWin=window.open(url,'ShareWin','left='+H+',top='+G+',width='+D+',height='+A+',personalbar=0,toolbar=0,scrollbars=1,resizable=1');
+	if (window.focus) {shareWin.focus()}
+	/*E=F.createElement('script');
+	E.src='//platform.twitter.com/bookmarklets/share.js?v=1';
+	F.getElementsByTagName('head')[0].appendChild(E);*/
+}
+
 jQuery(document).ready(function($){
 		jQuery('.google-visualization-table-td').each(function(i,v) {
 
@@ -244,6 +253,7 @@ jQuery(document).ready(function($){
 					 console.log("T"),
 					 false
 				  );
+				 
 	});
 	$(".google-visualization-table-td").click(function () {
 		console.log(this);
@@ -263,5 +273,9 @@ jQuery(document).ready(function($){
 			});
 		});
 	
+	});
+	$('a.geo_pop').live('click', function(){
+		customPop($(this).attr('href'));
+		return false;
 	});
 });

@@ -9,7 +9,7 @@ Author URI: http://mashe.hawksey.info
 License: GPL2
 
 /*
-Copyright 2014  Martin Hawksey  (email : m.hawksey@gmail.com)
+Copyright 2015  The Open Unversiity (web: open.ac.uk)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as 
@@ -67,6 +67,7 @@ if(!class_exists('Evidence_Hub'))
 			$this->_require(array(
 				'shortcodes/class-shortcode.php',
 				'shortcodes/class-bookmarklet.php',
+				'shortcodes/class-api_example.php',
 				'shortcodes/class-evidence_entry.php',
 				'shortcodes/class-general_getpostmeta.php',
 				'shortcodes/class-general_getpoststagged.php',
@@ -180,6 +181,8 @@ if(!class_exists('Evidence_Hub'))
 			$page_id = intval(get_option( 'hypothesis_template_page' )); //[Bug: #31]
 
 			if ($post->post_type == 'hypothesis' && $page_id) {
+				/*
+				[TODO Seems to be theme specific]
 				global $content_width;
 				$content_width = 960;
 				$wp_template = get_post_meta( $page_id, '_wp_page_template', true );
@@ -187,6 +190,7 @@ if(!class_exists('Evidence_Hub'))
 					$single_template = get_stylesheet_directory() .'/'. $wp_template;
 					add_filter( 'body_class', array(&$this, 'evidence_hub_body_class') );
 				}
+				*/
 			}
 			$this->debug(array( 'single_template' => $single_template ));
 			return $single_template;
@@ -516,7 +520,7 @@ if(!class_exists('Evidence_Hub'))
 			if ($typenow=='location') {
 				$scripts[] = 'pronamic_google_maps_admin';
 			}
-			wp_enqueue_style( 'evidence-hub-autocomplete', plugins_url( 'css/style.css' , EVIDENCE_HUB_REGISTER_FILE ) );
+			wp_enqueue_style( 'evidence-hub-autocomplete', plugins_url( 'css/style.css' , EVIDENCE_HUB_REGISTER_FILE ), '1.0.1' );
 			wp_enqueue_script( 'evidence-hub-autocomplete', plugins_url( 'js/script.js' , EVIDENCE_HUB_REGISTER_FILE ), $scripts, '', true );
 			wp_register_script( 'd3js', plugins_url( 'lib/map/lib/d3.v3.min.js' , EVIDENCE_HUB_REGISTER_FILE), array( 'jquery' )  );
 			wp_enqueue_script( 'd3js' );
@@ -589,9 +593,10 @@ if(!class_exists('Evidence_Hub'))
 			wp_enqueue_style( 'evidence_hub_style');
 			wp_enqueue_style( 'facetious_widget', EVIDENCE_HUB_URL.'/lib/facetious/facetious.css' );
 			
-			wp_register_script( 'selectreplace_script', plugins_url( 'js/selectreplace/jquery.minimalect.min.js' , EVIDENCE_HUB_REGISTER_FILE), $scripts  );
-			wp_enqueue_script( 'selectreplace_script' );
-			wp_enqueue_style( 'selectreplace_style', plugins_url( 'js/selectreplace/jquery.minimalect.min.css' , EVIDENCE_HUB_REGISTER_FILE ) );
+			wp_register_script( 'select2_script', plugins_url( 'js/select2/select2.min.js' , EVIDENCE_HUB_REGISTER_FILE), $scripts  );
+			wp_enqueue_script( 'select2_script' );
+			wp_enqueue_style( 'select2_style', plugins_url( 'js/select2/select2.css' , EVIDENCE_HUB_REGISTER_FILE ) );
+			
 			
 			// handle cookie-notice enqueue (required because of symbolic links)
 			$this->cookie = array(

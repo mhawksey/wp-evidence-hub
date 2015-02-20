@@ -130,7 +130,7 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
         <link rel="stylesheet" href="<?php echo plugins_url( 'js/markercluster/MarkerCluster.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
         <link rel="stylesheet" href="<?php echo plugins_url( 'js/markercluster/MarkerCluster.Default.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
         <script src="<?php echo plugins_url( 'js/markercluster/leaflet.markercluster-src.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
-		<script src="<?php echo plugins_url( 'js/leaflet-map.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
+		<script src="<?php echo plugins_url( 'js/leaflet-map.js?v=6' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
 
 		<?php $this->print_fullscreen_button_html_javascript() ?>
 		<script>
@@ -153,6 +153,7 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 		var data, table;
 		var pickers = {};;
 		var c = [];
+		var tableArray = [];
 		var summaryControl = L.Control.extend({
 			options: {
 				position: 'bottomleft'
@@ -170,15 +171,34 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 
 		function drawVisualization() {
 			// Prepare the data.
+			var d = json['geoJSON'] || null;
+			var row = ["id", "type", "name", "desc", "url", "sector", "polarity", "project", "hypothesis_id", "hypothesis", "locale"];
+			if (d){
+				/*for (var k in d[0].properties) {
+					row.push(k);
+				}*/
+				tableArray.push(row);
+				for (var i=0,  tI=d.length; i < tI; i++) {
+					var row = [];
+					for (var j=0,  tJ=tableArray[0].length; j < tJ; j++) {
+						if (d[i].properties[tableArray[0][j]] instanceof Array) {
+							row.push(d[i].properties[tableArray[0][j]].join(","));
+						} else {
+							row.push(d[i].properties[tableArray[0][j]]);
+						}
+					}
+					tableArray.push(row);
+				}
+			}
 			
 			data = google.visualization.arrayToDataTable(tableArray, false);
 			for (i=0; i<data.getNumberOfColumns(); i++){
 				c[data.getColumnLabel(i)] = i;
 			} 
 
-			var formatter = new google.visualization.PatternFormat('<div>{1} - <span style="text-transform: capitalize;">{2}</span><br/><a href="{0}">Read more..</a></div></div>');
+			var formatter = new google.visualization.PatternFormat('<div>{1} - <span style="text-transform: capitalize;">{2}</span></div></div>');
 			formatter.format(data, [c['url'],c['name'], c['type']], c['desc']);
-	   
+	   console.log(c);
 			// Define a StringFilter control for the 'Name' column
 			var stringFilter = new google.visualization.ControlWrapper({
 			  'controlType': 'StringFilter',
@@ -254,7 +274,6 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 				return false;
 			});
 			document.getElementById('result-count').innerHTML = table.getDataTable().getNumberOfRows();
-
 			jQuery(".oer-chart-loading").hide();
 		  }
 
