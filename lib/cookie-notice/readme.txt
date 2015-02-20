@@ -1,10 +1,10 @@
-=== Cookie Notice ===
+=== Cookie Notice by dFactory===
 Contributors: dfactory
 Donate link: http://www.dfactory.eu/
 Tags: cookie, cookies, notice, notification, notify, cookie, cookie compliance, cookie law, eu cookie, privacy, privacy directive, consent, Bootstrap
 Requires at least: 3.3
-Tested up to: 3.8.1
-Stable tag: 1.2.2
+Tested up to: 4.1
+Stable tag: 1.2.17
 License: MIT License
 License URI: http://opensource.org/licenses/MIT
 
@@ -25,11 +25,24 @@ For more information, check out plugin page at [dFactory](http://www.dfactory.eu
 * Animate the message box after cookie is accepted
 * Select bottons style from None, WordPress and Bootstrap
 * Set the text and bar background colors
+* WPML and Polylang compatible
 * .pot file for translations included
 
 = Translations: =
+
+* Croatian - by [Marko Beus](http://www.markobeus.com/)
+* Czech - by [Adam Laita](http://laita.cz)
 * Dutch - by [Heleen van den Bos](http://www.bostekst.nl/)
+* French - by [Laura Orsal](http://www.traductrice-independante.fr)
+* German - by Alex Ernst
+* Hebrew - by [Ahrale Shrem](http://atar4u.com/)
+* Hungarian - by [Surbma](http://surbma.hu)
+* Italian - by [Luca](http://www.lucacicca.it)
 * Polish - by Bartosz Arendt
+* Portuguese - by Luis Maia
+* Slovenian - by Thomas Cuk
+* Spanish - by Fernando Blasco
+* Swedish - by [Daniel Storgards](http://www.danielstorgards.com/)
 
 
 == Installation ==
@@ -47,6 +60,55 @@ No questions yet.
 1. screenshot-1.png
 
 == Changelog ==
+
+= 1.2.17 =
+* New: Hebrew translation, thanks to [Ahrale Shrem](http://atar4u.com/)
+
+= 1.2.16 =
+* Tweak: Dutch translation missing due to a typo 
+
+= 1.2.15 =
+* New: Danish translation, thanks to Hans C. Jorgensen
+* Fix: Notice bar not visible if no animation selected
+
+= 1.2.14 =
+* New: Hungarian translation, thanks to [Surbma](http://surbma.hu)
+
+= 1.2.13 =
+* New: Croatian translation, thanks to [Marko Beus](http://www.markobeus.com/)
+
+= 1.2.12 =
+* New: Slovenian translation, thanks to Thomas Cuk
+
+= 1.2.11 =
+* New: Swedish translation, thanks to [Daniel Storgards](http://www.danielstorgards.com/)
+
+= 1.2.10 =
+* New: Italian translation, thanks to [Luca](http://www.lucacicca.it)
+* Tweak: Confirmed WP 4.0 compatibility
+
+= 1.2.9.1 =
+* Tweak: Enable HTML in cookie message text
+* New: Option to donate this plugin :)
+
+= 1.2.8 =
+* New: Czech translation, thanks to [Adam Laita](http://laita.cz)
+
+= 1.2.7 =
+* New: French translation, thanks to [Laura Orsal](http://www.traductrice-independante.fr)
+* New: Deleting plugin settings on deactivation as an option
+
+= 1.2.6 =
+* New: German translation, thanks to Alex Ernst
+
+= 1.2.5 =
+* New: Spanish translation, thanks to Fernando Blasco
+
+= 1.2.4 =
+* New: Added filter hooks to customize where and how display the cookie notice
+
+= 1.2.3 =
+* New: Portuguese translation, thanks to Luis Maia
 
 = 1.2.2 =
 * Fix: Read more linking to default site language in WPML & Polylang
@@ -74,5 +136,5 @@ Initial release
 
 == Upgrade Notice ==
 
-= 1.2.2 =
-* Fix: Read more linking to default site language in WPML & Polylang
+= 1.2.17 =
+* New: Hebrew translation, thanks to [Ahrale Shrem](http://atar4u.com/)

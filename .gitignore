@@ -19,6 +19,9 @@ local.properties
 # External tool builders
 .externalToolBuilders/
 
+#Dreamweaver Notes
+_notes
+
 # Locally stored "Eclipse launch configurations"
 *.launch
 

@@ -57,12 +57,12 @@ if ( isset( $_POST['Submit'] ) ) {
 	$text = '';
 	foreach($update_ratings_queries as $update_ratings_query) {
 		if($update_ratings_query) {
-			$text .= '<font color="green">'.$update_ratings_text[$i].' '.__('Updated', 'wp-postratings').'</font><br />';
+			$text .= '<p style="color: green;">'.$update_ratings_text[$i].' '.__('Updated', 'wp-postratings').'</p>';
 		}
 		$i++;
 	}
 	if(empty($text)) {
-		$text = '<font color="red">'.__('No Ratings Templates Updated', 'wp-postratings').'</font>';
+		$text = '<p style="color: red;">'.__('No Ratings Templates Updated', 'wp-postratings').'</p>';
 	}
 }
 ?>
@@ -128,7 +128,6 @@ if ( isset( $_POST['Submit'] ) ) {
 </script>
 <?php if(!empty($text)) { echo '<!-- Last Action --><div id="message" class="updated fade"><p>'.$text.'</p></div>'; } ?>
 <div class="wrap">
-	<div id="icon-wp-postratings" class="icon32"><br /></div>
 	<h2><?php _e('Post Ratings Templates', 'wp-postratings'); ?></h2>
 	<form method="post" action="<?php echo admin_url('admin.php?page='.plugin_basename(__FILE__)); ?>">
 		<?php wp_nonce_field('wp-postratings_templates'); ?>

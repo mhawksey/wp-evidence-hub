@@ -14,7 +14,7 @@ class Pronamic_Google_Maps_Maps {
 	 *
 	 * @var string
 	 */
-	const SLUG = 'pronamic-google-maps';
+	const SLUG = 'pronamic_google_maps';
 
 	//////////////////////////////////////////////////
 
@@ -82,7 +82,7 @@ class Pronamic_Google_Maps_Maps {
 	 *
 	 * @param string $file
 	 */
-	public static function bootstrap($file) {
+	public static function bootstrap( $file ) {
 		self::$file = $file;
 
 		Pronamic_Google_Maps_Plugin::bootstrap();
@@ -136,7 +136,7 @@ class Pronamic_Google_Maps_Maps {
 	 * @see http://core.trac.wordpress.org/browser/tags/3.4/wp-includes/query.php#L0
 	 */
 	public static function parse_query( $query ) {
-		$meta_query_extra = array( );
+		$meta_query_extra = array();
 
 		// Range
 		// @see http://en.wikipedia.org/wiki/Decimal_degrees
@@ -179,24 +179,22 @@ class Pronamic_Google_Maps_Maps {
 	 */
 	public static function registerScripts() {
 		$protocol = is_ssl() ? 'https' : 'http';
-		
+
 		// Register the Google JavaScript API loader script
 		wp_register_script(
 			'google-jsapi',
 			add_query_arg(
-				array(
-					
-				),
+				array(),
 				$protocol . '://www.google.com/jsapi'
 			)
 		);
-	
+
 		// Register the Google Maps script
 		wp_register_script(
 			'google-maps',
 			add_query_arg(
 				array(
-					'sensor' => 'false'
+					'sensor' => 'false',
 				),
 				$protocol . '://maps.googleapis.com/maps/api/js'
 			)
@@ -304,26 +302,29 @@ class Pronamic_Google_Maps_Maps {
 	 * @param Pronamic_Google_Maps_Info $info
 	 * @return string an URL
 	 */
-	public static function getStaticMapUrl(Pronamic_Google_Maps_Info $info) {
+	public static function getStaticMapUrl( Pronamic_Google_Maps_Info $info ) {
 		$url = 'http://maps.google.com/maps/api/staticmap?';
+
+		$width  = Pronamic_Google_Maps_Size::parse( $info->width );
+		$height = Pronamic_Google_Maps_Size::parse( $info->height );
 
 		$parameters = array();
 		$parameters['center']  = $info->latitude . ',' . $info->longitude;
 		$parameters['zoom']    = $info->mapOptions->zoom;
-		$parameters['size']    = $info->width . 'x' . $info->height;
+		$parameters['size']    = $width->get_pixels( self::$defaultWidth ) . 'x' . $height->get_pixels( self::$defaultHeight );
 		$parameters['maptype'] = $info->mapOptions->mapTypeId;
 		$parameters['sensor']  = 'false';
 
 		$markers = '';
-		if($info->color != null) {
+		if ( $info->color != null ) {
 			$markers .= 'color:' . $info->color . '|';
 		}
 
-		if($info->label != null) {
+		if ( $info->label != null ) {
 			$markers .= 'label:' . $info->label . '|';
 		}
 
-		if( ! empty( $info->markerOptions->icon ) ) {
+		if ( ! empty( $info->markerOptions->icon ) ) {
 			$markers .= 'icon:' . $info->markerOptions->icon . '|';
 		}
 
@@ -331,7 +332,7 @@ class Pronamic_Google_Maps_Maps {
 
 		$parameters['markers'] = $markers;
 
-		$url .= http_build_query($parameters, '', '&amp;');
+		$url .= http_build_query( $parameters, '', '&amp;' );
 
 		return $url;
 	}
@@ -346,14 +347,17 @@ class Pronamic_Google_Maps_Maps {
 	public static function getMapHtml( Pronamic_Google_Maps_Info $info ) {
 		$content = '<div class="pgm">';
 
-		if($info->isDynamic()) {
-			$content .= sprintf('<input type="hidden" name="pgm-info" value="%s" />', esc_attr(json_encode($info)));
+		$width  = Pronamic_Google_Maps_Size::parse( $info->width );
+		$height = Pronamic_Google_Maps_Size::parse( $info->height );
 
-			$content .= sprintf('<div class="canvas" style="width: %dpx; height: %dpx;">', $info->width, $info->height);
-			$content .= sprintf('  <img src="%s" alt="" />', self::getStaticMapUrl($info));
-			$content .= sprintf('</div>');
+		if ( $info->isDynamic() ) {
+			$content .= sprintf( '<input type="hidden" name="pgm-info" value="%s" />', esc_attr( json_encode( $info ) ) );
+
+			$content .= sprintf( '<div class="canvas" style="width: %s; height: %s;">', $width, $height );
+			$content .= sprintf( '	<noscript><img src="%s" alt="" /></noscript>', self::getStaticMapUrl( $info ) );
+			$content .= sprintf( '</div>' );
 		} else {
-			$content .= sprintf('<img src="%s" alt="" />', self::getStaticMapUrl($info));
+			$content .= sprintf( '<img src="%s" alt="" />', self::getStaticMapUrl( $info ) );
 		}
 
 		$content .= '</div>';
@@ -376,15 +380,11 @@ class Pronamic_Google_Maps_Maps {
 			'label'          => null,
 			'color'          => null,
 			'echo'           => true,
-			'marker_options' => array(
-
-			),
-			'map_options' => array(
-
-			)
+			'marker_options' => array(),
+			'map_options'    => array(),
 		);
 
-		$arguments = wp_parse_args($arguments, $defaults);
+		$arguments = wp_parse_args( $arguments, $defaults );
 
 		$options = Pronamic_Google_Maps_Maps::getOptions();
 		$pgm = Pronamic_Google_Maps_Maps::getMetaData();
@@ -393,7 +393,7 @@ class Pronamic_Google_Maps_Maps {
 
 		global $post;
 
-		$active = isset($activeTypes[$post->post_type]) && $activeTypes[$post->post_type];
+		$active = isset( $activeTypes[ $post->post_type ] ) && $activeTypes[ $post->post_type ];
 
 		if ( $active && $pgm->active ) {
 			$info = new Pronamic_Google_Maps_Info();
@@ -403,7 +403,7 @@ class Pronamic_Google_Maps_Maps {
 			$info->longitude   = $pgm->longitude;
 			$info->width       = $arguments['width'];
 			$info->height      = $arguments['height'];
-			$info->static      = filter_var($arguments['static'], FILTER_VALIDATE_BOOLEAN);
+			$info->static      = filter_var( $arguments['static'], FILTER_VALIDATE_BOOLEAN );
 			$info->label       = $arguments['label'];
 			$info->color       = $arguments['color'];
 
@@ -420,19 +420,19 @@ class Pronamic_Google_Maps_Maps {
 			// Map options
 			$info->mapOptions->mapTypeId = $pgm->mapType;
 			$info->mapOptions->zoom      = $pgm->zoom;
-			foreach($arguments['map_options'] as $key => $value) {
-				$value = apply_filters('pronamic_google_maps_map_options_' . $key, $value);
+			foreach ( $arguments['map_options'] as $key => $value ) {
+				$value = apply_filters( 'pronamic_google_maps_map_options_' . $key, $value );
 
 				$info->mapOptions->$key = $value;
 			}
 
-			$html = self::getMapHtml($info);
+			$html = self::getMapHtml( $info );
 
-			if($info->isDynamic()) {
+			if ( $info->isDynamic() ) {
 				Pronamic_Google_Maps_Site::requireSiteScript();
 			}
 
-			if($arguments['echo']) {
+			if ( $arguments['echo'] ) {
 				echo $html;
 			} else {
 				return $html;

@@ -4,6 +4,8 @@
 .df-credits h3 { font-size: 14px; line-height: 1.4; margin: 0;  padding: 8px 12px; border-bottom: 1px solid #eee; }
 .df-credits .df-link { font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif; font-style:italic; padding-bottom: 10px; margin: 0; }
 .df-credits .df-link a { vertical-align: middle; padding: 5px 0 0 4px; }
+.cookie-notice-settings .df-credits form { min-width: 260px; margin-bottom: 1em; }
+.cookie-notice-settings .df-credits form input { margin: 0; padding: 0; }
 .cookie-notice-settings { margin-right: 300px; }
 .cookie-notice-settings hr, .df-credits hr { border: solid #eee; border-width: 1px 0 0; clear: both; height: 0; }
 .cookie-notice-settings form { float: left; min-width: 463px; width: 100%; }

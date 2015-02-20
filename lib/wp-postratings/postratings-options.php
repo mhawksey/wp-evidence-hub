@@ -1,18 +1,18 @@
 <?php
 /*
 +----------------------------------------------------------------+
-|																 |
-|	WordPress Plugin: WP-PostRatings							 |
-|	Copyright (c) 2012 Lester "GaMerZ" Chan						 |
-|																 |
-|	File Written By:											 |
-|	- Lester "GaMerZ" Chan										 |
-|	- http://lesterchan.net										 |
-|																 |
-|	File Information:											 |
-|	- Configure Post Ratings Options							 |
-|	- wp-content/plugins/wp-postratings/postratings-options.php	 |
-|																 |
+|																							|
+|	WordPress Plugin: WP-PostRatings								|
+|	Copyright (c) 2012 Lester "GaMerZ" Chan									|
+|																							|
+|	File Written By:																	|
+|	- Lester "GaMerZ" Chan															|
+|	- http://lesterchan.net															|
+|																							|
+|	File Information:																	|
+|	- Configure Post Ratings Options												|
+|	- wp-content/plugins/wp-postratings/postratings-options.php		|
+|																							|
 +----------------------------------------------------------------+
 */
 
@@ -93,12 +93,12 @@ if ( isset( $_POST['Submit'] ) ) {
 	$text = '';
 	foreach($update_ratings_queries as $update_ratings_query) {
 		if($update_ratings_query) {
-			$text .= '<font color="green">'.$update_ratings_text[$i].' '.__('Updated', 'wp-postratings').'</font><br />';
+			$text .= '<p style="color: green;">'.$update_ratings_text[$i].' '.__('Updated', 'wp-postratings').'</p>';
 		}
 		$i++;
 	}
 	if(empty($text)) {
-		$text = '<font color="red">'.__('No Ratings Option Updated', 'wp-postratings').'</font>';
+		$text = '<p style="color: red;">'.__('No Ratings Option Updated', 'wp-postratings').'</p>';
 	}
 }
 
@@ -107,8 +107,8 @@ if ( isset( $_POST['Submit'] ) ) {
 $postratings_max = intval(get_option('postratings_max'));
 $postratings_options = get_option('postratings_options');
 $postratings_customrating = intval(get_option('postratings_customrating'));
-$postratings_url = WP_POSTRATINGS_URL.'images';
-$postratings_path = dirname(__FILE__).'/images'; // WP_POSTRATINGS_PATH.'/images';
+$postratings_url = plugins_url('wp-postratings/images');
+$postratings_path = WP_PLUGIN_DIR.'/wp-postratings/images';
 $postratings_ratingstext = get_option('postratings_ratingstext');
 $postratings_ratingsvalue = get_option('postratings_ratingsvalue');
 $postratings_image = get_option('postratings_image');
@@ -205,9 +205,8 @@ $postratings_image = get_option('postratings_image');
 </script>
 <?php if(!empty($text)) { echo '<!-- Last Action --><div id="message" class="updated fade"><p>'.$text.'</p></div>'; } ?>
 <div class="wrap">
-	<div id="icon-wp-postratings" class="icon32"><br /></div>
 	<h2><?php _e('Post Ratings Options', 'wp-postratings'); ?></h2>
-	<form method="post" action="<?php echo admin_url('admin.php?page='.WP_POSTRATINGS_PATH.'/postratings-options.php'); ?>">
+	<form method="post" action="<?php echo admin_url('admin.php?page='.plugin_basename(__FILE__)); ?>">
 		<?php wp_nonce_field('wp-postratings_options'); ?>
 		<input type="hidden" id="postratings_customrating" name="postratings_customrating" value="<?php echo $postratings_customrating; ?>" />
 		<input type="hidden" id="postratings_template_vote" name="postratings_template_vote" value="<?php echo esc_attr(stripslashes(get_option('postratings_template_vote'))); ?>" />

@@ -32,7 +32,7 @@ Contributors: pronamic, remcotolsma
 Donate link: http://pronamic.eu/donate/?for=wp-plugin-pronamic-google-maps&source=wp-plugin-readme-txt  
 Requires at least: 3.0  
 Tested up to: 3.4.1  
-Stable tag: 2.2.5  
+Stable tag: 2.2.9  
 License: GPLv2 or later  
 http://wordpress.org/plugins/pronamic-google-maps/  
 
@@ -44,11 +44,38 @@ Tested up to: 3.5.2
 Stable tag: 1.1.1  
 http://wordpress.org/plugins/json-api/  
 
+**WP-PostRatings**
+Plugin URI: http://lesterchan.net/portfolio/programming/php/
+Description: Adds an AJAX rating system for your WordPress blog's post/page.
+Version: 1.80
+Author: Lester 'GaMerZ' Chan
+Author URI: http://lesterchan.net
+Text Domain: wp-postratings
+
+**Custom Headers and Footers**
+Plugin URI: http://www.poradnik-webmastera.com/projekty/custom_headers_and_footers/
+Description: This plugin adds custom header and footer for main page content.
+Author: Daniel Frużyński
+Version: 1.2
+Author URI: http://www.poradnik-webmastera.com/
+Text Domain: custom-headers-and-footers
+License: GPL2
+
+**Cookie Notice**
+Version: 1.2.17
+Author: dFactory
+Author URI: http://www.dfactory.eu/
+Plugin URI: http://www.dfactory.eu/plugins/cookie-notice/
+License: MIT License
+License URI: http://opensource.org/licenses/MIT
+Text Domain: cookie-notice
+Domain Path: /languages
+
 **Facetious**  
 Contributors: codeforthepeople, johnbillion, s1m0nd, simonwheatley  
 Requires at least: 3.4  
 Tested up to: 3.5  
-Stable tag: trunk  
+Stable tag: 1.1.4 
 License: GPL v2 or later  
 http://wordpress.org/plugins/facetious/  
 
