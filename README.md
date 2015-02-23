@@ -19,10 +19,40 @@ Build on [wp-plugin-template by Francis Yaconiello](https://github.com/fyaconiel
 briankwa](http://wordpress.org/plugins/conferencer/)
 
 The plugin has a couple of shortcodes:  
-`[evidence_map]` - Overview of hub data and evidence flow  
-`[evidence_geomap]` - Plot of all evidence and projects  
-`[hypothesis_bar]` - Displays all the hypotheses and a summary of polarity 
-
+* `[evidence_map]` - Overview of hub data and evidence flow  
+* `[evidence_geomap]` - Plot of all evidence and projects  
+* `[hypothesis_bar]` - Displays all the hypotheses and a summary of polarity 
+* `[bookmarklet]` - Displays bookmarklet link 
+  * Options: url - string submit page
+  *          text - string button text
+* `[evidence_entry]`
+  * Options: do_cache - boolean to disable cache option default: *false*
+* `[evidence_geomap]`	
+* `[evidence_map]	`
+* `[evidence_meta]`	
+  * Options: location - header|footer|false
+  *          header_terms - comma seperated list of fields to display
+  *          footer_terms -  comma seperated list of fields to display
+* `[evidence_summary]`	
+* `[geomap]`
+  * Options: type - string comma list of types to map
+* `[get_post_meta]`	
+  * Options: post_id - hypothesis id (defults to current post)
+  *          meta_key - string of meta key value to get
+* `[get_evidence_tagged]`	
+* `[hypothesis_archive]`	
+* `[hypothesis_balance]`	
+* `[hypothesis_bar]`
+* `[hypothesis_breakdown]`
+* `[hypothesis_geosummary]`	
+* `[evidence_ratings]`
+* `[hypothesis_sankey]`	
+* `[hypothesis_summary]`	
+* `[policy_geomap]`
+* `[policy_meta]`
+* `[project_meta]`		
+* `[survey_explorer]`
+* `[api_demo]`
 
 Libraries included
 ----
@@ -47,7 +77,7 @@ http://wordpress.org/plugins/json-api/
 **WP-PostRatings**
 Plugin URI: http://lesterchan.net/portfolio/programming/php/
 Description: Adds an AJAX rating system for your WordPress blog's post/page.
-Version: 1.80
+Version: 1.78
 Author: Lester 'GaMerZ' Chan
 Author URI: http://lesterchan.net
 Text Domain: wp-postratings

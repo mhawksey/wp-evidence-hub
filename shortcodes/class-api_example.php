@@ -1,11 +1,11 @@
 <?php
 /**
- * Bookmarklet Shortcode
+ * API Example
  * 
- * Generates metadata bars for projects
- * Shortcode: [bookmarklet]
- * Options: url - string submit page
- *			text - string button text
+ * Generates 'try me' form elements for api endpoints
+ * Shortcode: [api_demo]
+ * Options: api - string of api endpoint
+ *			parameters - additional parameters
  *
  * Based on shortcode class construction used in Conferencer http://wordpress.org/plugins/conferencer/.
  *
