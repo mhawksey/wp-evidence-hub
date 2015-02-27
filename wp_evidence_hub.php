@@ -181,16 +181,17 @@ if(!class_exists('Evidence_Hub'))
 			$page_id = intval(get_option( 'hypothesis_template_page' )); //[Bug: #31]
 
 			if ($post->post_type == 'hypothesis' && $page_id) {
-				/*
-				[TODO Seems to be theme specific]
+				
+				// [TODO Seems to be theme specific]
 				global $content_width;
 				$content_width = 960;
+		
 				$wp_template = get_post_meta( $page_id, '_wp_page_template', true );
-				if ($wp_template) {
+				if ($wp_template && file_exists(get_stylesheet_directory() .'/'. $wp_template)) {
 					$single_template = get_stylesheet_directory() .'/'. $wp_template;
 					add_filter( 'body_class', array(&$this, 'evidence_hub_body_class') );
 				}
-				*/
+				
 			}
 			$this->debug(array( 'single_template' => $single_template ));
 			return $single_template;
