@@ -38,7 +38,7 @@ class Evidence_Hub_Shortcode_API_Example extends Evidence_Hub_Shortcode {
 		else :
 		?>
         <div class="api_try">Try it:</div>
-        <form class="api_try_form" onsubmit="window.location.href = '<? echo $this->get_api_url( 'hub/' .$api ); ?>' + document.getElementById('param_<?php echo $api;?>').value; return false;"><? echo ($this->get_api_url( 'hub/' .$api )); ?>
+        <form class="api_try_form" onsubmit="window.location.href = '<?php echo $this->get_api_url( 'hub/' .$api ); ?>' + document.getElementById('param_<?php echo $api;?>').value; return false;"><?php echo ($this->get_api_url( 'hub/' .$api )); ?>
             <input type="text" id="param_<?php echo $api;?>" value="<?php echo $parameters; ?>">
             <input type="submit">
         </form>
