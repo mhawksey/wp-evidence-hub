@@ -1,0 +1,1665 @@
+[
+  {
+    "op": "core/column-rename",
+    "description": "Rename column IP Address to IP_Address",
+    "oldColumnName": "IP Address",
+    "newColumnName": "IP_Address"
+  },
+  {
+    "op": "core/column-addition-by-fetching-urls",
+    "description": "Create column geo_data at index 2 by fetching URLs based on column IP_Address using expression grel:\"http://freegeoip.net/json/\"+value",
+    "engineConfig": {
+      "mode": "row-based",
+      "facets": []
+    },
+    "newColumnName": "geo_data",
+    "columnInsertIndex": 2,
+    "baseColumnName": "IP_Address",
+    "urlExpression": "grel:\"http://freegeoip.net/json/\"+value",
+    "onError": "store-error",
+    "delay": 3000
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column longitude at index 3 based on column geo_data using expression grel:parseJson(value).get('longitude')",
+    "engineConfig": {
+      "mode": "row-based",
+      "facets": []
+    },
+    "newColumnName": "longitude",
+    "columnInsertIndex": 3,
+    "baseColumnName": "geo_data",
+    "expression": "grel:parseJson(value).get('longitude')",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column latitude at index 3 based on column geo_data using expression grel:parseJson(value).get('latitude')",
+    "engineConfig": {
+      "mode": "row-based",
+      "facets": []
+    },
+    "newColumnName": "latitude",
+    "columnInsertIndex": 3,
+    "baseColumnName": "geo_data",
+    "expression": "grel:parseJson(value).get('latitude')",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column metro_code at index 3 based on column geo_data using expression grel:parseJson(value).get('metro_code')",
+    "engineConfig": {
+      "mode": "row-based",
+      "facets": []
+    },
+    "newColumnName": "metro_code",
+    "columnInsertIndex": 3,
+    "baseColumnName": "geo_data",
+    "expression": "grel:parseJson(value).get('metro_code')",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column city at index 3 based on column geo_data using expression grel:parseJson(value).get('city')",
+    "engineConfig": {
+      "mode": "row-based",
+      "facets": []
+    },
+    "newColumnName": "city",
+    "columnInsertIndex": 3,
+    "baseColumnName": "geo_data",
+    "expression": "grel:parseJson(value).get('city')",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column region_name at index 3 based on column geo_data using expression grel:parseJson(value).get('region_name')",
+    "engineConfig": {
+      "mode": "row-based",
+      "facets": []
+    },
+    "newColumnName": "region_name",
+    "columnInsertIndex": 3,
+    "baseColumnName": "geo_data",
+    "expression": "grel:parseJson(value).get('region_name')",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column country_code at index 3 based on column geo_data using expression grel:parseJson(value).get('country_code')",
+    "engineConfig": {
+      "mode": "row-based",
+      "facets": []
+    },
+    "newColumnName": "country_code",
+    "columnInsertIndex": 3,
+    "baseColumnName": "geo_data",
+    "expression": "grel:parseJson(value).get('country_code')",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column country_name at index 3 based on column geo_data using expression grel:parseJson(value).get('country_name')",
+    "engineConfig": {
+      "mode": "row-based",
+      "facets": []
+    },
+    "newColumnName": "country_name",
+    "columnInsertIndex": 3,
+    "baseColumnName": "geo_data",
+    "expression": "grel:parseJson(value).get('country_name')",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column FullTime_FacetoFace to TeachingType_1",
+    "oldColumnName": "FullTime_FacetoFace",
+    "newColumnName": "TeachingType_1"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column PartTime_FacetoFace to TeachingType_2",
+    "oldColumnName": "PartTime_FacetoFace",
+    "newColumnName": "TeachingType_2"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column FullTime_Online to TeachingType_3",
+    "oldColumnName": "FullTime_Online",
+    "newColumnName": "TeachingType_3"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column PartTime_Online to TeachingType_4",
+    "oldColumnName": "PartTime_Online",
+    "newColumnName": "TeachingType_4"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column FullTime_Blended to TeachingType_5",
+    "oldColumnName": "FullTime_Blended",
+    "newColumnName": "TeachingType_5"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column PartTime_Blended to TeachingType_6",
+    "oldColumnName": "PartTime_Blended",
+    "newColumnName": "TeachingType_6"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column School/K12 to TeachK12",
+    "oldColumnName": "School/K12",
+    "newColumnName": "TeachK12"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column FE/College to TeachFE",
+    "oldColumnName": "FE/College",
+    "newColumnName": "TeachFE"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column HE to TeachHE",
+    "oldColumnName": "HE",
+    "newColumnName": "TeachHE"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column WorkBased_Training to TeachWorkBased",
+    "oldColumnName": "WorkBased_Training",
+    "newColumnName": "TeachWorkBased"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column One-to-one to Teach1to1",
+    "oldColumnName": "One-to-one",
+    "newColumnName": "Teach1to1"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column FullTime_Face-to-Face to Format_study_1",
+    "oldColumnName": "FullTime_Face-to-Face",
+    "newColumnName": "Format_study_1"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column PartTime_Face-to-Face to Format_study_3",
+    "oldColumnName": "PartTime_Face-to-Face",
+    "newColumnName": "Format_study_3"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column PartTime_Online2 to Format_study_4",
+    "oldColumnName": "PartTime_Online2",
+    "newColumnName": "Format_study_4"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column FullTime_Blended2 to Format_study_5",
+    "oldColumnName": "FullTime_Blended2",
+    "newColumnName": "Format_study_5"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column PartTime_Blended2 to Format_study_6",
+    "oldColumnName": "PartTime_Blended2",
+    "newColumnName": "Format_study_6"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column School/K122 to Context_Study_1",
+    "oldColumnName": "School/K122",
+    "newColumnName": "Context_Study_1"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column FE/College2 to Context_Study_2",
+    "oldColumnName": "FE/College2",
+    "newColumnName": "Context_Study_2"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column HE2 to Context_Study_3",
+    "oldColumnName": "HE2",
+    "newColumnName": "Context_Study_3"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column WorkBased_Training2 to Context_Study_4",
+    "oldColumnName": "WorkBased_Training2",
+    "newColumnName": "Context_Study_4"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column One-to-One to Context_Study_5",
+    "oldColumnName": "One-to-One",
+    "newColumnName": "Context_Study_5"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Study without a teacher to Context_Study_6",
+    "oldColumnName": "Study without a teacher",
+    "newColumnName": "Context_Study_6"
+  },
+  {
+    "op": "core/column-removal",
+    "description": "Remove column IP_Address",
+    "columnName": "IP_Address"
+  },
+  {
+    "op": "core/column-addition",
+    "description": "Create column region_code at index 2 based on column geo_data using expression grel:parseJson(value).get('country_code')+\"-\"+parseJson(value).get('region_code')",
+    "engineConfig": {
+      "mode": "row-based",
+      "facets": []
+    },
+    "newColumnName": "region_code",
+    "columnInsertIndex": 2,
+    "baseColumnName": "geo_data",
+    "expression": "grel:parseJson(value).get('country_code')+\"-\"+parseJson(value).get('region_code')",
+    "onError": "set-to-blank"
+  },
+  {
+    "op": "core/column-removal",
+    "description": "Remove column geo_data",
+    "columnName": "geo_data"
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Residency using expression grel:value.replace('Ð','-')",
+    "engineConfig": {
+      "mode": "row-based",
+      "facets": []
+    },
+    "columnName": "Residency",
+    "expression": "grel:value.replace('Ð','-')",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Residency using expression grel:value.replace('_','-')",
+    "engineConfig": {
+      "mode": "row-based",
+      "facets": []
+    },
+    "columnName": "Residency",
+    "expression": "grel:value.replace('_','-')",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Teaching_Experience to TeachingExperience",
+    "oldColumnName": "Teaching_Experience",
+    "newColumnName": "TeachingExperience"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Educational_Qualification to EducationalQual",
+    "oldColumnName": "Educational_Qualification",
+    "newColumnName": "EducationalQual"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column FullTime_Employed to FT_Employ",
+    "oldColumnName": "FullTime_Employed",
+    "newColumnName": "FT_Employ"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column PartTime_Employed to PT_Employ",
+    "oldColumnName": "PartTime_Employed",
+    "newColumnName": "PT_Employ"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column PartTime_VoluntaryWork to PT_Volunt",
+    "oldColumnName": "PartTime_VoluntaryWork",
+    "newColumnName": "PT_Volunt"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column FullTime_Student to FT_Student",
+    "oldColumnName": "FullTime_Student",
+    "newColumnName": "FT_Student"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column PartTime_Student to PT_Student",
+    "oldColumnName": "PartTime_Student",
+    "newColumnName": "PT_Student"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Unwaged_SeekingEmployment to Unwgd_Seek",
+    "oldColumnName": "Unwaged_SeekingEmployment",
+    "newColumnName": "Unwgd_Seek"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Unwaged_DomesticResponsibilities to Unwgd_Dom",
+    "oldColumnName": "Unwaged_DomesticResponsibilities",
+    "newColumnName": "Unwgd_Dom"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column NoWork_Disability to NoWork_Dis",
+    "oldColumnName": "NoWork_Disability",
+    "newColumnName": "NoWork_Dis"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Computing to UseOER_Computing",
+    "oldColumnName": "Computing",
+    "newColumnName": "UseOER_Computing"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Social Science to UseOER_SocScience",
+    "oldColumnName": "Social Science",
+    "newColumnName": "UseOER_SocScience"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Languages/Linguistics to UseOER_LangLing",
+    "oldColumnName": "Languages/Linguistics",
+    "newColumnName": "UseOER_LangLing"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Science to UseOER_Science",
+    "oldColumnName": "Science",
+    "newColumnName": "UseOER_Science"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Math to UseOER_Math",
+    "oldColumnName": "Math",
+    "newColumnName": "UseOER_Math"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Arts to UseOER_Arts",
+    "oldColumnName": "Arts",
+    "newColumnName": "UseOER_Arts"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Literature to UseOER_Literature",
+    "oldColumnName": "Literature",
+    "newColumnName": "UseOER_Literature"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column History & Geography to UseOER_Hist",
+    "oldColumnName": "History & Geography",
+    "newColumnName": "UseOER_Hist"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Economics to UseOER_Economics",
+    "oldColumnName": "Economics",
+    "newColumnName": "UseOER_Economics"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Medicine to UseOER_Medicine",
+    "oldColumnName": "Medicine",
+    "newColumnName": "UseOER_Medicine"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Health & Social Care to UseOER_Health",
+    "oldColumnName": "Health & Social Care",
+    "newColumnName": "UseOER_Health"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Education Studies to UseOER_Education",
+    "oldColumnName": "Education Studies",
+    "newColumnName": "UseOER_Education"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Physical Education to UseOER_PE",
+    "oldColumnName": "Physical Education",
+    "newColumnName": "UseOER_PE"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Special Education to UseOER_SpecEdu",
+    "oldColumnName": "Special Education",
+    "newColumnName": "UseOER_SpecEdu"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Via Smartphone to AccessInternet_smartphone",
+    "oldColumnName": "Via Smartphone",
+    "newColumnName": "AccessInternet_smartphone"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Via Tablet to AccessInternet_Tablet",
+    "oldColumnName": "Via Tablet",
+    "newColumnName": "AccessInternet_Tablet"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column HomeBroadband to AccessInternet_HomeBroadband",
+    "oldColumnName": "HomeBroadband",
+    "newColumnName": "AccessInternet_HomeBroadband"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column HomeDialUp to AccessInternet_HomeDialUp",
+    "oldColumnName": "HomeDialUp",
+    "newColumnName": "AccessInternet_HomeDialUp"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Via Console to AccessInternet_Console",
+    "oldColumnName": "Via Console",
+    "newColumnName": "AccessInternet_Console"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column At Work to AccessInternet_Work",
+    "oldColumnName": "At Work",
+    "newColumnName": "AccessInternet_Work"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column At educational Institution to AccessInternet_EducInsti",
+    "oldColumnName": "At educational Institution",
+    "newColumnName": "AccessInternet_EducInsti"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column At Library to AccessInternet_Library",
+    "oldColumnName": "At Library",
+    "newColumnName": "AccessInternet_Library"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column At Cybercafe to AccessInternet_Cybercafe",
+    "oldColumnName": "At Cybercafe",
+    "newColumnName": "AccessInternet_Cybercafe"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column The opportunity to study at no cost to Influence2Use_Cost",
+    "oldColumnName": "The opportunity to study at no cost",
+    "newColumnName": "Influence2Use_Cost"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column The chance to try university-level content before signing up to Influence_TryUni",
+    "oldColumnName": "The chance to try university-level content before signing up",
+    "newColumnName": "Influence_TryUni"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column The materials can be used flexibly to Influence_Flex",
+    "oldColumnName": "The materials can be used flexibly",
+    "newColumnName": "Influence_Flex"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column The materials can be accessed at any time to Influence_Time",
+    "oldColumnName": "The materials can be accessed at any time",
+    "newColumnName": "Influence_Time"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column The materials can be studied online to Influence_Online",
+    "oldColumnName": "The materials can be studied online",
+    "newColumnName": "Influence_Online"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column A desire to have a learning experience/study a course to Influence_Exper",
+    "oldColumnName": "A desire to have a learning experience/study a course",
+    "newColumnName": "Influence_Exper"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column A need to find information (but not to study a course) to Influence_Info",
+    "oldColumnName": "A need to find information (but not to study a course)",
+    "newColumnName": "Influence_Info"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column To gain a qualification/credits for further study to StudyReasons_1",
+    "oldColumnName": "To gain a qualification/credits for further study",
+    "newColumnName": "StudyReasons_1"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Improve employment prospects to StudyReasons_2",
+    "oldColumnName": "Improve employment prospects",
+    "newColumnName": "StudyReasons_2"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Professional development to StudyReasons_3",
+    "oldColumnName": "Professional development",
+    "newColumnName": "StudyReasons_3"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Personal development to StudyReasons_4",
+    "oldColumnName": "Personal development",
+    "newColumnName": "StudyReasons_4"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Leisure to StudyReasons_5",
+    "oldColumnName": "Leisure",
+    "newColumnName": "StudyReasons_5"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column In connection with voluntary work or caring responsibilities to StudyReasons_6",
+    "oldColumnName": "In connection with voluntary work or caring responsibilities",
+    "newColumnName": "StudyReasons_6"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column To gain confidence to StudyReasons_7",
+    "oldColumnName": "To gain confidence",
+    "newColumnName": "StudyReasons_7"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column As replacement for college/university education to StudyReasons_8",
+    "oldColumnName": "As replacement for college/university education",
+    "newColumnName": "StudyReasons_8"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column I have adapted OER to OER_Adapted",
+    "oldColumnName": "I have adapted OER",
+    "newColumnName": "OER_Adapted"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column I have created OER to OER_Created",
+    "oldColumnName": "I have created OER",
+    "newColumnName": "OER_Created"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column I have published OER with a CC license to OER_Published_CC",
+    "oldColumnName": "I have published OER with a CC license",
+    "newColumnName": "OER_Published_CC"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column I have added a resource to a repository to OER_AddedToRepos",
+    "oldColumnName": "I have added a resource to a repository",
+    "newColumnName": "OER_AddedToRepos"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column I've added comments regarding quality to OER_QualComment",
+    "oldColumnName": "I've added comments regarding quality",
+    "newColumnName": "OER_QualComment"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column I've added comments regarding use to OER_UseComment",
+    "oldColumnName": "I've added comments regarding use",
+    "newColumnName": "OER_UseComment"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Videos to Used_Videos",
+    "oldColumnName": "Videos",
+    "newColumnName": "Used_Videos"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Audiopodcasts to Used_Audiopod",
+    "oldColumnName": "Audiopodcasts",
+    "newColumnName": "Used_Audiopod"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Images to Used_Image",
+    "oldColumnName": "Images",
+    "newColumnName": "Used_Image"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Infographics to Used_Infogra",
+    "oldColumnName": "Infographics",
+    "newColumnName": "Used_Infogra"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Games to Used_Game",
+    "oldColumnName": "Games",
+    "newColumnName": "Used_Game"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Lectures to Used_Lecture",
+    "oldColumnName": "Lectures",
+    "newColumnName": "Used_Lecture"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Lesson Plans to Used_LessonPlan",
+    "oldColumnName": "Lesson Plans",
+    "newColumnName": "Used_LessonPlan"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Tutorials to Used_Tutorial",
+    "oldColumnName": "Tutorials",
+    "newColumnName": "Used_Tutorial"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Quizzes to Used_Quizz",
+    "oldColumnName": "Quizzes",
+    "newColumnName": "Used_Quizz"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Elements of a course to Used_Module",
+    "oldColumnName": "Elements of a course",
+    "newColumnName": "Used_Module"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Ebooks to Used_Ebook",
+    "oldColumnName": "Ebooks",
+    "newColumnName": "Used_Ebook"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Open Textbooks to Used_OpenText",
+    "oldColumnName": "Open Textbooks",
+    "newColumnName": "Used_OpenText"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column DataSets to Used_DataSet",
+    "oldColumnName": "DataSets",
+    "newColumnName": "Used_DataSet"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Tools to Used_Tools",
+    "oldColumnName": "Tools",
+    "newColumnName": "Used_Tools"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column To prepare for my teaching/training to Purpose_1",
+    "oldColumnName": "To prepare for my teaching/training",
+    "newColumnName": "Purpose_1"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column To get new ideas and inspiration to Purpose_2",
+    "oldColumnName": "To get new ideas and inspiration",
+    "newColumnName": "Purpose_2"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column To supplement my existing lessons/coursework to Purpose_3",
+    "oldColumnName": "To supplement my existing lessons/coursework",
+    "newColumnName": "Purpose_3"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column As assets within a classroom to Purpose_4",
+    "oldColumnName": "As assets within a classroom",
+    "newColumnName": "Purpose_4"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column To give to learners as compulsory self-study materials to Purpose_5",
+    "oldColumnName": "To give to learners as compulsory self-study materials",
+    "newColumnName": "Purpose_5"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column To give to learners as optional self-study materials to Purpose_6",
+    "oldColumnName": "To give to learners as optional self-study materials",
+    "newColumnName": "Purpose_6"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column To provide e-learning materials to online learners to Purpose_7",
+    "oldColumnName": "To provide e-learning materials to online learners",
+    "newColumnName": "Purpose_7"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column To compare them with my own teaching/training materials to Purpose_8",
+    "oldColumnName": "To compare them with my own teaching/training materials",
+    "newColumnName": "Purpose_8"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column To broaden the range of my teaching methods to Purpose_9",
+    "oldColumnName": "To broaden the range of my teaching methods",
+    "newColumnName": "Purpose_9"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column To broaden the range of resources available to my learners to Purpose_10",
+    "oldColumnName": "To broaden the range of resources available to my learners",
+    "newColumnName": "Purpose_10"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column To make my teaching more culturally diverse to Purpose_11",
+    "oldColumnName": "To make my teaching more culturally diverse",
+    "newColumnName": "Purpose_11"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column To enhance my professional development to Purpose_12",
+    "oldColumnName": "To enhance my professional development",
+    "newColumnName": "Purpose_12"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column To stay up-to-date in a subject or topic area to Purpose_13",
+    "oldColumnName": "To stay up-to-date in a subject or topic area",
+    "newColumnName": "Purpose_13"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column To learn about a new topic to Purpose_14",
+    "oldColumnName": "To learn about a new topic",
+    "newColumnName": "Purpose_14"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column To engage my students more fully in a topic area to Purpose_15",
+    "oldColumnName": "To engage my students more fully in a topic area",
+    "newColumnName": "Purpose_15"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column To connect with teachers/learners with similar interests to Purpose_16",
+    "oldColumnName": "To connect with teachers/learners with similar interests",
+    "newColumnName": "Purpose_16"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column To interest hard-to-engage learners to Purpose_17",
+    "oldColumnName": "To interest hard-to-engage learners",
+    "newColumnName": "Purpose_17"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column iTunes to Repos_iTunes",
+    "oldColumnName": "iTunes",
+    "newColumnName": "Repos_iTunes"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column YouTube to Repos_YouTube",
+    "oldColumnName": "YouTube",
+    "newColumnName": "Repos_YouTube"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column TEDtalks to Repos_TEDtalks",
+    "oldColumnName": "TEDtalks",
+    "newColumnName": "Repos_TEDtalks"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Merlot to Repos_Merlot",
+    "oldColumnName": "Merlot",
+    "newColumnName": "Repos_Merlot"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column OpenLearn to Repos_OpenLearn",
+    "oldColumnName": "OpenLearn",
+    "newColumnName": "Repos_OpenLearn"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Khan Academy to Repos_Khan",
+    "oldColumnName": "Khan Academy",
+    "newColumnName": "Repos_Khan"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Jorum to Repos_Jorum",
+    "oldColumnName": "Jorum",
+    "newColumnName": "Repos_Jorum"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Curriki to ReposCurriki",
+    "oldColumnName": "Curriki",
+    "newColumnName": "ReposCurriki"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Connexions to Repos_Connexions",
+    "oldColumnName": "Connexions",
+    "newColumnName": "Repos_Connexions"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column CK12 to Repos_CK12",
+    "oldColumnName": "CK12",
+    "newColumnName": "Repos_CK12"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Wikibooks to Repos_Wikibooks",
+    "oldColumnName": "Wikibooks",
+    "newColumnName": "Repos_Wikibooks"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column MIT to Repos_MIT",
+    "oldColumnName": "MIT",
+    "newColumnName": "Repos_MIT"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column CreativeCommons to Repos_CreativeCom",
+    "oldColumnName": "CreativeCommons",
+    "newColumnName": "Repos_CreativeCom"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Saylor to Repos_Saylor",
+    "oldColumnName": "Saylor",
+    "newColumnName": "Repos_Saylor"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column MOOCs to Repos_MOOCs",
+    "oldColumnName": "MOOCs",
+    "newColumnName": "Repos_MOOCs"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column I don't use repositories to Dont_use_repos",
+    "oldColumnName": "I don't use repositories",
+    "newColumnName": "Dont_use_repos"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column OERCom to Repos_OERCom",
+    "oldColumnName": "OERCom",
+    "newColumnName": "Repos_OERCom"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Overcoming technology problems when downloading resources to Challenges_1",
+    "oldColumnName": "Overcoming technology problems when downloading resources",
+    "newColumnName": "Challenges_1"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Knowing where to find resources to Challenges_2",
+    "oldColumnName": "Knowing where to find resources",
+    "newColumnName": "Challenges_2"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Finding suitable resources in my subject area to Challenges_3",
+    "oldColumnName": "Finding suitable resources in my subject area",
+    "newColumnName": "Challenges_3"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Finding resources of sufficiently high quality to Challenges_4",
+    "oldColumnName": "Finding resources of sufficiently high quality",
+    "newColumnName": "Challenges_4"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Finding resources that are up-to-date to Challenges_5",
+    "oldColumnName": "Finding resources that are up-to-date",
+    "newColumnName": "Challenges_5"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Finding resources that are relevant to my local context to Challenges_6",
+    "oldColumnName": "Finding resources that are relevant to my local context",
+    "newColumnName": "Challenges_6"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Getting work colleagues/managers to accept the use of OER to Challenges_7",
+    "oldColumnName": "Getting work colleagues/managers to accept the use of OER",
+    "newColumnName": "Challenges_7"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Not being skilled enough to edit resources to Challenges_8",
+    "oldColumnName": "Not being skilled enough to edit resources",
+    "newColumnName": "Challenges_8"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Not knowing whether I have permission to use or change a resource to Challenges_9",
+    "oldColumnName": "Not knowing whether I have permission to use or change a resource",
+    "newColumnName": "Challenges_9"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Not having enough time to look for suitable resources to Challenges_10",
+    "oldColumnName": "Not having enough time to look for suitable resources",
+    "newColumnName": "Challenges_10"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Not having connections with OER-using peers to Challenges_11",
+    "oldColumnName": "Not having connections with OER-using peers",
+    "newColumnName": "Challenges_11"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Not knowing how to use the resources in the classroom to Challenges_12",
+    "oldColumnName": "Not knowing how to use the resources in the classroom",
+    "newColumnName": "Challenges_12"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Not having enough time/opportunities to experiment to Challenges_13",
+    "oldColumnName": "Not having enough time/opportunities to experiment",
+    "newColumnName": "Challenges_13"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Lacking institutional support for my use of OER to Challenges_14",
+    "oldColumnName": "Lacking institutional support for my use of OER",
+    "newColumnName": "Challenges_14"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Resources not being aligned with professional standards to Challenges_15",
+    "oldColumnName": "Resources not being aligned with professional standards",
+    "newColumnName": "Challenges_15"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Missing/needing the support of a tutor or teacher to help me to Challenges_16",
+    "oldColumnName": "Missing/needing the support of a tutor or teacher to help me",
+    "newColumnName": "Challenges_16"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column I have broadened my coverage of the curriculum to Impact_BroadenCurriculum",
+    "oldColumnName": "I have broadened my coverage of the curriculum",
+    "newColumnName": "Impact_BroadenCurriculum"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column I use a broader range of teaching and learning methods to Impact_BroadenRangeTeaching",
+    "oldColumnName": "I use a broader range of teaching and learning methods",
+    "newColumnName": "Impact_BroadenRangeTeaching"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column I have improved my skills in ICT to Impact_ImprovedICT",
+    "oldColumnName": "I have improved my skills in ICT",
+    "newColumnName": "Impact_ImprovedICT"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column I make use of a wider range of multimedia to Impact_WideMultimedia",
+    "oldColumnName": "I make use of a wider range of multimedia",
+    "newColumnName": "Impact_WideMultimedia"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column I make more use of culturally diverse resources to Impact_CulturallyDiverseResources",
+    "oldColumnName": "I make more use of culturally diverse resources",
+    "newColumnName": "Impact_CulturallyDiverseResources"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column I have a more up-to-date knowledge of my subject area to Impact_UpToDate",
+    "oldColumnName": "I have a more up-to-date knowledge of my subject area",
+    "newColumnName": "Impact_UpToDate"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column I reflect more on the way that I teach to Impact_Reflect",
+    "oldColumnName": "I reflect more on the way that I teach",
+    "newColumnName": "Impact_Reflect"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column I more frequently compare my own teaching with others to Impact_Compare",
+    "oldColumnName": "I more frequently compare my own teaching with others",
+    "newColumnName": "Impact_Compare"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column I now use OER study to develop my teaching to Impact_DevelopTeach",
+    "oldColumnName": "I now use OER study to develop my teaching",
+    "newColumnName": "Impact_DevelopTeach"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column I collaborate more with colleagues to Impact_Collaborate",
+    "oldColumnName": "I collaborate more with colleagues",
+    "newColumnName": "Impact_Collaborate"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Increases learners' participation in class discussions to StudentImpact1_TView",
+    "oldColumnName": "Increases learners' participation in class discussions",
+    "newColumnName": "StudentImpact1_TView"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Increases learners' interest in the subjects taught to StudentImpact2_TView",
+    "oldColumnName": "Increases learners' interest in the subjects taught",
+    "newColumnName": "StudentImpact2_TView"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Increases learners' satisfaction with the learning experience to StudentImpact3_TView",
+    "oldColumnName": "Increases learners' satisfaction with the learning experience",
+    "newColumnName": "StudentImpact3_TView"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Leads to improved student grades to StudentImpact4_TView",
+    "oldColumnName": "Leads to improved student grades",
+    "newColumnName": "StudentImpact4_TView"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Builds learners' confidence to StudentImpact5_TView",
+    "oldColumnName": "Builds learners' confidence",
+    "newColumnName": "StudentImpact5_TView"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Develops learners' increased independence and self-reliance to StudentImpact6_TView",
+    "oldColumnName": "Develops learners' increased independence and self-reliance",
+    "newColumnName": "StudentImpact6_TView"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Allows me to better accommodate diverse learners' needs to StudentImpact7_TView",
+    "oldColumnName": "Allows me to better accommodate diverse learners' needs",
+    "newColumnName": "StudentImpact7_TView"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Increases learners' engagement with lesson content to StudentImpact8_TView",
+    "oldColumnName": "Increases learners' engagement with lesson content",
+    "newColumnName": "StudentImpact8_TView"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Increases learners' experimentation with new ways of learning to StudentImpact9_TView",
+    "oldColumnName": "Increases learners' experimentation with new ways of learning",
+    "newColumnName": "StudentImpact9_TView"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Increases collaboration and/or peer-support amongst learners to StudentImpact10_TView",
+    "oldColumnName": "Increases collaboration and/or peer-support amongst learners",
+    "newColumnName": "StudentImpact10_TView"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Increases learners enthusiasm for future study to StudentImpact11_TView",
+    "oldColumnName": "Increases learners enthusiasm for future study",
+    "newColumnName": "StudentImpact11_TView"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Leads to learners becoming interested in a wider range of subjects than before to StudentImpact12_TView",
+    "oldColumnName": "Leads to learners becoming interested in a wider range of subjects than before",
+    "newColumnName": "StudentImpact12_TView"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Increases the likelihood of students at risk of withdrawing continuing with their studies to StudentImpact13_TView",
+    "oldColumnName": "Increases the likelihood of students at risk of withdrawing continuing with their studies",
+    "newColumnName": "StudentImpact13_TView"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Increased participation in class discussions to StudentImpact1_StuV",
+    "oldColumnName": "Increased participation in class discussions",
+    "newColumnName": "StudentImpact1_StuV"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Increased interest in the subjects taught to StudentImpact2_StuV",
+    "oldColumnName": "Increased interest in the subjects taught",
+    "newColumnName": "StudentImpact2_StuV"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Increased satisfaction with the learning experience to StudentImpact3_StuV",
+    "oldColumnName": "Increased satisfaction with the learning experience",
+    "newColumnName": "StudentImpact3_StuV"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Grades improving to StudentImpact4_StuV",
+    "oldColumnName": "Grades improving",
+    "newColumnName": "StudentImpact4_StuV"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Gaining confidence to StudentImpact5_StuV",
+    "oldColumnName": "Gaining confidence",
+    "newColumnName": "StudentImpact5_StuV"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Having increased independence and self-reliance to StudentImpact6_StuV",
+    "oldColumnName": "Having increased independence and self-reliance",
+    "newColumnName": "StudentImpact6_StuV"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Increased engagement with lesson content to StudentImpact7_StuV",
+    "oldColumnName": "Increased engagement with lesson content",
+    "newColumnName": "StudentImpact7_StuV"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Increased experimentation with new ways of learning to StudentImpact8_StuV",
+    "oldColumnName": "Increased experimentation with new ways of learning",
+    "newColumnName": "StudentImpact8_StuV"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Increased collaboration with my peers to StudentImpact9_StuV",
+    "oldColumnName": "Increased collaboration with my peers",
+    "newColumnName": "StudentImpact9_StuV"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Increased enthusiasm for future study to StudentImpact10_StuV",
+    "oldColumnName": "Increased enthusiasm for future study",
+    "newColumnName": "StudentImpact10_StuV"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Becoming interested in a wider range of subjects than before to StudentImpact11_StuV",
+    "oldColumnName": "Becoming interested in a wider range of subjects than before",
+    "newColumnName": "StudentImpact11_StuV"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Being more likely to complete my course of study to StudentImpact12_StuV",
+    "oldColumnName": "Being more likely to complete my course of study",
+    "newColumnName": "StudentImpact12_StuV"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Reduced cost of study materials to ImproveRetention_1",
+    "oldColumnName": "Reduced cost of study materials",
+    "newColumnName": "ImproveRetention_1"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Greater range of learning methods to ImproveRetention_2",
+    "oldColumnName": "Greater range of learning methods",
+    "newColumnName": "ImproveRetention_2"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Materials can be used flexibly to ImproveRetention_3",
+    "oldColumnName": "Materials can be used flexibly",
+    "newColumnName": "ImproveRetention_3"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Materials can be accessed at any time to ImproveRetention_4",
+    "oldColumnName": "Materials can be accessed at any time",
+    "newColumnName": "ImproveRetention_4"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Materials can be adapted to suit student needs to ImproveRetention_5",
+    "oldColumnName": "Materials can be adapted to suit student needs",
+    "newColumnName": "ImproveRetention_5"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Use of resources for improving study skills to ImproveRetention_6",
+    "oldColumnName": "Use of resources for improving study skills",
+    "newColumnName": "ImproveRetention_6"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Materials can be used for improving non-native language skil to ImproveRetention_7",
+    "oldColumnName": "Materials can be used for improving non-native language skil",
+    "newColumnName": "ImproveRetention_7"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Materials are available in different languages to ImproveRetention_8",
+    "oldColumnName": "Materials are available in different languages",
+    "newColumnName": "ImproveRetention_8"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Availability of culturally-relevant materials to ImproveRetention_9",
+    "oldColumnName": "Availability of culturally-relevant materials",
+    "newColumnName": "ImproveRetention_9"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Evidence of interest in that resource to FactorSelectOER_1",
+    "oldColumnName": "Evidence of interest in that resource",
+    "newColumnName": "FactorSelectOER_1"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column The resource being recently created, uploaded or updated to FactorSelectOER_2",
+    "oldColumnName": "The resource being recently created, uploaded or updated",
+    "newColumnName": "FactorSelectOER_2"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column The resource being easy to download to FactorSelectOER_3",
+    "oldColumnName": "The resource being easy to download",
+    "newColumnName": "FactorSelectOER_3"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column A description of learning objectives or outcomes being provided to FactorSelectOER_4",
+    "oldColumnName": "A description of learning objectives or outcomes being provided",
+    "newColumnName": "FactorSelectOER_4"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column The resource being created by a reputable/trusted institution/person to FactorSelectOER_5",
+    "oldColumnName": "The resource being created by a reputable/trusted institution/person",
+    "newColumnName": "FactorSelectOER_5"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column The resource having a Creative Commons license to FactorSelectOER_6",
+    "oldColumnName": "The resource having a Creative Commons license",
+    "newColumnName": "FactorSelectOER_6"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column The resource having an open license allowing adaptation to FactorSelectOER_7",
+    "oldColumnName": "The resource having an open license allowing adaptation",
+    "newColumnName": "FactorSelectOER_7"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column The length/complexity of the resource to FactorSelectOER_8",
+    "oldColumnName": "The length/complexity of the resource",
+    "newColumnName": "FactorSelectOER_8"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Use of interactive or multimedia content to FactorSelectOER_9",
+    "oldColumnName": "Use of interactive or multimedia content",
+    "newColumnName": "FactorSelectOER_9"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Positive user ratings or comments about the resource to FactorSelectOER_10",
+    "oldColumnName": "Positive user ratings or comments about the resource",
+    "newColumnName": "FactorSelectOER_10"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Personal recommendation to FactorSelectOER_11",
+    "oldColumnName": "Personal recommendation",
+    "newColumnName": "FactorSelectOER_11"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Having previously used this resource successfully to FactorSelectOER_12",
+    "oldColumnName": "Having previously used this resource successfully",
+    "newColumnName": "FactorSelectOER_12"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column The resource being relevant to my particular interests/needs to FactorSelectOER_13",
+    "oldColumnName": "The resource being relevant to my particular interests/needs",
+    "newColumnName": "FactorSelectOER_13"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column The resource featuring a catchy title or attractive image(s) to FactorSelectOER_14",
+    "oldColumnName": "The resource featuring a catchy title or attractive image(s)",
+    "newColumnName": "FactorSelectOER_14"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Being required to use a resource for a project or study task to FactorSelectOER_15",
+    "oldColumnName": "Being required to use a resource for a project or study task",
+    "newColumnName": "FactorSelectOER_15"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column The resource having  previously been used with students to FactorSelectOER_16",
+    "oldColumnName": "The resource having  previously been used with students",
+    "newColumnName": "FactorSelectOER_16"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column A detailed description of the resource content being provided to FactorSelectOER_17",
+    "oldColumnName": "A detailed description of the resource content being provided",
+    "newColumnName": "FactorSelectOER_17"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Discussion with others via social networks (e.g. Facebook) to Support_1",
+    "oldColumnName": "Discussion with others via social networks (e.g. Facebook)",
+    "newColumnName": "Support_1"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Discussion in online forums to Support_2",
+    "oldColumnName": "Discussion in online forums",
+    "newColumnName": "Support_2"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Discussion with others in person to Support_3",
+    "oldColumnName": "Discussion with others in person",
+    "newColumnName": "Support_3"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Discussion via microblogging (e.g. Twitter, Tumblr) to Support_4",
+    "oldColumnName": "Discussion via microblogging (e.g. Twitter, Tumblr)",
+    "newColumnName": "Support_4"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Discussion via videochat (e.g. Skype) to Support_5",
+    "oldColumnName": "Discussion via videochat (e.g. Skype)",
+    "newColumnName": "Support_5"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Consulting and/or editing wikis (e.g. Wikipedia) to Support_6",
+    "oldColumnName": "Consulting and/or editing wikis (e.g. Wikipedia)",
+    "newColumnName": "Support_6"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Writing or reading blogs to Support_7",
+    "oldColumnName": "Writing or reading blogs",
+    "newColumnName": "Support_7"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Writing my own study notes to Support_8",
+    "oldColumnName": "Writing my own study notes",
+    "newColumnName": "Support_8"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Informal study groups to Support_9",
+    "oldColumnName": "Informal study groups",
+    "newColumnName": "Support_9"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Use of a learning journal/diary to Support_10",
+    "oldColumnName": "Use of a learning journal/diary",
+    "newColumnName": "Support_10"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Use of additional resources such as CDs, books, video to Support_11",
+    "oldColumnName": "Use of additional resources such as CDs, books, video",
+    "newColumnName": "Support_11"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Use of a study calendar/plan to Support_12",
+    "oldColumnName": "Use of a study calendar/plan",
+    "newColumnName": "Support_12"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Use of digital note-taking applications (e.g. Google Docs) to Support_13",
+    "oldColumnName": "Use of digital note-taking applications (e.g. Google Docs)",
+    "newColumnName": "Support_13"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Take a free course /  study a free open educational resource to Future_1",
+    "oldColumnName": "Take a free course /  study a free open educational resource",
+    "newColumnName": "Future_1"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Take a paid-for course to Future_2",
+    "oldColumnName": "Take a paid-for course",
+    "newColumnName": "Future_2"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Do further research in the subject you are interested in to Future_3",
+    "oldColumnName": "Do further research in the subject you are interested in",
+    "newColumnName": "Future_3"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Download more materials from [repository] to Future_4",
+    "oldColumnName": "Download more materials from [repository]",
+    "newColumnName": "Future_4"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Make use of [repository] materials for teaching to Future_5",
+    "oldColumnName": "Make use of [repository] materials for teaching",
+    "newColumnName": "Future_5"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Share OER with others to Future_6",
+    "oldColumnName": "Share OER with others",
+    "newColumnName": "Future_6"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Recommend [repository] content to others to Future_7",
+    "oldColumnName": "Recommend [repository] content to others",
+    "newColumnName": "Future_7"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Personal interest to Interest_1",
+    "oldColumnName": "Personal interest",
+    "newColumnName": "Interest_1"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Family interest to Interest_2",
+    "oldColumnName": "Family interest",
+    "newColumnName": "Interest_2"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Study related to my work or business to Interest_4",
+    "oldColumnName": "Study related to my work or business",
+    "newColumnName": "Interest_4"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column In connection with my formal studies to Interest_5",
+    "oldColumnName": "In connection with my formal studies",
+    "newColumnName": "Interest_5"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column For use when training others at work to Interest_6",
+    "oldColumnName": "For use when training others at work",
+    "newColumnName": "Interest_6"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column For use when teaching in an educational institution to Interest_7",
+    "oldColumnName": "For use when teaching in an educational institution",
+    "newColumnName": "Interest_7"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column To find information (rather than study a complete unit) to Interest_8",
+    "oldColumnName": "To find information (rather than study a complete unit)",
+    "newColumnName": "Interest_8"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column For the purpose of sharing with others to Interest_9",
+    "oldColumnName": "For the purpose of sharing with others",
+    "newColumnName": "Interest_9"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column To improve my study skills to Interest_10",
+    "oldColumnName": "To improve my study skills",
+    "newColumnName": "Interest_10"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column To improve my non-native language skills to Interest_11",
+    "oldColumnName": "To improve my non-native language skills",
+    "newColumnName": "Interest_11"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Being issued with a certificate for participating or completing the course to Motivation_1",
+    "oldColumnName": "Being issued with a certificate for participating or completing the course",
+    "newColumnName": "Motivation_1"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Being presented with a series of challenges to complete in order to demonstrate skills development to Motivation_2",
+    "oldColumnName": "Being presented with a series of challenges to complete in order to demonstrate skills development",
+    "newColumnName": "Motivation_2"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Being rewarded for participation, skills or knowledge through an online \"badge\" to Motivation_3",
+    "oldColumnName": "Being rewarded for participation, skills or knowledge through an online \"badge\"",
+    "newColumnName": "Motivation_3"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Being allowed to progress to the next section if completed an automatically graded test correctly to Motivation_4",
+    "oldColumnName": "Being allowed to progress to the next section if completed an automatically graded test correctly",
+    "newColumnName": "Motivation_4"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Having an educator/instructor available to provide support to Motivation_5",
+    "oldColumnName": "Having an educator/instructor available to provide support",
+    "newColumnName": "Motivation_5"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Being provided with hints or advice about how to answer a question or performed a task when I clicked on a button to Motivation_6",
+    "oldColumnName": "Being provided with hints or advice about how to answer a question or performed a task when I clicked on a button",
+    "newColumnName": "Motivation_6"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Being allowed to look back and review my progress through the course to Motivation_7",
+    "oldColumnName": "Being allowed to look back and review my progress through the course",
+    "newColumnName": "Motivation_7"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Being given automated feedback on submitted work to Motivation_8",
+    "oldColumnName": "Being given automated feedback on submitted work",
+    "newColumnName": "Motivation_8"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Being allowed to talk with other learners on the course about my experiences (e.g. though forums) to Motivation_9",
+    "oldColumnName": "Being allowed to talk with other learners on the course about my experiences (e.g. though forums)",
+    "newColumnName": "Motivation_9"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column The resource being part of a series of open, online courses which contributed to a recognised qualification to Motivation_10",
+    "oldColumnName": "The resource being part of a series of open, online courses which contributed to a recognised qualification",
+    "newColumnName": "Motivation_10"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Being required to complete tasks for which an instructor would give feedback to Motivation_11",
+    "oldColumnName": "Being required to complete tasks for which an instructor would give feedback",
+    "newColumnName": "Motivation_11"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column The resource/course being structured to take place over a specific timeframe to Motivation_12",
+    "oldColumnName": "The resource/course being structured to take place over a specific timeframe",
+    "newColumnName": "Motivation_12"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column There being virtual seminars where students could interact with each other and an instructor to Motivation_13",
+    "oldColumnName": "There being virtual seminars where students could interact with each other and an instructor",
+    "newColumnName": "Motivation_13"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Working collaboratively with other people to complete tasks to Motivation_14",
+    "oldColumnName": "Working collaboratively with other people to complete tasks",
+    "newColumnName": "Motivation_14"
+  },
+  {
+    "op": "core/text-transform",
+    "description": "Text transform on cells in column Impact_DevelopTeach using expression grel:\"neither agree nor disagree\"",
+    "engineConfig": {
+      "mode": "row-based",
+      "facets": [
+        {
+          "omitError": false,
+          "expression": "value",
+          "selectBlank": false,
+          "selection": [
+            {
+              "v": {
+                "v": "neiter agree nor disagree",
+                "l": "neiter agree nor disagree"
+              }
+            }
+          ],
+          "selectError": false,
+          "invert": false,
+          "name": "Impact_DevelopTeach",
+          "omitBlank": false,
+          "type": "list",
+          "columnName": "Impact_DevelopTeach"
+        }
+      ]
+    },
+    "columnName": "Impact_DevelopTeach",
+    "expression": "grel:\"neither agree nor disagree\"",
+    "onError": "keep-original",
+    "repeat": false,
+    "repeatCount": 10
+  }
+]

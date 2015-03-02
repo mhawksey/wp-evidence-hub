@@ -19,7 +19,7 @@ new Evidence_Hub_Shortcode_Survey_Explorer2();
 class Evidence_Hub_Shortcode_Survey_Explorer2 extends Evidence_Hub_Shortcode {
 	var $shortcode = 'survey_explorer';
 	public $defaults = array(
-	'table_data' => '1szq2hshkKPmyXfo9tyYXLND4iS5vpTKOEKNX82uY',
+	'table_data' => '168zd0pLh8IqJE6jeeWjFx6NdmUd5Hax0zkl5ncRr',
 	'table_headings' => '1IWMifnMW7OqJ1_QYYdfVeD5WiJxncMfDzBVwQ3rl',
 	);
 	/**

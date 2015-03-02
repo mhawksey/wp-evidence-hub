@@ -192,7 +192,7 @@ class Evidence_Hub_Shortcode_Evidence_Summary extends Evidence_Hub_Shortcode {
 		<script>
         var graph = <?php print_r(json_encode($graph)); ?>;
         var margin = {top: 1, right: 1, bottom: 1, left: 1},
-            width = document.getElementById("content").offsetWidth - margin.left - margin.right,
+            width = document.getElementById("evidence-balance").parentNode.offsetWidth - margin.left - margin.right,
             height = 400 - margin.top - margin.bottom;
         </script>
         <link rel="stylesheet" href="<?php echo plugins_url( 'lib/map/css/styles.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />

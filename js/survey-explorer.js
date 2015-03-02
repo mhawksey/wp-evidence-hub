@@ -30,7 +30,7 @@
 	var groupLookup = groupLookup || [];
 	groupLookup["profiles"] = "Learning & Teaching Profiles";
     groupLookup["behaviours"] = "OER Behaviours";
-    groupLookup["challenges"] = "Challenges &amp; Solutions";
+    groupLookup["challenges"] = "Challenges & Solutions";
     groupLookup["impact"] = "OER Impact";
 
 	// initialise the chart editor
