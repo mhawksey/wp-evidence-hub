@@ -359,6 +359,18 @@
   },
   {
     "op": "core/column-rename",
+    "description": "Rename column Psychology/Philosophy to UseOER_Psych",
+    "oldColumnName": "Psychology/Philosophy",
+    "newColumnName": "UseOER_Psych"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column ReligiousStudies to UseOER_Religion",
+    "oldColumnName": "ReligiousStudies",
+    "newColumnName": "UseOER_Religion"
+  },
+  {
+    "op": "core/column-rename",
     "description": "Rename column Social Science to UseOER_SocScience",
     "oldColumnName": "Social Science",
     "newColumnName": "UseOER_SocScience"
@@ -407,6 +419,12 @@
   },
   {
     "op": "core/column-rename",
+    "description": "Rename column Applied Science to UseOER_Engineer",
+    "oldColumnName": "Applied Science",
+    "newColumnName": "UseOER_Engineer"
+  },
+  {
+    "op": "core/column-rename",
     "description": "Rename column Medicine to UseOER_Medicine",
     "oldColumnName": "Medicine",
     "newColumnName": "UseOER_Medicine"
@@ -434,6 +452,12 @@
     "description": "Rename column Special Education to UseOER_SpecEdu",
     "oldColumnName": "Special Education",
     "newColumnName": "UseOER_SpecEdu"
+  },
+  {
+    "op": "core/column-rename",
+    "description": "Rename column Other Subject to UseOER_Other",
+    "oldColumnName": "Other Subject",
+    "newColumnName": "UseOER_Other"
   },
   {
     "op": "core/column-rename",

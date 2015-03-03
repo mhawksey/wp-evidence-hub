@@ -108,7 +108,7 @@
 		var hCols = "Grouping, Question, Column_Name, Option_Values, Question_Option";
 		var hQuery = new google.visualization.Query(url);
 		hQuery.setQuery('SELECT '+hCols+' '+ hFrom);
-		console.log('SELECT '+hCols+' '+ hFrom);
+		//console.log('SELECT '+hCols+' '+ hFrom);
 		
 		// Prep query for Fustion Table with questions used for filtering the data
 		var dFrom = "FROM "+qTableId+" WHERE Filter NOT EQUAL TO '' ";
@@ -340,7 +340,7 @@
 				data[fetch].addColumn('number', 'Count');
 				$jq.each(colNames[qVal], function(ke, va){
 					  colQuery[ke] = new google.visualization.Query(url);
-					  colQuery[ke].setQuery("SELECT "+va.v+", COUNT() FROM "+ tableId +" WHERE "+va.v+" NOT EQUAL TO '' " +  fetchWhere + " GROUP BY "+va.v);
+					  colQuery[ke].setQuery("SELECT "+va.v+", COUNT() FROM "+ tableId +" WHERE "+va.v+" NOT EQUAL TO '' AND "+va.v+" = 'Yes'  " +  fetchWhere + " GROUP BY "+va.v);
 					  colQuery[ke].send(handleYesNoResponse);
 				});	
 			} else if (dataType === 'LIKERT'){
@@ -391,6 +391,7 @@
       var col = response.getDataTable();
 	  if (col.getNumberOfRows() > 0){
 	  	data[fetch].addRow([qOption[col.getColumnLabel(0)],col.getValue(0,1)]);
+		data[fetch].setColumnLabel(1, "Yes");
 	  	sendAndDraw();
 	  } else {
 		notEnoughData()  
