@@ -1616,3 +1616,15 @@ speak: none;
 #country-vis-table div table thead th {
 	font-size: 1.1em;
 }
+
+
+.map-controls {
+	font-size: .95em;
+}
+.map-controls i {
+	display: inline-block;
+	padding: 0 3px;
+}
+.map-controls a i {
+	text-decoration: none;
+}
