@@ -2,9 +2,10 @@
 /**
  * Shortcode to display post meta
  *
- * Shortcode: [get_post_meta]
- * Options: post_id - hypothesis id (defults to current post)
- *			meta_key - string of meta keey value to get
+ * Shortcode: [evidence_ratings]
+ * Options: post_type - evidence (default ?)
+ *          polarity  - (neg|pos)
+ * Example: [evidence_ratings post_type="evidence" polarity="neg"]
  *
  * Based on shortcode class construction used in Conferencer http://wordpress.org/plugins/conferencer/.
  *
@@ -17,7 +18,9 @@
 new Evidence_Hub_Shortcode_EvidenceRatings();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_EvidenceRatings extends Evidence_Hub_Shortcode {
-	var $shortcode = 'evidence_ratings';
+
+	const SHORTCODE = 'evidence_ratings';
+
 	public $defaults = array('meta_key' => false,
 							 'post_type' => 'evidence',
 							 'rating_type' => 'ratings_score',
@@ -31,7 +34,7 @@ class Evidence_Hub_Shortcode_EvidenceRatings extends Evidence_Hub_Shortcode {
 	* @since 0.1.1
 	* @return string.
 	*/
-	function content() {
+	protected function content() {
 		ob_start();
 		extract($this->options); 
 		$id = ($post_id) ? $post_id : get_the_ID();
@@ -82,7 +85,7 @@ class Evidence_Hub_Shortcode_EvidenceRatings extends Evidence_Hub_Shortcode {
 			endforeach;
 			echo '</ul>';
 		} else {
-			echo '<em class="postrank-list">No posts found</em>';
+			echo '<em class="postrank-list">No evidence found<!--No posts found--></em>';
 		}
 		/* Restore original Post Data */
 		wp_reset_postdata();	
