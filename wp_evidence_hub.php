@@ -226,7 +226,7 @@ if(!class_exists('Evidence_Hub'))
 		*
 		* @since 0.1.1
     	*/
-    	public function init() {	
+       public function init() {
 			$caps = array('read_evidence', 
 						  'delete_evidence', 
 						  'edit_evidence');
@@ -963,7 +963,10 @@ if(!class_exists('Evidence_Hub'))
 			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/evidence/?",'index.php?post_type=evidence&hyp_id=$matches[1]','top');
 			  
 			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/page/([0-9]+)?",'index.php?post_type=hypothesis&p=$matches[1]&paged=$matches[2]','top');
-			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/?",'index.php?post_type=hypothesis&p=$matches[1]','top');
+
+			// "Proposition" - for LACE [Bug: #39]
+			add_rewrite_rule("^(hypothesis|proposition)/([0-9]+)/([^/]+)/?",'index.php?post_type=hypothesis&p=$matches[2]','top');
+
 		}
 		
 		/**

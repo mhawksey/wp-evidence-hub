@@ -1,7 +1,7 @@
 <?php
 
 
-class Evidence_Hub_Settings_Cache {
+class Evidence_Hub_Settings_Cache extends Evidence_Hub_Base {
 	function __construct() {
 		register_activation_hook(EVIDENCE_HUB_REGISTER_FILE, array(&$this, 'activate'));
 		register_deactivation_hook(EVIDENCE_HUB_REGISTER_FILE, array(&$this, 'deactivate'));
@@ -162,10 +162,15 @@ class Evidence_Hub_Settings_Cache {
 			'evidence_hub_template'
 		);
 
+		// "Proposition" - for LACE [Bug: #39]
+		$is_proposition = $this->get_option( 'wp_evidence_hub_is_proposition' );
+
 		// add your setting's fields
 		add_settings_field(
 			'evidence_hub_settings-hypothesis_page', 
-			'Hypothesis Page Template', 
+			$is_proposition
+				? __('Proposition (hypothesis) page template', self::LOC_DOMAIN)
+				: __('Hypothesis Page Template', self::LOC_DOMAIN),
 			array(&$this, 'settings_field_input_page_select'), 
 			'evidence_hub_template', 
 			'evidence_hub_template-section',

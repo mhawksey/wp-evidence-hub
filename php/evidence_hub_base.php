@@ -7,6 +7,8 @@
 
 class Evidence_Hub_Base {
 
+	const LOC_DOMAIN = 'wp-evidence-hub';
+
 	protected $_messages = array();
 
 
