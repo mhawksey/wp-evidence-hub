@@ -52,6 +52,7 @@ if(!class_exists('Evidence_Hub'))
 			self::$options['custom_head_foot'] = get_option('display_custom_head_foot');
 			self::$options['postrating'] = get_option('display_postrating');
 			self::$options['facetious'] = get_option('display_facetious');
+			self::$options['hyp_naming'] = get_option('evidence_hub_hyp_naming', array());
 
 			// Register custom post types
 			$this->_require(array(
@@ -931,6 +932,8 @@ if(!class_exists('Evidence_Hub'))
 		* @since 0.1.1
     	*/
 		private function do_rewrites(){
+			$hyp_slug = isset(self::$options['hyp_naming']['archive_slug'])
+					? self::$options['hyp_naming']['archive_slug'] : 'hypothesis';
 			add_rewrite_rule("^country/([^/]+)/policy/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=policy&evidence_hub_country=$matches[1]&evidence_hub_sector=$matches[2]&paged=$matches[3]','top');
 			add_rewrite_rule("^country/([^/]+)/policy/sector/([^/]+)?",'index.php?post_type=policy&evidence_hub_country=$matches[1]&evidence_hub_sector=$matches[2]','top');
 			
@@ -940,9 +943,9 @@ if(!class_exists('Evidence_Hub'))
 			add_rewrite_rule("^country/([^/]+)/evidece/polarity/([^/]+)/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&evidence_hub_polarity=$matches[2]&evidence_hub_sector=$matches[3]&paged=$matches[4]','top');
 			add_rewrite_rule("^country/([^/]+)/evidence/polarity/([^/]+)/sector/([^/]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&evidence_hub_polarity=$matches[2]&evidence_hub_sector=$matches[3]','top');
 			
-			add_rewrite_rule("^country/([^/]+)/hypothesis/([0-9]+)/[^/]+/polarity/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&hyp_id=$matches[2]&evidence_hub_polarity=$matches[3]&paged=$matches[4]','top');
-			add_rewrite_rule("^country/([^/]+)/hypothesis/([0-9]+)/[^/]+/polarity/([^/]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&hyp_id=$matches[2]&evidence_hub_polarity=$matches[3]','top');			
-			add_rewrite_rule("^country/([^/]+)/hypothesis/([0-9]+)/.*?",'index.php?post_type=hypothesis&p=$matches[2]','top');
+			add_rewrite_rule("^country/([^/]+)/".$hyp_slug."/([0-9]+)/[^/]+/polarity/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&hyp_id=$matches[2]&evidence_hub_polarity=$matches[3]&paged=$matches[4]','top');
+			add_rewrite_rule("^country/([^/]+)/".$hyp_slug."/([0-9]+)/[^/]+/polarity/([^/]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&hyp_id=$matches[2]&evidence_hub_polarity=$matches[3]','top');			
+			add_rewrite_rule("^country/([^/]+)/".$hyp_slug."/([0-9]+)/.*?",'index.php?post_type=hypothesis&p=$matches[2]','top');
 			
 			add_rewrite_rule("^country/([^/]+)/evidence/(polarity|sector)/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&evidence_hub_$matches[2]=$matches[3]&paged=$matches[4]','top');
 			add_rewrite_rule("^country/([^/]+)/evidence/(polarity|sector)/([^/]+)?",'index.php?post_type=evidence&evidence_hub_country=$matches[1]&evidence_hub_$matches[2]=$matches[3]','top');
@@ -959,17 +962,17 @@ if(!class_exists('Evidence_Hub'))
 			add_rewrite_rule("^policy/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=policy&evidence_hub_sector=$matches[1]&paged=$matches[2]','top');
 			add_rewrite_rule("^policy/sector/([^/]+)?",'index.php?post_type=policy&evidence_hub_sector=$matches[1]','top');
 	
-			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/evidence/polarity/([^/]+)/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&evidence_hub_polarity=$matches[3]&evidence_hub_sector=$matches[4]&paged=$matches[5]','top');
-			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/evidence/polarity/([^/]+)/sector/([^/]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&evidence_hub_polarity=$matches[3]&evidence_hub_sector=$matches[4]','top');
+			add_rewrite_rule("^".$hyp_slug."/([0-9]+)/([^/]+)/evidence/polarity/([^/]+)/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&evidence_hub_polarity=$matches[3]&evidence_hub_sector=$matches[4]&paged=$matches[5]','top');
+			add_rewrite_rule("^".$hyp_slug."/([0-9]+)/([^/]+)/evidence/polarity/([^/]+)/sector/([^/]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&evidence_hub_polarity=$matches[3]&evidence_hub_sector=$matches[4]','top');
 			
-			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/evidence/(polarity|sector)/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&evidence_hub_$matches[3]=$matches[4]&paged=$matches[5]','top');
-			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/evidence/(polarity|sector)/([^/]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&evidence_hub_$matches[3]=$matches[4]','top');
+			add_rewrite_rule("^".$hyp_slug."/([0-9]+)/([^/]+)/evidence/(polarity|sector)/([^/]+)/page/([0-9]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&evidence_hub_$matches[3]=$matches[4]&paged=$matches[5]','top');
+			add_rewrite_rule("^".$hyp_slug."/([0-9]+)/([^/]+)/evidence/(polarity|sector)/([^/]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&evidence_hub_$matches[3]=$matches[4]','top');
 			
-			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/evidence/page/([0-9]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&paged=$matches[2]','top');  
-			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/evidence/?",'index.php?post_type=evidence&hyp_id=$matches[1]','top');
+			add_rewrite_rule("^".$hyp_slug."/([0-9]+)/([^/]+)/evidence/page/([0-9]+)?",'index.php?post_type=evidence&hyp_id=$matches[1]&paged=$matches[2]','top');  
+			add_rewrite_rule("^".$hyp_slug."/([0-9]+)/([^/]+)/evidence/?",'index.php?post_type=evidence&hyp_id=$matches[1]','top');
 			  
-			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/page/([0-9]+)?",'index.php?post_type=hypothesis&p=$matches[1]&paged=$matches[2]','top');
-			add_rewrite_rule("^hypothesis/([0-9]+)/([^/]+)/?",'index.php?post_type=hypothesis&p=$matches[1]','top');
+			add_rewrite_rule("^".$hyp_slug."/([0-9]+)/([^/]+)/page/([0-9]+)?",'index.php?post_type=hypothesis&p=$matches[1]&paged=$matches[2]','top');
+			add_rewrite_rule("^".$hyp_slug."/([0-9]+)/([^/]+)/?",'index.php?post_type=hypothesis&p=$matches[1]','top');
 		}
 		
 		/**
@@ -1088,6 +1091,9 @@ if(!class_exists('Evidence_Hub'))
 		public static function activate(){
 			flush_rewrite_rules();
 			update_option( 'Pronamic_Google_maps', array( 'active' => false ) );
+			update_option( 'evidence_hub_hyp_naming', array( 'archive_slug' => 'hypothesis',
+									 'singular' => 'Hypothesis',
+									 'plural') => 'Hypotheses' );
 			Evidence_Hub_Shortcode::activate();
 			if (function_exists('create_ratinglogs_table')){
 				create_ratinglogs_table();
