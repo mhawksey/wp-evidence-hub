@@ -52,6 +52,7 @@ if(!class_exists('Evidence_Hub'))
 			self::$options['custom_head_foot'] = get_option('display_custom_head_foot');
 			self::$options['postrating'] = get_option('display_postrating');
 			self::$options['facetious'] = get_option('display_facetious');
+			// adding hypothesis slug option [Bug: #39]
 			self::$options['hyp_naming'] = get_option('evidence_hub_hyp_naming', array());
 
 			// Register custom post types
@@ -932,6 +933,7 @@ if(!class_exists('Evidence_Hub'))
 		* @since 0.1.1
     	*/
 		private function do_rewrites(){
+			// adding hypothesis slug option [Bug: #39]
 			$hyp_slug = isset(self::$options['hyp_naming']['archive_slug'])
 					? self::$options['hyp_naming']['archive_slug'] : 'hypothesis';
 			add_rewrite_rule("^country/([^/]+)/policy/sector/([^/]+)/page/([0-9]+)?",'index.php?post_type=policy&evidence_hub_country=$matches[1]&evidence_hub_sector=$matches[2]&paged=$matches[3]','top');
@@ -1091,6 +1093,7 @@ if(!class_exists('Evidence_Hub'))
 		public static function activate(){
 			flush_rewrite_rules();
 			update_option( 'Pronamic_Google_maps', array( 'active' => false ) );
+			// adding hypothesis slug option [Bug: #39]
 			update_option( 'evidence_hub_hyp_naming', array( 'archive_slug' => 'hypothesis',
 									 'singular' => 'Hypothesis',
 									 'plural') => 'Hypotheses' );
