@@ -1609,8 +1609,9 @@ speak: none;
 
 /* Hypothesis map [Bug: #35] */
 #country-vis-map > div, #country-vis-map svg {
-       min-height: 140px;
-       max-height: 320px;
+       min-height: 220px;
+       max-height: 360px;
+       margin: 2px 0;
 }
 
 #country-vis-table div table thead th {
