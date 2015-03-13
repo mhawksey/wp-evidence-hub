@@ -12,23 +12,25 @@
 new Evidence_Hub_Shortcode_HypBar();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_HypBar extends Evidence_Hub_Shortcode {
-	var $shortcode = 'hypothesis_bar';
+
+	const SHORTCODE = 'hypothesis_bar';
+
 	var $defaults = array();
 
 	static $post_types_with_sessions = NULL;
-	
+
 	/**
 	* Generate post content. 
 	*
 	* @since 0.1.1
 	* @return string.
 	*/
-	function content() {
+	protected function content() {
 		ob_start();
 		extract($this->options);
 		$errors = array();
 		$output = array();
-		
+
 		// get all the evidence and add terms
 		$posts = Evidence_Hub::add_terms(get_posts( array (	'post_type' => 'evidence', // my custom post type
 									'posts_per_page' => -1,

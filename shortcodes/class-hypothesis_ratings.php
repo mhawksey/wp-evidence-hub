@@ -28,6 +28,7 @@ class Evidence_Hub_Shortcode_EvidenceRatings extends Evidence_Hub_Shortcode {
 							 'limit' => 5,
 							 'polarity' => false);
 	static $post_types_with_shortcode = array('hypothesis');
+
 	/**
 	* Generate post content. 
 	*
@@ -51,8 +52,8 @@ class Evidence_Hub_Shortcode_EvidenceRatings extends Evidence_Hub_Shortcode {
 		$this->get_highest_rated_by_hyp($id, $post_type, $rating_type, $min_votes, $limit, $args);
 		return ob_get_clean();
 	} // end of function content
-	
-	function get_highest_rated_by_hyp($hyp_id = 0, $post_type = 'evidence', $rating_type = 'ratings_score', $min_votes = 0, $limit = 5, $add_args = false) {
+
+	protected function get_highest_rated_by_hyp($hyp_id = 0, $post_type = 'evidence', $rating_type = 'ratings_score', $min_votes = 0, $limit = 5, $add_args = false) {
 		$output = '';
 		$args = array( 'posts_per_page' => $limit, 
 					   'meta_key' => $rating_type, 
@@ -90,8 +91,8 @@ class Evidence_Hub_Shortcode_EvidenceRatings extends Evidence_Hub_Shortcode {
 		/* Restore original Post Data */
 		wp_reset_postdata();	
 	}
-	
-	function eh_get_post_views($postID){
+
+	protected function eh_get_post_views($postID){
 		$count_key = 'post_views_count';
 		$count = get_post_meta($postID, $count_key, true);
 		if($count==''){

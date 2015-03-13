@@ -17,19 +17,21 @@
 new Evidence_Hub_Shortcode_Bookmarklet();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_Bookmarklet extends Evidence_Hub_Shortcode {
-	var $shortcode = 'bookmarklet';
+
+	const SHORTCODE = 'bookmarklet';
+
 	var $defaults = array(
 		'url' => false,
 		'text' => 'Bookmarklet',
 	);
-		
+
 	/**
 	* Generate post content. 
 	*
 	* @since 0.1.1
 	* @return string.
 	*/
-	function content() {
+	protected function content() {
 		ob_start();
 		extract($this->options);
 		if (!($url)): 

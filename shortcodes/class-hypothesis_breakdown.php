@@ -32,7 +32,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Breakdown extends Evidence_Hub_Shortcode
 	* @since 0.1.1
 	* @return string.
 	*/
-	function content() {
+	protected function content() {
 		ob_start();
 		extract($this->options);
 		$id = ($post_id) ? $post_id : get_the_ID();
