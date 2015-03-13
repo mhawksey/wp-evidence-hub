@@ -52,6 +52,22 @@ if(!class_exists('Evidence_Hub'))
 			self::$options['custom_head_foot'] = get_option('display_custom_head_foot');
 			self::$options['postrating'] = get_option('display_postrating');
 			self::$options['facetious'] = get_option('display_facetious');
+			self::$options['evidence_hub_tax'] = array('evidence_hub_rag' => array( 'post_types' => array('hypothesis'),
+																			 		'labels' => array('single' => 'RAG Status', 'plural' => 'RAG Status')
+																				   ),
+													   'evidence_hub_sector' => array('post_types' => array('evidence','policy'),
+													   						 		'labels' => array('single' => 'Sector', 'plural' => 'Sectors')
+																					),
+													   'evidence_hub_polarity' => array('post_types' => array('evidence'),
+													   						 			'labels' => array('single' => 'Polarity', 'plural' => 'Polarity')
+																					),
+													   'evidence_hub_country' => array('post_types' => array('evidence', 'project', 'policy'),
+													   						 		   'labels' => array('single' => 'Country', 'plural' => 'Countries')
+																					),
+													   'evidence_hub_locale' => array('post_types' => array('policy'),
+													   						 		  'labels' => array('single' => 'Locale', 'plural' => 'Locales')
+																					  )
+														);
 
 			// Register custom post types
 			$this->_require(array(
@@ -69,6 +85,7 @@ if(!class_exists('Evidence_Hub'))
 				'shortcodes/class-bookmarklet.php',
 				'shortcodes/class-api_example.php',
 				'shortcodes/class-evidence_entry.php',
+				//'shortcodes/class-evidence_summary.php',
 				'shortcodes/class-general_getpostmeta.php',
 				'shortcodes/class-general_getpoststagged.php',
 				'shortcodes/class-general_geomap.php',
@@ -264,28 +281,25 @@ if(!class_exists('Evidence_Hub'))
 			// add permalink rewrites
 			$this->do_rewrites();
 			
-
-
-			// register custom post type taxonomies
-			// register post type taxonomies for hypothesis
-			$args = $this->get_taxonomy_args("RAG Status","RAG Status");
-			register_taxonomy( 'evidence_hub_rag', 'hypothesis', $args );
+			$hub_taxs = self::$options['evidence_hub_tax'];
 			
-			// register post type taxonomies for sector
-			$args = $this->get_taxonomy_args("Sector","Sectors");
-			register_taxonomy( 'evidence_hub_sector', array('evidence','policy'), $args );
+			// Types integration - add extra post types to registered taxonomies
+			$custom = get_option( 'wpcf-custom-types', array() );
+			foreach ( $custom as $post_type => $data ) {
+				if (!empty( $data['taxonomies'])){
+					foreach ( $data['taxonomies'] as $tax => $v ) {
+						if ( array_key_exists( $tax, $hub_taxs ) ) {
+							$hub_taxs[$tax]['post_types'][] = $post_type;
+						}
+					}
+				}
+			}
 			
-			// register post type taxonomies for polarity
-			$args = $this->get_taxonomy_args("Polarity","Polarity");
-			register_taxonomy( 'evidence_hub_polarity', 'evidence', $args );
-			
-			// register post type taxonomies for country
-			$args = Evidence_Hub::get_taxonomy_args("Country", "Countries");
-			register_taxonomy( 'evidence_hub_country', array('evidence', 'project', 'policy'), $args );
-			
-			// register post type taxonomies for locale
-			$args = Evidence_Hub::get_taxonomy_args("Locale","Locales");
-			register_taxonomy( 'evidence_hub_locale', 'policy', $args );
+			foreach ($hub_taxs as $reg_tax_name => $reg_tax){
+				// register custom post type taxonomies
+				$args = $this->get_taxonomy_args($reg_tax['labels']['single'],$reg_tax['labels']['plural']);
+				register_taxonomy( $reg_tax_name, $reg_tax['post_types'], $args );
+			}
 			
 			// install contry codes/terms
 			$countries = get_terms( 'evidence_hub_country', array( 'hide_empty' => false ) );
@@ -429,10 +443,9 @@ if(!class_exists('Evidence_Hub'))
 		public function my_remove_named_menus() {
 			global $menu;
 			foreach ( $menu as $i => $item ) {
-				if ( 'pronamic_google_maps' == $item[2] ) {
-						unset( $menu[$i] );
-						
-				}
+				/*if ( 'pronamic_google_maps' == $item[2] ) {
+						unset( $menu[$i] );	
+				}*/
 				if (!current_user_can( 'evidence_admin' )){
 					if ('index.php' === $item[2] || 'edit.php' === $item[2] || 'edit-comments.php' === $item[2] || 'tools.php' === $item[2]){
 						unset( $menu[$i] );
@@ -1087,7 +1100,11 @@ if(!class_exists('Evidence_Hub'))
 		*/
 		public static function activate(){
 			flush_rewrite_rules();
-			update_option( 'Pronamic_Google_maps', array( 'active' => false ) );
+			update_option( 'Pronamic_Google_maps', array( 'active' => array('hypothesis' => true,
+																			'evidence' => true,
+																			'project' => true,
+																			'policy' => true,
+																			'suggestion' => true) ) );
 			Evidence_Hub_Shortcode::activate();
 			if (function_exists('create_ratinglogs_table')){
 				create_ratinglogs_table();
