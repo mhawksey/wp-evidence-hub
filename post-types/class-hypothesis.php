@@ -20,10 +20,7 @@ class Hypothesis_Template extends Evidence_Hub_CustomPostType {
 	public function __construct() {
 		parent::__construct();
 
-		// "Proposition" - for LACE [Bug: #39]
-		$this->is_proposition = $this->get_option( 'wp_evidence_hub_is_proposition' );
-
-		if ($this->is_proposition) {
+		if ($this->is_proposition()) {
 			$this->archive_slug = "proposition";
 			$this->singular = __("Proposition", self::LOC_DOMAIN);
 			$this->plural = __("Propositions", self::LOC_DOMAIN);
@@ -55,6 +52,7 @@ class Hypothesis_Template extends Evidence_Hub_CustomPostType {
 					'not_found_in_trash' => __(sprintf('No found in Trash%s', $this->plural)),
 				),
 				'public' => true,
+'show_in_nav_menus' => true,
 				'description' => $this->is_proposition
 					? __('A proposition or hypothesis', self::LOC_DOMAIN)
 					: __('A hypothesis', self::LOC_DOMAIN),
