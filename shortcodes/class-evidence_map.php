@@ -169,7 +169,7 @@ class Evidence_Hub_Shortcode_Evidence_Map extends Evidence_Hub_Shortcode {
                     <br/>
                     <strong>Sources</strong>:
                     <br/>
-                    Original Code: <a href="http://labs.wnstnsmth.net/worldoil/">Timo Grossenbacher/Global Oil Presentation</a>
+                    Original Code: <a href="http://labs.timogrossenbacher.ch/worldoil">Timo Grossenbacher/Global Oil Presentation</a>
                     <br/>
                     Geodata: <a href="https://github.com/mbostock/topojson/blob/master/examples/world-110m.json">mbostock/topojson</a>            
                </small>    
