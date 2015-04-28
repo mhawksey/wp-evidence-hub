@@ -46,7 +46,13 @@ class Evidence_Hub_Shortcode_Hypothesis_Archive extends Evidence_Hub_Shortcode {
 		if( $my_query->have_posts() ) {
 		  while ($my_query->have_posts()) : $my_query->the_post();
 		  	global $more; $more = 0; 
-			get_template_part( 'content');
+			?>
+			<h1 class="entry-title"><a href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?></a></h1>
+            <div class="entry-summary">
+				<?php the_content(); ?>
+			</div><!-- .entry-summary -->
+            
+			<?php
 		  endwhile;
 		}
 		wp_reset_query(); 

@@ -72,6 +72,9 @@ position: relative;
 top: 0px;
 padding-top:3px;
 }
+#summary-table table tr{
+	cursor:pointer;	
+}
 .tbl-head {
 	display:none;
 }
@@ -233,6 +236,12 @@ cursor:pointer;
 	display: inline;
 	vertical-align:baseline;
 }
+#control-Residency .charts-menu {
+	overflow: scroll;
+	height: 400px;
+}
+.fCell { display:none; }
+
 @media screen and (max-width: 1012px){
 	#evidence-map fieldset div {
 		display: block;
@@ -1304,6 +1313,13 @@ margin: 8px 5px 0;
                 50% 50% 
                 no-repeat;
 }
+#modal_msg{
+  height: 100%;
+  margin-top: 50%;
+  text-align: center;
+  font-weight: 600;
+  font-style: italic;
+}
 #eh-entry label[for=evidence_hub_pgm] {
 display:none;	
 }
@@ -1628,4 +1644,60 @@ speak: none;
 }
 .map-controls a i {
 	text-decoration: none;
+}
+/* Survey Explorer css fixes */
+.google-visualization-charteditor-dialog {
+z-index:9999;	
+}
+.google-visualization-charteditor-dialog *, *:before, .google-visualization-charteditor-dialog *:after {
+    -webkit-box-sizing: initial; 
+	-moz-box-sizing: initial;
+	box-sizing: initial; }
+}
+.google-visualization-charteditor-dialog {
+  word-wrap: initial;
+  word-break: initial;
+}
+.google-visualization-charteditor-dialog input[type="text"] {
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    border-radius: 1px;
+    border: 1px solid #d9d9d9;
+    border-top: 1px solid silver;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+	background-color: initial;
+    font-size: 13px;
+    height: 16px;
+	padding: 5px 2px;
+}
+.google-visualization-charteditor-dialog input[type="text"].charts-toolbar-combo-button-input {
+	padding: 0 0 0 3px;
+}
+.google-visualization-charteditor-multi-section-title-text {
+	white-space:nowrap;	
+}
+.google-visualization-charteditor-chart-type-subtypes {
+	padding-left:0px;	
+}
+.button {
+  border: 1px solid #d3d3d3;
+  background: #e6e6e6;
+  font-weight: normal;
+  color: #555555;
+  border-radius:4px;
+  padding: .4em 1em;
+  font-size: 12px;
+}
+.filter_icon{
+	float:right;
+	width:10px;
+	background:url(images/ui-icon_filter.png);
+	background-repeat: no-repeat;
+	height: 10px;
+  	margin-top: 2px;
+}
+.filter_icon.on{
+	background-position-x: -11px;
 }

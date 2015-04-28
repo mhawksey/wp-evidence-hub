@@ -41,8 +41,8 @@ class JSON_API_Hub_Controller {
 		if ($json_api->query->count) {
 		  $query['posts_per_page'] = $json_api->query->count;
 		}
-		if ($json_api->query->paged) {
-			$query['paged'] = $json_api->query->paged;
+		if ($json_api->query->page) {
+			$query['paged'] = $json_api->query->page;
 		}
 		if (isset($args['hypothesis_id']))
 			$query['p'] = $args['hypothesis_id']; 
@@ -197,7 +197,7 @@ class JSON_API_Hub_Controller {
 			$args['type'] = $json_api->query->type;
 		}
 		if ($json_api->query->paged) {
-			$args['paged'] = $json_api->query->paged;
+			$args['paged'] = $json_api->query->page;
 		}
 		$posts = $this->get_all_type($args);
 		$geoJSON = array();

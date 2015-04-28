@@ -24,6 +24,7 @@ class Evidence_Hub_Shortcode_EvidenceRatings extends Evidence_Hub_Shortcode {
 	public $defaults = array('meta_key' => false,
 							 'post_type' => 'evidence',
 							 'rating_type' => 'ratings_score',
+							 'display_rating' => true,
 							 'min_votes' => 0,
 							 'limit' => 5,
 							 'polarity' => false);
@@ -49,11 +50,11 @@ class Evidence_Hub_Shortcode_EvidenceRatings extends Evidence_Hub_Shortcode {
 											))
 						);
 		}
-		$this->get_highest_rated_by_hyp($id, $post_type, $rating_type, $min_votes, $limit, $args);
+		$this->get_highest_rated_by_hyp($id, $post_type, $rating_type, $min_votes, $limit, $args, $display_rating);
 		return ob_get_clean();
 	} // end of function content
 
-	protected function get_highest_rated_by_hyp($hyp_id = 0, $post_type = 'evidence', $rating_type = 'ratings_score', $min_votes = 0, $limit = 5, $add_args = false) {
+	protected function get_highest_rated_by_hyp($hyp_id = 0, $post_type = 'evidence', $rating_type = 'ratings_score', $min_votes = 0, $limit = 5, $add_args = false, $display_rating) {
 		$output = '';
 		$args = array( 'posts_per_page' => $limit, 
 					   'meta_key' => $rating_type, 
@@ -77,10 +78,12 @@ class Evidence_Hub_Shortcode_EvidenceRatings extends Evidence_Hub_Shortcode {
 			echo '<ul class="postrank-list">';
 			foreach ( $myposts as $post ) :
 				$rating_block = "";
-				if ($rating_type =='post_views_count'){
-					$rating_block = ' - <span id="postviews">'.$this->eh_get_post_views($post).'</span>';
-				} else {
-					$rating_block = '<span id="postvoting">'.the_ratings('div', $post, false).'</span>';
+				if ($display_rating){
+					if ($rating_type =='post_views_count'){
+						$rating_block = ' - <span id="postviews">'.$this->eh_get_post_views($post).'</span>';
+					} else {
+						$rating_block = '<span id="postvoting">'.the_ratings('div', $post, false).'</span>';
+					}
 				}
 				echo '<li><a href="'.get_permalink($post).'">' . get_the_title($post) . '</a> '.$rating_block.'</li>';
 			endforeach;

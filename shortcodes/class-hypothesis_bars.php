@@ -55,7 +55,7 @@ class Evidence_Hub_Shortcode_HypBar extends Evidence_Hub_Shortcode {
 		<script>
 			/*global bar_data: false, hyp_w: false, hyp_h: false */
 			var bar_data = <?php $this->print_json_data( $output ) ?>,
-			hyp_w = document.getElementById("content").offsetWidth,
+			hyp_w = document.getElementById("evidence-balance").parentNode.offsetWidth,
 			hyp_h = parseInt(hyp_w*9/16);
 		</script>
 		<script src="<?php echo plugins_url( 'js/hyp_bars.js' , EVIDENCE_HUB_REGISTER_FILE );?>"></script>
