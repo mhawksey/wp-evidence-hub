@@ -1,8 +1,9 @@
 <?php
 
 
-class Evidence_Hub_Settings_Cache {
-	function __construct() {
+class Evidence_Hub_Settings_Cache extends Evidence_Hub_Base {
+
+	public function __construct() {
 		register_activation_hook(EVIDENCE_HUB_REGISTER_FILE, array(&$this, 'activate'));
 		register_deactivation_hook(EVIDENCE_HUB_REGISTER_FILE, array(&$this, 'deactivate'));
 		
@@ -10,15 +11,15 @@ class Evidence_Hub_Settings_Cache {
 		add_action('admin_menu', array(&$this, 'admin_menu'));
 	}
 	
-	function activate() {
+	public function activate() {
 		add_option('evidence_hub_caching', true);
 	}
 	
-	function deactivate() {
+	public function deactivate() {
 		delete_option('evidence_hub_caching');
 	}
 	
-	function admin_menu() {
+	public function admin_menu() {
 		add_submenu_page(
 			'evidence_hub',
 			"Caching/Settings",
@@ -29,7 +30,7 @@ class Evidence_Hub_Settings_Cache {
 		);
 	}
 	
-	function page() {
+	public function page() {
 		if (!current_user_can('hypothesis_admin')) wp_die("You do not have sufficient permissions to access this page.");
 		
 		$caching = get_option('evidence_hub_caching');
@@ -147,8 +148,9 @@ class Evidence_Hub_Settings_Cache {
 		</div>';
 		
 	} // END public function settings_field_input_radio($args)
-	
-	function save() {
+
+	/** admin_init action */
+	public function save() {
 		register_setting('evidence_hub_settings', 'hypothesis_template_page');
 		register_setting('evidence_hub_settings', 'display_cookie_notice');
 		register_setting('evidence_hub_settings', 'display_custom_head_foot');
@@ -165,7 +167,9 @@ class Evidence_Hub_Settings_Cache {
 		// add your setting's fields
 		add_settings_field(
 			'evidence_hub_settings-hypothesis_page', 
-			'Hypothesis Page Template', 
+			$this->is_proposition()
+				? __('Proposition (hypothesis) page template', self::LOC_DOMAIN)
+				: __('Hypothesis Page Template', self::LOC_DOMAIN),
 			array(&$this, 'settings_field_input_page_select'), 
 			'evidence_hub_template', 
 			'evidence_hub_template-section',

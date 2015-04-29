@@ -37,11 +37,11 @@ class Evidence_Hub_Shortcode_Hypothesis_Balance extends Evidence_Hub_Shortcode {
   <table class="balance-holder">
     <tr>
       <td><div class="evidence-scorecard neg">
-          <div>-ve</div>
+          <div><abbr title="<?php _e('Negative', self::LOC_DOMAIN)?>">-ve</abbr></div>
           <div class="count">-</div>
         </div></td>
       <td style="text-align:right"><div class="evidence-scorecard pos">
-          <div>+ve</div>
+          <div><abbr title="<?php _e('Positive', self::LOC_DOMAIN)?>">+ve</abbr></div>
           <div class="count">-</div>
         </div></td>
     </tr>
@@ -61,7 +61,7 @@ class Evidence_Hub_Shortcode_Hypothesis_Balance extends Evidence_Hub_Shortcode {
         <g>
           <rect x="58" y="3" width="72" height="9" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect>
           <g>
-            <text text-anchor="start" x="70" y="10.65" font-family="Arial" font-size="9" stroke="none" stroke-width="0" fill="#222222">Higher Educ...</text>
+            <text text-anchor="start" x="70" y="10.65" font-family="Arial" font-size="9" stroke="none" stroke-width="0" fill="#222222">Higher Education</text>
             <rect x="70" y="3" width="60" height="9" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect>
           </g>
           <rect x="58" y="3" width="9" height="9" stroke="none" stroke-width="0" fill="#fd9417"></rect>

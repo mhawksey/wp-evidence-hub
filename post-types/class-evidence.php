@@ -110,7 +110,8 @@ class Evidence_Template extends Evidence_Hub_CustomPostType {
 				'required' => true,
 				'save_as' => 'post_meta',
 				'position' => 'side',
-				'label' => "Hypothesis",
+				'label' => $this->is_proposition() ?
+				  __('Proposition', self::LOC_DOMAIN) : __('Hypothesis', self::LOC_DOMAIN),
 				'options' => $hypothesis_options,
 				),
 		));

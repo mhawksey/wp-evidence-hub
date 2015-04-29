@@ -7,6 +7,8 @@
 
 class Evidence_Hub_Base {
 
+	const LOC_DOMAIN = 'wp-evidence-hub';
+
 	protected $_messages = array();
 
 
@@ -69,6 +71,11 @@ class Evidence_Hub_Base {
 	protected function get_option( $option, $default = NULL ) {
 		$KEY = strtoupper( $option );
 		return defined( $KEY ) ? constant( $KEY ) : get_option( $option, $default );
+	}
+
+	/** Use the term "Hypothesis" (default) or "Proposition" - LACE [Bug: #39] */
+	protected function is_proposition() {
+		return $this->get_option( 'wp_evidence_hub_is_proposition' );
 	}
 }
 

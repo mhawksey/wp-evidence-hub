@@ -14,7 +14,19 @@ class Hypothesis_Template extends Evidence_Hub_CustomPostType {
 	public $singular = "Hypothesis";
 	public $plural = "Hypotheses";
 	public $options = array();
-		
+
+	private $is_proposition = false;
+
+	public function __construct() {
+		parent::__construct();
+
+		if ($this->is_proposition()) {
+			$this->archive_slug = "proposition";
+			$this->singular = __("Proposition", self::LOC_DOMAIN);
+			$this->plural = __("Propositions", self::LOC_DOMAIN);
+		}
+	}
+
 	/**
 	* Register custom post type.
 	*
@@ -40,7 +52,10 @@ class Hypothesis_Template extends Evidence_Hub_CustomPostType {
 					'not_found_in_trash' => __(sprintf('No found in Trash%s', $this->plural)),
 				),
 				'public' => true,
-				'description' => __("A hypothesis"),
+'show_in_nav_menus' => true,
+				'description' => $this->is_proposition
+					? __('A proposition or hypothesis', self::LOC_DOMAIN)
+					: __('A hypothesis', self::LOC_DOMAIN),
 				'supports' => array(
 					'title', 'editor', 'excerpt', 'author', 'comments'
 				),
@@ -75,7 +90,8 @@ class Hypothesis_Template extends Evidence_Hub_CustomPostType {
 				'type' => 'select',
 				'save_as' => 'term',
 				'position' => 'side',
-				'label' => "RAG",
+				'label' => '<abbr title="'.
+					__('Red-Amber-Green', self::LOC_DOMAIN). '">RAG</abbr>',
 				'options' => get_terms('evidence_hub_rag', 'hide_empty=0&orderby=id'),
 				),
 			));
@@ -98,7 +114,7 @@ class Hypothesis_Template extends Evidence_Hub_CustomPostType {
 		// Add this metabox to every selected post	
 		add_meta_box( 
 			sprintf('wp_evidence_hub_%s_section', $this->post_type),
-			sprintf('%s Key Questions', ucwords(str_replace("_", " ", $this->post_type))),
+			sprintf('%s Key Questions', $this->singular),
 			array(&$this, 'add_inner_meta_boxes'),
 			$this->post_type,
 			'normal',          // The part of the page where the edit screen section should be shown.
@@ -107,7 +123,7 @@ class Hypothesis_Template extends Evidence_Hub_CustomPostType {
 		// Add this metabox to custom post wp-admin
 		add_meta_box( 
 			sprintf('wp_evidence_hub_%s_side_section', $this->post_type),
-			sprintf('%s Information', ucwords(str_replace("_", " ", $this->post_type))),
+			sprintf('%s Information', $this->singular),
 			array(&$this, 'add_inner_meta_boxes_side'),
 			$this->post_type,
 			'side'

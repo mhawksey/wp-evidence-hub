@@ -1,0 +1,33 @@
+{
+  "name": "iet-ou/wp-evidence-hub",
+  "description": "WordPress plugin to capture and visualise evidence around a set of hypotheses. Gather and publish evidence about the impact of open educational resources. Developed for the OER Research Hub project. ©2015 The Open University, UK.",
+  "keywords": [ "WordPress", "OER", "OerMap", "EvidenceHub", "OpenUniversity", "IET-OU" ],
+  "homepage": "http://oerresearchhub.org",
+  "license": "GPL-2.0+",
+  "type": "wordpress-plugin",
+  "time": "2013-10-04",
+  "minimum-stability": "dev",
+  "authors": [
+    { "name": "Martin Hawksey (@mhawksey)", "role": "original developer" },
+    { "name": "Rob Farrow", "role": "lead researcher" },
+    { "name": "Nick Freear (@nfreear)", "role": "developer", "homepage": "http://iet.open.ac.uk" }
+  ],
+  "support": {
+    "email": "iet-webmaster@open.ac.uk",
+    "source": "https://github.com/mhawksey/wp-evidence-hub"
+  },
+  "require": {
+    "php": ">=5.3.3",
+    "composer/installers": "~1.0"
+  },
+  "extra": {
+    "x-wordpress-minimum": "3.0.1",
+    "x-wordpress-tested": "3.7.1",
+
+
+    "//": [
+      "https://github.com/IET-OU/oer-evidence-hub-org",
+      "https://roots.io/using-composer-with-wordpress/"
+    ]
+  }
+}

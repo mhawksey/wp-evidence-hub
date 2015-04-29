@@ -16,7 +16,8 @@
 new Evidence_Hub_Shortcode_Hypothesis_GeoSummary();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_Hypothesis_GeoSummary extends Evidence_Hub_Shortcode {
-	var $shortcode = 'hypothesis_geosummary';
+	const SHORTCODE = 'hypothesis_geosummary';
+
 	public $defaults = array();
 	static $post_types_with_shortcode = array('hypothesis');
 	/**
@@ -25,7 +26,7 @@ class Evidence_Hub_Shortcode_Hypothesis_GeoSummary extends Evidence_Hub_Shortcod
 	* @since 0.1.1
 	* @return string.
 	*/
-	function content() {
+	protected function content() {
 		ob_start();
 		extract($this->options); ?>
         <div id="country-vis-map" style="width:100%"><?php

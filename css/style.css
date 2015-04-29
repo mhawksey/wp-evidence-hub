@@ -1,7 +1,7 @@
 /* CSS Document */
 
 #evidence-balance, #evidence-meta {
-padding: 10px;
+padding: 10px 2px;
 -moz-border-radius: 5px;
 -webkit-border-radius: 5px;
 border-radius: 5px;
@@ -174,12 +174,13 @@ table-layout: fixed;
 evidence-table td {
 border:none!important;	
 }
-.evidence-breakdown td{
+#evidence-balance .evidence-breakdown td {
 text-align: center;
 line-height: 1.2em;
 background-color:#FFF;
 border:solid 1px #666!important;
-padding:4px!important;
+padding: 4px 0 !important;
+font-size: .95em;
 }
 
 .evidence-box {
@@ -1624,8 +1625,25 @@ speak: none;
 
 /* Hypothesis map [Bug: #35] */
 #country-vis-map > div, #country-vis-map svg {
-       min-height: 140px;
-       max-height: 320px;
+       min-height: 220px;
+       max-height: 360px;
+       margin: 2px 0;
+}
+
+#country-vis-table div table thead th {
+	font-size: 1.1em;
+}
+
+
+.map-controls {
+	font-size: .95em;
+}
+.map-controls i {
+	display: inline-block;
+	padding: 0 3px;
+}
+.map-controls a i {
+	text-decoration: none;
 }
 /* Survey Explorer css fixes */
 .google-visualization-charteditor-dialog {
