@@ -1,5 +1,4 @@
 // JavaScript Document
-// JavaScript Document
 /*
 Modified from:
 
@@ -637,5 +636,33 @@ function autocomplete_eh_change_project(id, label){
 			 });
 	
 	}
+
+
+	// when_call: https://gist.github.com/nfreear/f40470e1aec63f442a8a
+	function when_call(when_true_FN, callback_FN, interval) {
+		var int_id = setInterval(function () {
+			if (when_true_FN()) {
+				clearInterval(int_id);
+				callback_FN();
+			}
+		}, interval || 200); // Milliseconds.
+	}
+
+
+	// Improve usability of evidence map search box [Bug: #46]
+	when_call(function () {
+		return jQuery(".leaflet-container #8-input").length;
+	}
+	, function () {
+		console.log("when_call");
+
+		jQuery(".leaflet-container #8-input").attr({
+			//type: "search",
+			placeholder: "Enter keywords...",
+			"aria-label": "Search"
+		});
+	});
+
+	console.log("End script.js");
 });
 

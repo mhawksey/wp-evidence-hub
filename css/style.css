@@ -1636,7 +1636,8 @@ speak: none;
 
 
 .map-controls {
-	font-size: .95em;
+	font-size: .92em;
+	margin: .7em 0;
 }
 .map-controls i {
 	display: inline-block;
@@ -1700,4 +1701,15 @@ z-index:9999;
 }
 .filter_icon.on{
 	background-position-x: -11px;
+}
+
+
+/* Evidence map search [Bug: #43]
+*/
+.google-visualization-controls-stringfilter INPUT,
+.google-visualization-controls-stringfilter,
+.leaflet-container #X--8-input {
+  font-size: 1.1em;
+  padding: 3px;
+  min-width: 12em;
 }
