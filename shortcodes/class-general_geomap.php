@@ -123,8 +123,9 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 			var json = <?php $this->print_json_file($this->get_api_url( 'hub.get_geojson' ) .'count=-1&type='. strtolower($type)) ?>;	
 			var hubPoints = json['geoJSON'] || null;
 			var pluginurl = '<?php echo EVIDENCE_HUB_URL; ?>';
-			var h = (jQuery('#evidence-map').width() > 820) ? parseInt(jQuery('#evidence-map').width()*9/16) : 560;
-			jQuery('#map').css('height', h);	
+			var h = (jQuery('#evidence-map').width() > 820) ? parseInt(jQuery('#evidence-map').width() * 9 / 16) : 560;
+			jQuery('#map').css('height', h);
+			<?php $this->print_leaflet_geomap_options_javascript() ?>	
 		/* ]]> */
 		</script>
         <link rel="stylesheet" href="<?php echo plugins_url( 'js/markercluster/MarkerCluster.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
@@ -156,7 +157,8 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 		var tableArray = [];
 		var summaryControl = L.Control.extend({
 			options: {
-				position: 'bottomleft'
+				position: OERRH.map_summary_position || 'bottomleft'
+
 			},
 
 			onAdd: function (map) {

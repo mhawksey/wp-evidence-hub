@@ -337,6 +337,25 @@ abstract class Evidence_Hub_Shortcode extends Evidence_Hub_Base {
 <?php
 	}
 
+    /** Output Javascript global var object with config[Bug: #46]
+    */
+    protected function print_leaflet_geomap_options_javascript() {
+        //return;
+        $map_center = json_decode($this->get_option( 'evidence_geomap_center', '[25, 0]' ));
+        echo "/* map_center: $map_center */";
+        echo 'var OERRH = ' . json_encode(array(
+		    'map_center' => $map_center,
+		    'map_filter_position' => $this->get_option(
+		        'evidence_geomap_filter_position', 'topright' ), # Filter by "Type"...
+		    'map_summary_position' => $this->get_option(
+		        'evidence_geomap_summary_position', 'bottomleft' ), # AKA "search"
+		    'map_attribution' => ' '. $this->get_option(
+		        'evidence_geomap_attribution' ),
+		))
+		. ";\n";
+    }
+
+
 	/** Put Evidence Hub shortcodes used on a page in the Javascript console [Bug: #9].
 	*/
 	protected function debug_shortcode( $options = NULL ) {
