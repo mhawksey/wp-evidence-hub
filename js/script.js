@@ -658,11 +658,12 @@ function autocomplete_eh_change_project(id, label){
 
 		jQuery(".leaflet-container #8-input").attr({
 			//type: "search",
-			placeholder: "Enter keywords...",
+			placeholder: "Enter title keywords...",
+			title: "Filter by keywords in the title of evidence",
 			"aria-label": "Search"
 		});
 	});
 
-	console.log("End script.js");
+	//console.log("End script.js");
 });
 

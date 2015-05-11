@@ -1709,7 +1709,8 @@ z-index:9999;
 .google-visualization-controls-stringfilter INPUT,
 .google-visualization-controls-stringfilter,
 .leaflet-container #X--8-input {
-  font-size: 1.1em;
-  padding: 3px;
-  min-width: 12em;
+  font-size: 1.05em;
+  padding: 2px;
+  margin: 0;
+  min-width: 13em;
 }
