@@ -76,7 +76,7 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 				'hypothesis_id' => array(
 					'type' => 'select',
 					'save_as' => 'post_meta',
-					'label' => "Hypothesis",
+					'label' => $this->is_proposition() ? 'Proposition' : 'Hypothesis',
 					'options' => $hypothesis_options,
 					),
 			));
