@@ -52,6 +52,7 @@ class Evidence_Hub_Shortcode_HypBar extends Evidence_Hub_Shortcode {
 						'barPos' => count(Evidence_Hub::filterOptions($hposts, 'polarity_slug', 'pos')));					
 		} 
 		// dump html ?>
+	<div id="evidence-balance">
 		<script>
 			/*global bar_data: false, hyp_w: false, hyp_h: false */
 			var bar_data = <?php $this->print_json_data( $output ) ?>,
@@ -60,6 +61,7 @@ class Evidence_Hub_Shortcode_HypBar extends Evidence_Hub_Shortcode {
 		</script>
 		<script src="<?php echo plugins_url( 'js/hyp_bars.js' , EVIDENCE_HUB_REGISTER_FILE );?>"></script>
 		<div id="vis"><?php $this->print_chart_loading_no_support_message() ?></div>
+	</div>
         <?php
 		return ob_get_clean();
 	}

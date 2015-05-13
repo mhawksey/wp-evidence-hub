@@ -14,6 +14,12 @@ background-color: #F8F8F8;
 #evidence-balance{
 display:table;
 }
+#evidence-balance svg .bar text.femalebar {
+	stroke: #222;
+}
+#evidence-balance svg .bar text.malebar {
+	stroke: #b87b00; /*stroke: #FC9F00; orange*/
+}
 .pos, .neg{
 font-size:85%;
 display: inline-table;
@@ -142,7 +148,17 @@ text-align:left;
 .ie8 #evidence-map #loading,
 .ie8 .oer-chart-loading,
 .oer-chart-loading.hide {
-       display: none;
+	display: none;
+}
+.oer-chart-loading {
+	font-size: 1.1em;
+	color: #b87b00; /*orange*/
+	border: 1px solid #ddd;
+	background: #fafafa;
+	min-width: 450px;
+	padding: 1em;
+	margin: 1em;
+	text-align: center;
 }
 
 .postrank-list{
@@ -1714,3 +1730,29 @@ z-index:9999;
   margin: 0;
   min-width: 13em;
 }
+
+
+.evidence-laceproject-eu map #evidence_hub_options > div.eh_input.eh_evidence_hub_type {
+	display: none;
+}
+
+/* Hypothesis template.
+*/
+.evidence-laceproject-eu .hypothesis-template-explain,
+.evidence-laceproject-eu .evidence-map-key {
+	font-size: .92em;
+	background: #fbfbfb;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	padding: 2px 8px;
+	margin: .8em 0;
+}
+.evidence-laceproject-eu .hypothesis-template-explain p {
+	margin: .8em 0;
+	line-heigh: 1.5em;
+}
+.evidence-laceproject-eu .evidence-map-key h3 {
+	margin: 7px 0;
+}
+
+/*End*/
