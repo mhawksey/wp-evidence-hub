@@ -337,22 +337,33 @@ abstract class Evidence_Hub_Shortcode extends Evidence_Hub_Base {
 <?php
 	}
 
-    /** Output Javascript global var object with config[Bug: #46]
+    /** Output Javascript with configuration options [Bug: #49] [Bug: #47]
+    *
+    * @param string $js_key Based on eg. shortcode.
+    * @param mixed  $js_value
     */
+    protected function print_js_config( $js_key, $js_value, $with_el = false ) {
+        // Sanitize data - ensure $js_key is a string ...
+        $js_value = json_encode( $js_value );
+
+        if($with_el): ?><script>
+<?php endif; ?>
+var OERRH = OERRH || {};
+OERRH.<?php echo $js_key ?> = <?php echo $js_value ?>;
+<?php if($with_el): ?></script><?php endif;
+    }
+
     protected function print_leaflet_geomap_options_javascript() {
-        //return;
         $map_center = json_decode($this->get_option( 'evidence_geomap_center', '[25, 0]' ));
-        echo "/* map_center: $map_center */";
-        echo 'var OERRH = ' . json_encode(array(
-		    'map_center' => $map_center,
-		    'map_filter_position' => $this->get_option(
+        $this->print_js_config( 'geomap', array(
+		    'center' => $map_center,
+		    'filter_position' => $this->get_option(
 		        'evidence_geomap_filter_position', 'topright' ), # Filter by "Type"...
-		    'map_summary_position' => $this->get_option(
+		    'summary_position' => $this->get_option(
 		        'evidence_geomap_summary_position', 'bottomleft' ), # AKA "search"
-		    'map_attribution' => ' '. $this->get_option(
+		    'attribution' => ' '. $this->get_option(
 		        'evidence_geomap_attribution' ),
-		))
-		. ";\n";
+		));
     }
 
 

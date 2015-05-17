@@ -157,7 +157,7 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 		var tableArray = [];
 		var summaryControl = L.Control.extend({
 			options: {
-				position: OERRH.map_summary_position || 'bottomleft'
+				position: OERRH.geomap.summary_position || 'bottomleft'
 
 			},
 
