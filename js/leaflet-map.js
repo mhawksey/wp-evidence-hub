@@ -37,7 +37,7 @@ map.addControl(new filterControl());
 //var oms = new OverlappingMarkerSpiderfier(map);
 
 // helper function to return icons for different types 
-var customIcon = function (prop){
+var customIcon = function (prop, className) {
 					var options = {	shadowUrl: iconuri+'marker-shadow.png',
 									iconSize: [25, 41],
 									iconAnchor: [12, 41],
@@ -59,7 +59,7 @@ var customIcon = function (prop){
 					m = m.filter(function(v) { return v !== null; });
 					
 					options.iconUrl = iconuri+'marker-'+m.join('-')+'.png';
-					options.className = prop.id;
+					options.className = 'id-' + prop.id +' '+ className;
 					return new LeafIcon(options)
 				};
 // construct custom icon
@@ -128,6 +128,7 @@ function renderLayer(switches){
 						var prop = feature.properties
 						  , coord = feature.geometry.coordinates
 						  , no_loc = OERRH.geomap.no_location_latlng
+						  // Evidence located at or v. near [0, 0] degrees.
 						  , near_zero = function (deg) { return Math.abs(deg) < 2; }
 						  , class_name = ''
 						  , no_loc_text= '';
@@ -139,7 +140,7 @@ function renderLayer(switches){
 							if (no_loc && near_zero(coord[0]) && near_zero(coord[1])) {
 								window.console && console.log("No location?", coord, prop);
 
-								// Swap!
+								// Re-locate ... swap!
 								coord[ 0 ] = no_loc[ 1 ];
 								coord[ 1 ] = no_loc[ 0 ];
 								class_name = "lace-no-location-marker";
@@ -147,9 +148,8 @@ function renderLayer(switches){
 							}
 
 							marker = new L.Marker(new L.LatLng(coord[1], coord[0]), {
-									icon: customIcon(prop),
-									title: no_loc_text,
-									className: class_name
+									icon: customIcon(prop, class_name),
+									title: no_loc_text
 								})
 								.bindPopup(formattedText(prop));
 							
@@ -309,9 +309,8 @@ jQuery(document).ready(function($){
 
 
 	// Mark "no location" evidence [LACE][Bug: #50]
-	var is_lace = $(".evidence-laceproject-eu").length
-	  , no_loc = OERRH.geomap.no_location_latlng;
-	if (no_loc /*|| is_lace*/) {
+	var no_loc = OERRH.geomap.no_location_latlng;
+	if (no_loc) {
 
 		var lace_no_location_pop = L.popup({ className: "lace-no-location-pop" })
 			.setLatLng(no_loc)

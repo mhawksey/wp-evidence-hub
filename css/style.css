@@ -1760,7 +1760,6 @@ z-index:9999;
 */
 #evidence-map .lace-no-location-pop .leaflet-popup-content {
 	margin: 3px 21px 3px 5px;
-	/*margin: 15px 5px 5px;*/
 }
 #evidence-map .lace-no-location-pop .leaflet-popup-content-wrapper {
 	border-radius: 6px;
