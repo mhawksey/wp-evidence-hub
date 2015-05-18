@@ -11,7 +11,7 @@ window.console && console.log("OERRH:", OERRH);
 var iconuri = pluginurl+'images/icons/';
 
 //prepare the map
-var map = OERRH.geomap.map = L.map('map').setView(OERRH.geomap.center || [25, 0], 2);
+var map = OERRH.geomap.map = L.map('map', { minZoom: 1 }).setView(OERRH.geomap.center || [25, 0], 2);
 L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
 	attribution:
 		"&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors" +
