@@ -337,7 +337,7 @@ abstract class Evidence_Hub_Shortcode extends Evidence_Hub_Base {
 <?php
 	}
 
-    /** Output Javascript with configuration options [Bug: #49] [Bug: #47]
+    /** Output Javascript with configuration options [Bug: #49]
     *
     * @param string $js_key Based on eg. shortcode.
     * @param mixed  $js_value
@@ -353,8 +353,10 @@ OERRH.<?php echo $js_key ?> = <?php echo $js_value ?>;
 <?php if($with_el): ?></script><?php endif;
     }
 
+	/** Output [geomap] Javascript configuration [Bug: #47]
+	*/
     protected function print_leaflet_geomap_options_javascript() {
-        $map_center = json_decode($this->get_option( 'evidence_geomap_center', '[25, 0]' ));
+        $map_center = $this->decode_option( 'evidence_geomap_center', '[25, 0]' );
         $this->print_js_config( 'geomap', array(
 		    'center' => $map_center,
 		    'filter_position' => $this->get_option(
@@ -363,6 +365,8 @@ OERRH.<?php echo $js_key ?> = <?php echo $js_value ?>;
 		        'evidence_geomap_summary_position', 'bottomleft' ), # AKA "search"
 		    'attribution' => ' '. $this->get_option(
 		        'evidence_geomap_attribution' ),
+		    'no_location_latlng' => $this->decode_option(
+		        'evidence_geomap_no_location_latlng' ),  // [Bug: #50]
 		));
     }
 

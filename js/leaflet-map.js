@@ -125,11 +125,33 @@ function renderLayer(switches){
 	markerArray = [];
 	L.geoJson(hubPoints, {
 		onEachFeature: function (feature, layer) {
-						var prop = feature.properties;
-						if (testSwitches(switches, prop)){			
-							marker = new L.Marker(new L.LatLng(feature.geometry.coordinates[1],feature.geometry.coordinates[0]),{
-											  icon: customIcon(feature.properties)})
-									 .bindPopup(formattedText(feature.properties));
+						var prop = feature.properties
+						  , coord = feature.geometry.coordinates
+						  , no_loc = OERRH.geomap.no_location_latlng
+						  , near_zero = function (deg) { return Math.abs(deg) < 2; }
+						  , class_name = ''
+						  , no_loc_text= '';
+
+						if (testSwitches(switches, prop)){
+
+							// Move "no location" markers [LACE][Bug: #50]
+							//if (no_loc && !coord[0] && !coord[1])
+							if (no_loc && near_zero(coord[0]) && near_zero(coord[1])) {
+								window.console && console.log("No location?", coord, prop);
+
+								// Swap!
+								coord[ 0 ] = no_loc[ 1 ];
+								coord[ 1 ] = no_loc[ 0 ];
+								class_name = "lace-no-location-marker";
+								no_loc_text = "No location given";
+							}
+
+							marker = new L.Marker(new L.LatLng(coord[1], coord[0]), {
+									icon: customIcon(prop),
+									title: no_loc_text,
+									className: class_name
+								})
+								.bindPopup(formattedText(prop));
 							
 							markerMap[prop.id] = marker;
 							markerArray.push(marker);
@@ -284,4 +306,17 @@ jQuery(document).ready(function($){
 		customPop($(this).attr('href'));
 		return false;
 	});
+
+
+	// Mark "no location" evidence [LACE][Bug: #50]
+	var is_lace = $(".evidence-laceproject-eu").length
+	  , no_loc = OERRH.geomap.no_location_latlng;
+	if (no_loc /*|| is_lace*/) {
+
+		var lace_no_location_pop = L.popup({ className: "lace-no-location-pop" })
+			.setLatLng(no_loc)
+			.setContent("No location given")
+			.openOn(map);
+	}
+
 });

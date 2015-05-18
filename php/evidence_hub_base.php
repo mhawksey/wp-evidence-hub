@@ -73,6 +73,11 @@ class Evidence_Hub_Base {
 		return defined( $KEY ) ? constant( $KEY ) : get_option( $option, $default );
 	}
 
+	/** JSON decode a configuration option. */
+	protected function decode_option( $option, $default = null ) {
+		return json_decode($this->get_option( $option, $default ));
+	}
+
 	/** Use the term "Hypothesis" (default) or "Proposition" - LACE [Bug: #39] */
 	protected function is_proposition() {
 		return $this->get_option( 'wp_evidence_hub_is_proposition' );
