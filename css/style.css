@@ -156,8 +156,8 @@ text-align:left;
 	border: 1px solid #ddd;
 	background: #fafafa;
 	min-width: 450px;
-	padding: 1em;
-	margin: 1em;
+	padding: 5px 1em;
+	margin: 1em 0;
 	text-align: center;
 }
 
