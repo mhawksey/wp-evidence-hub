@@ -1720,7 +1720,7 @@ z-index:9999;
 }
 
 
-/* Evidence map search [Bug: #43]
+/* Evidence map search [LACE][Bug: #43]
 */
 .google-visualization-controls-stringfilter INPUT,
 .google-visualization-controls-stringfilter,
@@ -1732,11 +1732,11 @@ z-index:9999;
 }
 
 
-.evidence-laceproject-eu map #evidence_hub_options > div.eh_input.eh_evidence_hub_type {
+.evidence-laceproject-eu #evidence-map #evidence_hub_options > div.eh_input.eh_evidence_hub_type {
 	display: none;
 }
 
-/* Hypothesis template.
+/* Hypothesis template [LACE]
 */
 .evidence-laceproject-eu .hypothesis-template-explain,
 .evidence-laceproject-eu .evidence-map-key {
