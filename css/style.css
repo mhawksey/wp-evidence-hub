@@ -1749,12 +1749,12 @@ z-index:9999;
 }
 .evidence-laceproject-eu .hypothesis-template-explain p {
 	margin: .8em 0;
-	line-heigh: 1.5em;
+	line-height: 1.5em;
 }
 .evidence-laceproject-eu .evidence-map-key h3 {
 	margin: 7px 0;
 }
-.hypothesis-template h2,
+.entry-content .hypothesis-template h2,
 .hypothesis-template h3 {
 	border: 1px solid #d2691e;
 	text-align: center;
