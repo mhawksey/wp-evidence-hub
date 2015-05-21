@@ -1755,13 +1755,13 @@ z-index:9999;
 	margin: 7px 0;
 }
 .entry-content .hypothesis-template h2,
-.hypothesis-template h3 {
+.entry-content .hypothesis-template h3 {
 	border: 1px solid #d2691e;
 	text-align: center;
 	font-size: 1.1em;
 	margin: .8em 0;
 }
-.hypothesis-template h3 {
+.entry-content .hypothesis-template h3 {
 	font-weight: normal;
 	font-style: italic;
 }
