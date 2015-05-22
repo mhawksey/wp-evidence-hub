@@ -38,9 +38,11 @@ require_once 'php/evidence_hub_base.php';
 if(!class_exists('Evidence_Hub'))
 {
 	class Evidence_Hub extends Evidence_Hub_Base {
-		static $post_types = array(); // used in shortcode caching
-		static $post_type_fields = array(); // used to collect field types for frontend data entry 
-		static $options = array();
+
+		protected static $post_types = array(); // used in shortcode caching.
+		public static $post_type_fields = array(); // used to collect field types for frontend data entry.
+		public static $options = array();
+
 		/**
 		* Construct the plugin object.
 		*
@@ -183,7 +185,15 @@ if(!class_exists('Evidence_Hub'))
 			$this->debug(array( 'hypothesis_template_page' => $template_id ));
 
 		} // END public function __construct
-		
+
+		/**
+		* Push post types for caching.
+		* @param string $post_type
+		*/
+		public static cache_post_type( $post_type ) {
+			self::$post_types[] = $post_type;
+		}
+
 		/**
 		* Custom page template
 		*

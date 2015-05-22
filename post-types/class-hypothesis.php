@@ -8,12 +8,14 @@
  * @subpackage Evidence_Hub_CustomPostType
  */
 new Hypothesis_Template();
-class Hypothesis_Template extends Evidence_Hub_CustomPostType { 
-	public $post_type	= "hypothesis";
-	public $archive_slug = "hypothesis"; // use pluralized string if you want an archive page
-	public $singular = "Hypothesis";
-	public $plural = "Hypotheses";
-	public $options = array();
+class Hypothesis_Template extends Evidence_Hub_CustomPostType {
+
+	const POST_TYPE = 'hypothesis';
+
+	protected $archive_slug = "hypothesis"; // use pluralized string if you want an archive page
+	protected $singular = "Hypothesis";
+	protected $plural = "Hypotheses";
+	protected $options = array();
 
 	private $is_proposition = false;
 
@@ -33,11 +35,11 @@ class Hypothesis_Template extends Evidence_Hub_CustomPostType {
 	* @since 0.1.1
 	*/
 	public function create_post_type(){
-		register_post_type($this->post_type,
+		register_post_type($this->get_post_type() ,
 			array(
 				'labels' => array(
-					'name' => __(sprintf('%ss', ucwords(str_replace("_", " ", $this->post_type)))),
-					'singular_name' => __(ucwords(str_replace("_", " ", $this->post_type)))
+					'name' => __(sprintf('%ss', ucwords(str_replace("_", " ", $this->get_post_type() )))),
+					'singular_name' => __(ucwords(str_replace("_", " ", $this->get_post_type() )))
 				),
 				'labels' => array(
 					'name' => __(sprintf('%s', $this->plural)),
@@ -102,7 +104,7 @@ class Hypothesis_Template extends Evidence_Hub_CustomPostType {
 				'position' => 'bottom',
 				),
 			));
-		Evidence_Hub::$post_type_fields[$this->post_type] = $this->options;
+		Evidence_Hub::$post_type_fields[ $this->get_post_type() ] = $this->options;
 	}
 		
 	/**
@@ -113,22 +115,22 @@ class Hypothesis_Template extends Evidence_Hub_CustomPostType {
 	public function add_meta_boxes() {
 		// Add this metabox to every selected post	
 		add_meta_box( 
-			sprintf('wp_evidence_hub_%s_section', $this->post_type),
+			sprintf('wp_evidence_hub_%s_section', $this->get_post_type() ),
 			sprintf('%s Key Questions', $this->singular),
 			array(&$this, 'add_inner_meta_boxes'),
-			$this->post_type,
+			$this->get_post_type() ,
 			'normal',          // The part of the page where the edit screen section should be shown.
             'high'
 		);
 		// Add this metabox to custom post wp-admin
 		add_meta_box( 
-			sprintf('wp_evidence_hub_%s_side_section', $this->post_type),
+			sprintf('wp_evidence_hub_%s_side_section', $this->get_post_type() ),
 			sprintf('%s Information', $this->singular),
 			array(&$this, 'add_inner_meta_boxes_side'),
-			$this->post_type,
+			$this->get_post_type() ,
 			'side'
 		);	
-		remove_meta_box('tagsdiv-evidence_hub_rag',$this->post_type,'side');				
+		remove_meta_box('tagsdiv-evidence_hub_rag',$this->get_post_type() ,'side');
 	} // END public function add_meta_boxes()
 
 	

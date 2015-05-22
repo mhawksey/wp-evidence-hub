@@ -28,7 +28,7 @@ class Evidence_Hub_CustomPostType extends Evidence_Hub_Base {
 		add_filter('post_type_link', array(&$this, 'custom_post_type_link'), 1, 3);
 		add_action('edit_form_after_title', array(&$this, 'foo_move_deck'),999);
 		// push post types for caching
-		Evidence_Hub::$post_types[] = $this->get_post_type();
+		Evidence_Hub::cache_post_type( $this->get_post_type() );
 	} // END public function __construct()
 
 	protected function get_post_type() {
