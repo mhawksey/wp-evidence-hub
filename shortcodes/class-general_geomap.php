@@ -200,7 +200,9 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 
 			var formatter = new google.visualization.PatternFormat('<div>{1} - <span style="text-transform: capitalize;">{2}</span></div></div>');
 			formatter.format(data, [c['url'],c['name'], c['type']], c['desc']);
-	   console.log(c);
+
+		window.console && console.log(c);
+
 			// Define a StringFilter control for the 'Name' column
 			var stringFilter = new google.visualization.ControlWrapper({
 			  'controlType': 'StringFilter',
