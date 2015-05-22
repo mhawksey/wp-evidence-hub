@@ -1,13 +1,16 @@
 <?php
 
 class Evidence_Hub_CustomPostType extends Evidence_Hub_Base {
-	public $post_type = "custom_post_type";
-	public $archive_slug = false; // use pluralized string if you want an archive page
-	public $singular = "Item";
-	public $plural = "Items";
-	
-	public $options = array();
-	
+
+	const POST_TYPE = 'custom_post_type';
+	//public $post_type = "custom_post_type";
+
+	protected $archive_slug = false; // use pluralized string if you want an archive page
+	protected $singular = "Item";
+	protected $plural = "Items";
+
+	protected $options = array();
+
 	/**
 	* The Constructor
 	*
@@ -19,15 +22,19 @@ class Evidence_Hub_CustomPostType extends Evidence_Hub_Base {
 		add_action('init', array(&$this, 'set_options'));
 		add_action('admin_init', array(&$this, 'admin_init'));
 		// register custom columns in wp-admin
-		add_action('manage_edit-'.$this->post_type.'_columns', array(&$this, 'columns'));
-		add_action('manage_'.$this->post_type.'_posts_custom_column', array(&$this, 'column'),10 ,2);
+		add_action('manage_edit-'. $this->get_post_type() .'_columns', array(&$this, 'columns'));
+		add_action('manage_'. $this->get_post_type() .'_posts_custom_column', array(&$this, 'column'),10 ,2);
 		// add filters
 		add_filter('post_type_link', array(&$this, 'custom_post_type_link'), 1, 3);
 		add_action('edit_form_after_title', array(&$this, 'foo_move_deck'),999);
 		// push post types for caching
-		Evidence_Hub::$post_types[] = $this->post_type;
+		Evidence_Hub::$post_types[] = $this->get_post_type();
 	} // END public function __construct()
-	
+
+	protected function get_post_type() {
+		return property_exists( $this, 'post_type' ) ? $this->post_type : static::POST_TYPE;
+	}
+
 	/**
 	* hook into WP's init action hook.
 	*
@@ -40,6 +47,8 @@ class Evidence_Hub_CustomPostType extends Evidence_Hub_Base {
 		add_action('save_post', array(&$this, 'save_post'));
 
 	} // END public function init()
+
+	/** This function is used & re-implemented! */
 	public function foo_move_deck(){
 	}
 	
@@ -69,7 +78,7 @@ class Evidence_Hub_CustomPostType extends Evidence_Hub_Base {
 	public function save_post($post_id)	{
 		// verify if this is an auto save routine. 
 		// If it is our form has not been submitted, so we dont want to do anything
-		if (get_post_type($post_id) != $this->post_type) return;
+		if (get_post_type($post_id) != $this->get_post_type()) return;
 		
 		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
 		
@@ -193,14 +202,4 @@ class Evidence_Hub_CustomPostType extends Evidence_Hub_Base {
 	public function column($column, $post_id) {
 		
 	}
-
-	/**
-	* Get a WP configuration option from a PHP define() or the database.
-	* @return string
-	*/
-	protected function get_option( $option, $default = NULL ) {
-		$KEY = strtoupper( $option );
-		return defined( $KEY ) ? constant( $KEY ) : get_option( $option, $default );
-	}
-
 }

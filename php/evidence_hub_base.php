@@ -67,7 +67,9 @@ class Evidence_Hub_Base {
 			count($this->_messages)) .': '. json_encode( $message_r ));
 	}
 
-	/** Get a WP configuration option from a PHP define() or the database. */
+	/** Get a WP configuration option from a PHP define() or the database.
+	* @return string
+	*/
 	protected function get_option( $option, $default = NULL ) {
 		$KEY = strtoupper( $option );
 		return defined( $KEY ) ? constant( $KEY ) : get_option( $option, $default );

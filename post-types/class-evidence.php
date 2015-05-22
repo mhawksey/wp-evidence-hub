@@ -9,13 +9,16 @@
  */
 new Evidence_Template();
 class Evidence_Template extends Evidence_Hub_CustomPostType {
-	public $post_type	= "evidence";
-	public $archive_slug = "evidence"; // use pluralized string if you want an archive page
-	public $singular = "Evidence";
-	public $plural = "Evidence";
 
-	public $options = array();
-	
+	const POST_TYPE = 'evidence';
+	//public $post_type	= "evidence";
+
+	protected $archive_slug = "evidence"; // use pluralized string if you want an archive page
+	protected $singular = "Evidence";
+	protected $plural = "Evidence";
+
+	protected $options = array();
+
 	/**
 	* Register custom post type.
 	*
@@ -34,11 +37,11 @@ class Evidence_Template extends Evidence_Hub_CustomPostType {
 		}
 		$this->debug(array( __FUNCTION__, 'rewrite', $rewrite ));
 
-		register_post_type($this->post_type,
+		register_post_type($this->get_post_type() ,
 			array(
 				'labels' => array(
-					'name' => __(sprintf('%ss', ucwords(str_replace("_", " ", $this->post_type)))),
-					'singular_name' => __(ucwords(str_replace("_", " ", $this->post_type)))
+					'name' => __(sprintf('%ss', ucwords(str_replace("_", " ", $this->get_post_type() )))),
+					'singular_name' => __(ucwords(str_replace("_", " ", $this->get_post_type() )))
 				),
 				'labels' => array(
 					'name' => __(sprintf('%s', $this->plural)),
@@ -184,7 +187,7 @@ class Evidence_Template extends Evidence_Hub_CustomPostType {
 			));
 		}
 
-		 Evidence_Hub::$post_type_fields[$this->post_type] = $this->options;
+		 Evidence_Hub::$post_type_fields[$this->get_post_type() ] = $this->options;
 	}
 		
 	/**
@@ -195,27 +198,27 @@ class Evidence_Template extends Evidence_Hub_CustomPostType {
 	public function add_meta_boxes() {
 		// Add this metabox to every selected post	
 		add_meta_box( 
-			sprintf('wp_evidence_hub_%s_section', $this->post_type),
-			sprintf('%s Information', ucwords(str_replace("_", " ", $this->post_type))),
+			sprintf('wp_evidence_hub_%s_section', $this->get_post_type() ),
+			sprintf('%s Information', ucwords(str_replace("_", " ", $this->get_post_type() ))),
 			array(&$this, 'add_inner_meta_boxes'),
-			$this->post_type,
+			$this->get_post_type() ,
 			'top',          // The part of the page where the edit screen section should be shown.
             'high'
 		);
 		add_meta_box( 
-			sprintf('wp_evidence_hub_%s_side_section', $this->post_type),
-			sprintf('%s Information', ucwords(str_replace("_", " ", $this->post_type))),
+			sprintf('wp_evidence_hub_%s_side_section', $this->get_post_type() ),
+			sprintf('%s Information', ucwords(str_replace("_", " ", $this->get_post_type() ))),
 			array(&$this, 'add_inner_meta_boxes_side'),
-			$this->post_type,
+			$this->get_post_type() ,
 			'side',
 			'high'
 		);
 
 		// remove standard Tags boxes
-		remove_meta_box('tagsdiv-evidence_hub_country',$this->post_type,'side');
-		remove_meta_box('tagsdiv-evidence_hub_sector',$this->post_type,'side');
-		remove_meta_box('tagsdiv-evidence_hub_polarity',$this->post_type,'side');
-		Pronamic_Google_Maps_MetaBox::register($this->post_type, 'normal', 'high');
+		remove_meta_box('tagsdiv-evidence_hub_country', $this->get_post_type(), 'side');
+		remove_meta_box('tagsdiv-evidence_hub_sector', $this->get_post_type(), 'side');
+		remove_meta_box('tagsdiv-evidence_hub_polarity', $this->get_post_type(), 'side');
+		Pronamic_Google_Maps_MetaBox::register($this->get_post_type(), 'normal', 'high');
 		
 	} // END public function add_meta_boxes()
 	
