@@ -190,7 +190,7 @@ if(!class_exists('Evidence_Hub'))
 		* Push post types for caching.
 		* @param string $post_type
 		*/
-		public static cache_post_type( $post_type ) {
+		public static function cache_post_type( $post_type ) {
 			self::$post_types[] = $post_type;
 		}
 
