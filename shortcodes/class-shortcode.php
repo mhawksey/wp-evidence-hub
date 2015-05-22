@@ -430,7 +430,7 @@ OERRH.<?php echo $js_key ?> = <?php echo $js_value ?>;
 	* @param string $post_id
 	*/
 	public function save_post($post_id) {
-		if (!in_array(get_post_type($post_id), Evidence_Hub::$post_types)) return;
+		if (!Evidence_Hub::is_cacheable_post( $post_id )) return;
 		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
 		self::clear_cache();
 	}
@@ -442,7 +442,7 @@ OERRH.<?php echo $js_key ?> = <?php echo $js_value ?>;
 	* @param string $post_id
 	*/	
 	public function trash_post($post_id) {
-		if (!in_array(get_post_type($post_id), Evidence_Hub::$post_types)) return;
+		if (!Evidence_Hub::is_cacheable_post( $post_id )) return;
 		self::clear_cache();
 	}
 	

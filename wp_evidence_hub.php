@@ -194,6 +194,11 @@ if(!class_exists('Evidence_Hub'))
 			self::$post_types[] = $post_type;
 		}
 
+		
+		public static function is_cacheable_post( $post_id ) {
+			return in_array( get_post_type( $post_id ), self::$post_types );
+		}
+
 		/**
 		* Custom page template
 		*
@@ -748,7 +753,7 @@ if(!class_exists('Evidence_Hub'))
 		public static function add_terms($posts) {
 			$posts_termed = array();
 			foreach ($posts as $post_id){
-				$posts_termed[] = Evidence_Hub::add_meta($post_id);
+				$posts_termed[] = self::add_meta($post_id);
 			}
 			return $posts_termed;
 		}
@@ -824,7 +829,7 @@ if(!class_exists('Evidence_Hub'))
 							   'orderby' => 'meta_value',
 							   'order' => 'ASC',
 							   'post_status' => array( 'pending', 'draft', 'future', 'publish' ),
-							   'post_type' => Evidence_Hub::$post_types,
+							   'post_type' => self::$post_types,
 							   'meta_query' => array(
 								   array(
 									   'key' => $_REQUEST['lookup_field'],
