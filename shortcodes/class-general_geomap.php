@@ -19,7 +19,7 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 
 	const SHORTCODE = 'geomap';
 
-	var $defaults = array(
+	protected $defaults = array(
 		'title' => false,
 		'no_evidence_message' => "There is no map yet to display",
 		'title_tag' => 'h3',
@@ -27,8 +27,8 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 		'table' => true
 	);
 
-	static $post_types_with_shortcode = array();
-	
+	protected static $post_types_with_shortcode = array();
+
 	/**
 	* Generate post content.
 	*
@@ -146,7 +146,7 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 		return ob_get_clean();
 	}
 
-	function renderGoogleTable() { ?>
+	protected function renderGoogleTable() { ?>
         <script>
           google.load('visualization', '1.1', { packages: [ 'controls' ] });
         </script>

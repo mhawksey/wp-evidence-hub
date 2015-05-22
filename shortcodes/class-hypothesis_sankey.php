@@ -14,17 +14,17 @@
  * @package Evidence_Hub
  * @subpackage Evidence_Hub_Shortcode
  */
- 
+
 new Evidence_Hub_Shortcode_Hypothesis_Sankey();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_Hypothesis_Sankey extends Evidence_Hub_Shortcode {
 
 	const SHORTCODE = 'hypothesis_sankey';
 
-	var $defaults = array('slug' => 'World');
+	protected $defaults = array('slug' => 'World');
 
-	static $post_types_with_sessions = NULL;
-	
+	protected static $post_types_with_sessions = NULL;
+
 	/**
 	* Generate post content.
 	* Gets all the hypothesis and renders in a single page.

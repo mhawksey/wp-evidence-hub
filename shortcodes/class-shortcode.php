@@ -14,9 +14,9 @@ abstract class Evidence_Hub_Shortcode extends Evidence_Hub_Base {
 
 	const SHORTCODE = 'evidence_hub_shortcode';
 
-	var $defaults = array('do_cache' => true);
-	var $options = array();
-	
+	protected $defaults = array('do_cache' => true);
+	protected $options = array();
+
 	/**
 	* Construct the plugin object.
 	*

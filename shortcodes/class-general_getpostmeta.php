@@ -13,16 +13,16 @@
  * @package Evidence_Hub
  * @subpackage Evidence_Hub_Shortcode
  */
- 
+
 new Evidence_Hub_Shortcode_GetPostMeta();
 // Base class 'Evidence_Hub_Shortcode' defined in 'shortcodes/class-shortcode.php'.
 class Evidence_Hub_Shortcode_GetPostMeta extends Evidence_Hub_Shortcode {
 
 	const SHORTCODE = 'get_post_meta';
 
-	public $defaults = array('meta_key' => false,
+	protected $defaults = array('meta_key' => false,
 							 'single' => true);
-	static $post_types_with_shortcode = array('hypothesis');
+	protected static $post_types_with_shortcode = array('hypothesis');
 
 	/**
 	* Generate post content. 
