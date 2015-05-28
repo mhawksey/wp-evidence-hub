@@ -32,7 +32,7 @@ var filterControl = L.Control.extend({
 map.addControl(new filterControl());
 
 
-			
+
 // Spiderfier close markers
 //var oms = new OverlappingMarkerSpiderfier(map);
 
@@ -69,7 +69,7 @@ var formattedText = function (d){
 	var tHyp = (d.hypothesis) ? '<div class="poptc h">Hypothesis:</div><div class="poptc v">'+(d.hypothesis)+'</div>' : '',
 	tType = (d.type) ? '<div class="poptc h">Type:</div><div class="poptc v">'+toProperCase(d.type)+'</div>' : '',
 	tSector = (d.sector) ? '<div class="poptc h">Sector:</div><div class="poptc v">'+toProperCase((typeof d.sector === "string") ? d.sector : d.sector.join(", "))+'</div>' : '',
-	tPol = (d.polarity) ? '<div class="poptc h">Polarity:</div><div class="poptc v">'+toVeCase(d.polarity)+'</div>' : '';
+	tPol = /*(d.polarity) ?*/ '<div class="poptc h">Polarity:</div><div class="poptc v">'+toVeCase(d.polarity)+'</div>'; //: '';
 	tLoc = (d.locale) ? '<div class="poptc h">Locale:</div><div class="poptc v">'+toProperCase(d.locale)+'</div>' : '';
 	tUrl = (d.url) ? '<a href="'+d.url+'" class="geo_pop">Read more..</a>' : '';
 	return '<a href="'+d.url+'"><strong>'+d.name+'</strong></a>' +
@@ -218,8 +218,15 @@ var addTitle = function(){
 function toProperCase(d){
     return d.replace('-',' ').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
+// [Bug: #55]
 function toVeCase(d) {
-    return ('pos' === d) ? '+ve' : ('neg' === d) ? '-ve' : 'neutral';
+    //return ('pos' === d) ? '+ve' : ('neg' === d) ? '-ve' : 'neutral';
+    switch (d) {
+        case 'pos': return '+ve';
+        case 'neg': return '-ve';
+        case 'neutral': return 'neutral';
+        default: return '(not given)';
+    }
 }
 jQuery('#evidence-map select').on('touchstart change', function() {
 	markers.removeLayers(markerArray);
