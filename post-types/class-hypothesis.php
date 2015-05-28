@@ -17,8 +17,6 @@ class Hypothesis_Template extends Evidence_Hub_CustomPostType {
 	protected $plural = "Hypotheses";
 	protected $options = array();
 
-	private $is_proposition = false;
-
 	public function __construct() {
 		parent::__construct();
 
@@ -55,7 +53,7 @@ class Hypothesis_Template extends Evidence_Hub_CustomPostType {
 				),
 				'public' => true,
 'show_in_nav_menus' => true,
-				'description' => $this->is_proposition
+				'description' => $this->is_proposition()
 					? __('A proposition or hypothesis', self::LOC_DOMAIN)
 					: __('A hypothesis', self::LOC_DOMAIN),
 				'supports' => array(

@@ -66,7 +66,8 @@ var customIcon = function (prop, className) {
 var LeafIcon = L.Icon.extend({});
 
 var formattedText = function (d){
-	var tHyp = (d.hypothesis) ? '<div class="poptc h">Hypothesis:</div><div class="poptc v">'+(d.hypothesis)+'</div>' : '',
+	var hypothesis_word = OERRH.geomap.hypothesis_word || 'Hypothesis',
+	tHyp = d.hypothesis ? '<div class="poptc h">'+ hypothesis_word +':</div><div class="poptc v">'+d.hypothesis+'</div>' : '',
 	tType = (d.type) ? '<div class="poptc h">Type:</div><div class="poptc v">'+toProperCase(d.type)+'</div>' : '',
 	tSector = (d.sector) ? '<div class="poptc h">Sector:</div><div class="poptc v">'+toProperCase((typeof d.sector === "string") ? d.sector : d.sector.join(", "))+'</div>' : '',
 	tPol = /*(d.polarity) ?*/ '<div class="poptc h">Polarity:</div><div class="poptc v">'+toVeCase(d.polarity)+'</div>'; //: '';

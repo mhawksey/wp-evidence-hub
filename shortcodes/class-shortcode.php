@@ -147,7 +147,8 @@ abstract class Evidence_Hub_Shortcode extends Evidence_Hub_Base {
 		}
 		// handle hypothesis as related value
 		if ($type == 'hypothesis_id') {
-			return  __(sprintf('<span class="meta_label">Hypothesis</span>: <a href="%s">%s</a>', get_permalink($post[$type]), get_the_title($post[$type])));
+			$hypothesis_word = $this->is_proposition() ? __( 'Proposition' ) : __( 'Hypothesis' );
+			return sprintf( '<span class="meta_label">%s</span>: <a href="%s">%s</a>', $hypothesis_word, get_permalink($post[$type]), get_the_title($post[$type]) );
 		// handle post_type
 		} elseif($type == "type" ) {
 			return __(sprintf('<span class="meta_label">Type</span>: <a href="%s">%s</a>', get_post_type_archive_link($post[$type]), ucwords($post[$type])));
@@ -367,6 +368,7 @@ OERRH.<?php echo $js_key ?> = <?php echo $js_value ?>;
 		        'evidence_geomap_attribution' ),
 		    'no_location_latlng' => $this->decode_option(
 		        'evidence_geomap_no_location_latlng' ),  // [Bug: #50]
+		    'hypothesis_word' => $this->is_proposition() ? 'Proposition' : 'Hypothesis',
 		));
     }
 
