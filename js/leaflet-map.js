@@ -219,7 +219,7 @@ function toProperCase(d){
     return d.replace('-',' ').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
 function toVeCase(d) {
-    return (d == 'pos') ? '+ve' : '-ve';
+    return ('pos' === d) ? '+ve' : ('neg' === d) ? '-ve' : 'neutral';
 }
 jQuery('#evidence-map select').on('touchstart change', function() {
 	markers.removeLayers(markerArray);
