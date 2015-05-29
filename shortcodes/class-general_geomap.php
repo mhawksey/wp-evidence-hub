@@ -24,7 +24,8 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 		'no_evidence_message' => "There is no map yet to display",
 		'title_tag' => 'h3',
 		'type' => 'evidence',
-		'table' => true
+		'table' => true,
+		'display_key' => true,
 	);
 
 	protected static $post_types_with_shortcode = array();
@@ -134,6 +135,9 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 		<script src="<?php echo plugins_url( 'js/leaflet-map.js?v=6' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
 
 		<?php $this->print_fullscreen_button_html_javascript() ?>
+		<?php if ($display_key) {
+			require_once __DIR__ . '/geomap-key.php';
+		} ?>
 		<script>
 		jQuery("#eh-form").appendTo(".my-custom-control");
 		jQuery('#evidence-map fieldset').show();

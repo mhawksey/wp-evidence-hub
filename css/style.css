@@ -1744,7 +1744,7 @@ z-index:9999;
 	background: #fbfbfb;
 	border: 1px solid #ccc;
 	border-radius: 5px;
-	padding: 2px 8px;
+	padding: 0 15px;
 	margin: .8em 0;
 }
 .evidence-laceproject-eu .hypothesis-template-explain p {
@@ -1780,5 +1780,70 @@ z-index:9999;
 #evidence-map .lace-no-location-pop .leaflet-popup-content-wrapper {
 	border-radius: 6px;
 }
+
+
+/* Key for [geomap] [LACE][Bug: #48]
+*/
+.geomap-key ul {
+	padding: 0;
+}
+.geomap-key .marker {
+	list-style: none;
+	background-repeat: no-repeat;
+	background-position: left;
+	padding: 8px 0 7px 42px;
+	margin-left: 7px;
+	margin-top: 3px;
+	min-height: 25px;
+}
+.geomap-key .marker.evidence {
+	background-image: url(../images/icons/marker-evidence.png);
+}
+.geomap-key .marker.evidence-pos {
+	background-image: url(../images/icons/marker-evidence-pos.png);
+}
+.geomap-key .marker.evidence-neg {
+	background-image: url(../images/icons/marker-evidence-neg.png);
+}
+.geomap-key .marker.evidence-neutral {
+	background-image: url(../images/icons/marker-evidence-neutral.png);
+}
+.geomap-key .marker.project {
+	background-image: url(../images/icons/marker-project.png);
+}
+.geomap-key .marker.policy-international {
+	background-image: url(../images/icons/marker-policy-international.png);
+}
+.geomap-key .marker.policy-local {
+	background-image: url(../images/icons/marker-policy-local.png);
+}
+.geomap-key .marker.policy-national {
+	background-image: url(../images/icons/marker-policy-national.png);
+}
+.geomap-key .marker.policy-regional {
+	background-image: url(../images/icons/marker-policy-regional.png);
+}
+.geomap-key .marker { display: none; }
+.geomap-key.key-type-evidence .marker.evidence { display: block; }
+.geomap-key.key-type-project .marker.project { display: block; }
+.geomap-key.key-type-policy .marker.policy { display: block; }
+
+.geomap-key .marker.cluster {
+	display: block;
+	padding: 0;
+	margin-left: 0;
+}
+.geomap-key .marker.cluster > div {
+	display: inline-block;
+}
+.geomap-key .marker-cluster {
+	margin-right: 5px;
+}
+.geomap-key .marker-cluster > div {
+	margin: 5px;
+}
+
+/* End: key for [geoap] */
+
 
 /*End*/
