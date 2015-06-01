@@ -28,8 +28,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 define('EVIDENCE_HUB_VERSION', '0.1.1');
 define('EVIDENCE_HUB_PATH', dirname(__FILE__));
 // Handle symbolic links - code portability.
-define('EVIDENCE_HUB_URL', plugin_dir_url(preg_replace('@\/var\/www\/[^\/]+@', '', __FILE__)));
-define('EVIDENCE_HUB_REGISTER_FILE', preg_replace('@\/var\/www\/[^\/]+@', '', __FILE__));
+define('EVIDENCE_HUB_URL', plugin_dir_url(preg_replace('@^.*wp-content\/plugins@', '', __FILE__)));
+define('EVIDENCE_HUB_REGISTER_FILE', __FILE__);  //preg_replace('@^.*wp-content\/plugins@', '', __FILE__));
 
 
 require_once 'php/evidence_hub_base.php';
@@ -38,9 +38,11 @@ require_once 'php/evidence_hub_base.php';
 if(!class_exists('Evidence_Hub'))
 {
 	class Evidence_Hub extends Evidence_Hub_Base {
-		static $post_types = array(); // used in shortcode caching
-		static $post_type_fields = array(); // used to collect field types for frontend data entry 
-		static $options = array();
+
+		protected static $post_types = array(); // used in shortcode caching.
+		public static $post_type_fields = array(); // used to collect field types for frontend data entry.
+		public static $options = array();
+
 		/**
 		* Construct the plugin object.
 		*
@@ -183,7 +185,20 @@ if(!class_exists('Evidence_Hub'))
 			$this->debug(array( 'hypothesis_template_page' => $template_id ));
 
 		} // END public function __construct
+
+		/**
+		* Push post types for caching.
+		* @param string $post_type
+		*/
+		public static function cache_post_type( $post_type ) {
+			self::$post_types[] = $post_type;
+		}
+
 		
+		public static function is_cacheable_post( $post_id ) {
+			return in_array( get_post_type( $post_id ), self::$post_types );
+		}
+
 		/**
 		* Custom page template
 		*
@@ -738,7 +753,7 @@ if(!class_exists('Evidence_Hub'))
 		public static function add_terms($posts) {
 			$posts_termed = array();
 			foreach ($posts as $post_id){
-				$posts_termed[] = Evidence_Hub::add_meta($post_id);
+				$posts_termed[] = self::add_meta($post_id);
 			}
 			return $posts_termed;
 		}
@@ -814,7 +829,7 @@ if(!class_exists('Evidence_Hub'))
 							   'orderby' => 'meta_value',
 							   'order' => 'ASC',
 							   'post_status' => array( 'pending', 'draft', 'future', 'publish' ),
-							   'post_type' => Evidence_Hub::$post_types,
+							   'post_type' => self::$post_types,
 							   'meta_query' => array(
 								   array(
 									   'key' => $_REQUEST['lookup_field'],

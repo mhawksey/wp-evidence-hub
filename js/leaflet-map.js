@@ -4,16 +4,22 @@
  @license			MIT License (http://www.opensource.org/licenses/mit-license.php)
  
 */
+var OERRH = OERRH || {};
+
+window.console && console.log("OERRH:", OERRH);
+
 var iconuri = pluginurl+'images/icons/';
 
 //prepare the map
-var map = L.map('map').setView([25, 0], 2);
+var map = OERRH.geomap.map = L.map('map', { minZoom: 1 }).setView(OERRH.geomap.center || [25, 0], 2);
 L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
-			 attribution: "&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors"}
-			).addTo(map);
+	attribution:
+		"&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors" +
+		(OERRH.geomap.attribution || "")
+	}).addTo(map);
 var filterControl = L.Control.extend({
     options: {
-        position: 'topright'
+        position: OERRH.geomap.filter_position || 'topright'
     },
 
     onAdd: function (map) {
@@ -26,12 +32,12 @@ var filterControl = L.Control.extend({
 map.addControl(new filterControl());
 
 
-			
+
 // Spiderfier close markers
 //var oms = new OverlappingMarkerSpiderfier(map);
 
 // helper function to return icons for different types 
-var customIcon = function (prop){
+var customIcon = function (prop, className) {
 					var options = {	shadowUrl: iconuri+'marker-shadow.png',
 									iconSize: [25, 41],
 									iconAnchor: [12, 41],
@@ -53,17 +59,18 @@ var customIcon = function (prop){
 					m = m.filter(function(v) { return v !== null; });
 					
 					options.iconUrl = iconuri+'marker-'+m.join('-')+'.png';
-					options.className = prop.id;
+					options.className = 'id-' + prop.id +' '+ className;
 					return new LeafIcon(options)
 				};
 // construct custom icon
 var LeafIcon = L.Icon.extend({});
 
 var formattedText = function (d){
-	var tHyp = (d.hypothesis) ? '<div class="poptc h">Hypothesis:</div><div class="poptc v">'+(d.hypothesis)+'</div>' : '',
+	var hypothesis_word = OERRH.geomap.hypothesis_word || 'Hypothesis',
+	tHyp = d.hypothesis ? '<div class="poptc h">'+ hypothesis_word +':</div><div class="poptc v">'+d.hypothesis+'</div>' : '',
 	tType = (d.type) ? '<div class="poptc h">Type:</div><div class="poptc v">'+toProperCase(d.type)+'</div>' : '',
 	tSector = (d.sector) ? '<div class="poptc h">Sector:</div><div class="poptc v">'+toProperCase((typeof d.sector === "string") ? d.sector : d.sector.join(", "))+'</div>' : '',
-	tPol = (d.polarity) ? '<div class="poptc h">Polarity:</div><div class="poptc v">'+toVeCase(d.polarity)+'</div>' : '';
+	tPol = /*(d.polarity) ?*/ '<div class="poptc h">Polarity:</div><div class="poptc v">'+toVeCase(d.polarity)+'</div>'; //: '';
 	tLoc = (d.locale) ? '<div class="poptc h">Locale:</div><div class="poptc v">'+toProperCase(d.locale)+'</div>' : '';
 	tUrl = (d.url) ? '<a href="'+d.url+'" class="geo_pop">Read more..</a>' : '';
 	return '<a href="'+d.url+'"><strong>'+d.name+'</strong></a>' +
@@ -119,11 +126,33 @@ function renderLayer(switches){
 	markerArray = [];
 	L.geoJson(hubPoints, {
 		onEachFeature: function (feature, layer) {
-						var prop = feature.properties;
-						if (testSwitches(switches, prop)){			
-							marker = new L.Marker(new L.LatLng(feature.geometry.coordinates[1],feature.geometry.coordinates[0]),{
-											  icon: customIcon(feature.properties)})
-									 .bindPopup(formattedText(feature.properties));
+						var prop = feature.properties
+						  , coord = feature.geometry.coordinates
+						  , no_loc = OERRH.geomap.no_location_latlng
+						  // Evidence located at or v. near [0, 0] degrees.
+						  , near_zero = function (deg) { return Math.abs(deg) < 2; }
+						  , class_name = ''
+						  , no_loc_text= '';
+
+						if (testSwitches(switches, prop)){
+
+							// Move "no location" markers [LACE][Bug: #50]
+							//if (no_loc && !coord[0] && !coord[1])
+							if (no_loc && near_zero(coord[0]) && near_zero(coord[1])) {
+								window.console && console.log("No location?", coord, prop);
+
+								// Re-locate ... swap!
+								coord[ 0 ] = no_loc[ 1 ];
+								coord[ 1 ] = no_loc[ 0 ];
+								class_name = "lace-no-location-marker";
+								no_loc_text = "No location given";
+							}
+
+							marker = new L.Marker(new L.LatLng(coord[1], coord[0]), {
+									icon: customIcon(prop, class_name),
+									title: no_loc_text
+								})
+								.bindPopup(formattedText(prop));
 							
 							markerMap[prop.id] = marker;
 							markerArray.push(marker);
@@ -190,8 +219,15 @@ var addTitle = function(){
 function toProperCase(d){
     return d.replace('-',' ').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
+// [Bug: #55]
 function toVeCase(d) {
-    return (d == 'pos') ? '+ve' : '-ve';
+    //return ('pos' === d) ? '+ve' : ('neg' === d) ? '-ve' : 'neutral';
+    switch (d) {
+        case 'pos': return '+ve';
+        case 'neg': return '-ve';
+        case 'neutral': return 'neutral';
+        default: return '(not given)';
+    }
 }
 jQuery('#evidence-map select').on('touchstart change', function() {
 	markers.removeLayers(markerArray);
@@ -278,4 +314,16 @@ jQuery(document).ready(function($){
 		customPop($(this).attr('href'));
 		return false;
 	});
+
+
+	// Mark "no location" evidence [LACE][Bug: #50]
+	var no_loc = OERRH.geomap.no_location_latlng;
+	if (no_loc) {
+
+		var lace_no_location_pop = L.popup({ className: "lace-no-location-pop" })
+			.setLatLng(no_loc)
+			.setContent("No location given")
+			.openOn(map);
+	}
+
 });

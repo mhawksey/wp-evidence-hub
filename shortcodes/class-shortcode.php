@@ -14,9 +14,9 @@ abstract class Evidence_Hub_Shortcode extends Evidence_Hub_Base {
 
 	const SHORTCODE = 'evidence_hub_shortcode';
 
-	var $defaults = array('do_cache' => true);
-	var $options = array();
-	
+	protected $defaults = array('do_cache' => true);
+	protected $options = array();
+
 	/**
 	* Construct the plugin object.
 	*
@@ -147,7 +147,8 @@ abstract class Evidence_Hub_Shortcode extends Evidence_Hub_Base {
 		}
 		// handle hypothesis as related value
 		if ($type == 'hypothesis_id') {
-			return  __(sprintf('<span class="meta_label">Hypothesis</span>: <a href="%s">%s</a>', get_permalink($post[$type]), get_the_title($post[$type])));
+			$hypothesis_word = $this->is_proposition() ? __( 'Proposition' ) : __( 'Hypothesis' );
+			return sprintf( '<span class="meta_label">%s</span>: <a href="%s">%s</a>', $hypothesis_word, get_permalink($post[$type]), get_the_title($post[$type]) );
 		// handle post_type
 		} elseif($type == "type" ) {
 			return __(sprintf('<span class="meta_label">Type</span>: <a href="%s">%s</a>', get_post_type_archive_link($post[$type]), ucwords($post[$type])));
@@ -337,6 +338,41 @@ abstract class Evidence_Hub_Shortcode extends Evidence_Hub_Base {
 <?php
 	}
 
+    /** Output Javascript with configuration options [Bug: #49]
+    *
+    * @param string $js_key Based on eg. shortcode.
+    * @param mixed  $js_value
+    */
+    protected function print_js_config( $js_key, $js_value, $with_el = false ) {
+        // Sanitize data - ensure $js_key is a string ...
+        $js_value = json_encode( $js_value );
+
+        if($with_el): ?><script>
+<?php endif; ?>
+var OERRH = OERRH || {};
+OERRH.<?php echo $js_key ?> = <?php echo $js_value ?>;
+<?php if($with_el): ?></script><?php endif;
+    }
+
+	/** Output [geomap] Javascript configuration [Bug: #47]
+	*/
+    protected function print_leaflet_geomap_options_javascript() {
+        $map_center = $this->decode_option( 'evidence_geomap_center', '[25, 0]' );
+        $this->print_js_config( 'geomap', array(
+		    'center' => $map_center,
+		    'filter_position' => $this->get_option(
+		        'evidence_geomap_filter_position', 'topright' ), # Filter by "Type"...
+		    'summary_position' => $this->get_option(
+		        'evidence_geomap_summary_position', 'bottomleft' ), # AKA "search"
+		    'attribution' => ' '. $this->get_option(
+		        'evidence_geomap_attribution' ),
+		    'no_location_latlng' => $this->decode_option(
+		        'evidence_geomap_no_location_latlng' ),  // [Bug: #50]
+		    'hypothesis_word' => $this->is_proposition() ? 'Proposition' : 'Hypothesis',
+		));
+    }
+
+
 	/** Put Evidence Hub shortcodes used on a page in the Javascript console [Bug: #9].
 	*/
 	protected function debug_shortcode( $options = NULL ) {
@@ -396,7 +432,7 @@ abstract class Evidence_Hub_Shortcode extends Evidence_Hub_Base {
 	* @param string $post_id
 	*/
 	public function save_post($post_id) {
-		if (!in_array(get_post_type($post_id), Evidence_Hub::$post_types)) return;
+		if (!Evidence_Hub::is_cacheable_post( $post_id )) return;
 		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
 		self::clear_cache();
 	}
@@ -408,7 +444,7 @@ abstract class Evidence_Hub_Shortcode extends Evidence_Hub_Base {
 	* @param string $post_id
 	*/	
 	public function trash_post($post_id) {
-		if (!in_array(get_post_type($post_id), Evidence_Hub::$post_types)) return;
+		if (!Evidence_Hub::is_cacheable_post( $post_id )) return;
 		self::clear_cache();
 	}
 	

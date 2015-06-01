@@ -19,16 +19,17 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 
 	const SHORTCODE = 'geomap';
 
-	var $defaults = array(
+	protected $defaults = array(
 		'title' => false,
 		'no_evidence_message' => "There is no map yet to display",
 		'title_tag' => 'h3',
 		'type' => 'evidence',
-		'table' => true
+		'table' => true,
+		'display_key' => true,
 	);
 
-	static $post_types_with_shortcode = array();
-	
+	protected static $post_types_with_shortcode = array();
+
 	/**
 	* Generate post content.
 	*
@@ -76,7 +77,7 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 				'hypothesis_id' => array(
 					'type' => 'select',
 					'save_as' => 'post_meta',
-					'label' => "Hypothesis",
+					'label' => $this->is_proposition() ? 'Proposition' : 'Hypothesis',
 					'options' => $hypothesis_options,
 					),
 			));
@@ -123,8 +124,9 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 			var json = <?php $this->print_json_file($this->get_api_url( 'hub.get_geojson' ) .'count=-1&type='. strtolower($type)) ?>;	
 			var hubPoints = json['geoJSON'] || null;
 			var pluginurl = '<?php echo EVIDENCE_HUB_URL; ?>';
-			var h = (jQuery('#evidence-map').width() > 820) ? parseInt(jQuery('#evidence-map').width()*9/16) : 560;
-			jQuery('#map').css('height', h);	
+			var h = (jQuery('#evidence-map').width() > 820) ? parseInt(jQuery('#evidence-map').width() * 9 / 16) : 560;
+			jQuery('#map').css('height', h);
+			<?php $this->print_leaflet_geomap_options_javascript() ?>	
 		/* ]]> */
 		</script>
         <link rel="stylesheet" href="<?php echo plugins_url( 'js/markercluster/MarkerCluster.css' , EVIDENCE_HUB_REGISTER_FILE )?>" />
@@ -133,6 +135,9 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 		<script src="<?php echo plugins_url( 'js/leaflet-map.js?v=6' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
 
 		<?php $this->print_fullscreen_button_html_javascript() ?>
+		<?php if ($display_key) {
+			require_once __DIR__ . '/geomap-key.php';
+		} ?>
 		<script>
 		jQuery("#eh-form").appendTo(".my-custom-control");
 		jQuery('#evidence-map fieldset').show();
@@ -145,7 +150,7 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 		return ob_get_clean();
 	}
 
-	function renderGoogleTable() { ?>
+	protected function renderGoogleTable() { ?>
         <script>
           google.load('visualization', '1.1', { packages: [ 'controls' ] });
         </script>
@@ -156,7 +161,8 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 		var tableArray = [];
 		var summaryControl = L.Control.extend({
 			options: {
-				position: 'bottomleft'
+				position: OERRH.geomap.summary_position || 'bottomleft'
+
 			},
 
 			onAdd: function (map) {
@@ -198,7 +204,9 @@ class Evidence_Hub_Shortcode_GeoMap extends Evidence_Hub_Shortcode {
 
 			var formatter = new google.visualization.PatternFormat('<div>{1} - <span style="text-transform: capitalize;">{2}</span></div></div>');
 			formatter.format(data, [c['url'],c['name'], c['type']], c['desc']);
-	   console.log(c);
+
+		window.console && console.log(c);
+
 			// Define a StringFilter control for the 'Name' column
 			var stringFilter = new google.visualization.ControlWrapper({
 			  'controlType': 'StringFilter',
