@@ -6,6 +6,8 @@
 */
 var OERRH = OERRH || {};
 
+OERRH.geomap.no_loc_count = 0;
+
 window.console && console.log("OERRH:", OERRH);
 
 var iconuri = pluginurl+'images/icons/';
@@ -139,7 +141,10 @@ function renderLayer(switches){
 							// Move "no location" markers [LACE][Bug: #50]
 							//if (no_loc && !coord[0] && !coord[1])
 							if (no_loc && near_zero(coord[0]) && near_zero(coord[1])) {
-								window.console && console.log("No location?", coord, prop);
+
+								OERRH.geomap.no_loc_count++;
+
+								//window.console && console.log("No location?", coord, prop);
 
 								// Re-locate ... swap!
 								coord[ 0 ] = no_loc[ 1 ];
@@ -318,7 +323,7 @@ jQuery(document).ready(function($){
 
 	// Mark "no location" evidence [LACE][Bug: #50]
 	var no_loc = OERRH.geomap.no_location_latlng;
-	if (no_loc) {
+	if (no_loc && OERRH.geomap.no_loc_count > 0) {
 
 		var lace_no_location_pop = L.popup({ className: "lace-no-location-pop" })
 			.setLatLng(no_loc)
