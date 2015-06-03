@@ -306,8 +306,9 @@ abstract class Evidence_Hub_Shortcode extends Evidence_Hub_Base {
 	<![endif]-->
 		<div id="fullscreen-button" class="map-controls">
 		  <!--[Bug: #40]-->
-		  <a href="#" id="map-reset-button" onclick="document.location.reload();return false"><i class="el-icon-refresh x-el-icon-zoom-out"></i>Refresh map</a> <i class=sep ></i>
-		  <a href="#" id="evidence-map-fullscreen"><i class=el-icon-fullscreen ></i>Full Screen</a>
+		  <a href="#!zoom-out" id="map-reset-button" onclick="displaySankey && displaySankey();return false"><i class="el-icon-refresh x-el-icon-zoom-out"></i>Zoom out</a>
+		  <?php #<a href="#" id="map-reset-button" onclick="document.location.reload();return false"><i class="el-icon-refresh x-el-icon-zoom-out"></i>Refresh map</a> ?> <i class=sep ></i>
+		  <a href="#!full-screen" id="evidence-map-fullscreen"><i class=el-icon-fullscreen ></i>Full Screen</a>
 		</div>
 		<script src="<?php echo plugins_url( 'lib/map/lib/bigscreen.min.js' , EVIDENCE_HUB_REGISTER_FILE )?>" charset="utf-8"></script>
 		<script>

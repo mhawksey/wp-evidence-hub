@@ -9,10 +9,10 @@
 <div id="key" class="evidence-map-key geomap-key key-type-<?php echo $type ?>">
 <h3>Key</h3>
 <ul>
-  <li class="marker cluster"><div class="marker-cluster marker-cluster-small" ><div><span>2</span></div></div>
+  <li class="marker cluster"><div class="marker-cluster marker-cluster-small" ><div><span>1</span></div></div>
     Small cluster: <?php if('evidence'==$type):?>limited evidence<?php else:?>a limited number of items<?php endif;?> <small>(green)</small>
   <li class="marker cluster"><div class="marker-cluster marker-cluster-medium"><div><span>21</span></div></div>
-    Medium cluster: more than 20 items <?php if('evidence'==$type):?>of evidence<?php endif;?> <small>(orange)</small>
+    Medium cluster: more than 20 items <?php if('evidence'==$type):?>of evidence<?php endif;?> <small>(yellow)</small>
   <li class="marker cluster"><div class="marker-cluster marker-cluster-large" ><div><span>101</span></div></div>
     Large cluster: more than 100 items <?php if('evidence'==$type):?>of evidence<?php endif;?> <small>(red)</small>
 
